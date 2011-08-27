@@ -1,0 +1,276 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		2C1E9EA114099B4600C5C30E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1E9EA014099B4600C5C30E /* UIKit.framework */; };
+		2C1E9EA314099B4600C5C30E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1E9EA214099B4600C5C30E /* Foundation.framework */; };
+		2C1E9EA914099B4600C5C30E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C1E9EA714099B4600C5C30E /* InfoPlist.strings */; };
+		2C1E9EAB14099B4600C5C30E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E9EAA14099B4600C5C30E /* main.m */; };
+		2C1E9EAF14099B4600C5C30E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E9EAE14099B4600C5C30E /* AppDelegate.m */; };
+		2C1E9EB814099BC900C5C30E /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E9EB714099BC900C5C30E /* WebViewJavascriptBridge.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		2C1E9E9C14099B4600C5C30E /* WebViewJavascriptBridge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebViewJavascriptBridge.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2C1E9EA014099B4600C5C30E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		2C1E9EA214099B4600C5C30E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		2C1E9EA614099B4600C5C30E /* WebViewJavascriptBridge-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "WebViewJavascriptBridge-Info.plist"; sourceTree = "<group>"; };
+		2C1E9EA814099B4600C5C30E /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2C1E9EAA14099B4600C5C30E /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		2C1E9EAC14099B4600C5C30E /* WebViewJavascriptBridge-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WebViewJavascriptBridge-Prefix.pch"; sourceTree = "<group>"; };
+		2C1E9EAD14099B4600C5C30E /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		2C1E9EAE14099B4600C5C30E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		2C1E9EB614099BC900C5C30E /* WebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebViewJavascriptBridge.h; path = Classes/WebViewJavascriptBridge.h; sourceTree = "<group>"; };
+		2C1E9EB714099BC900C5C30E /* WebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebViewJavascriptBridge.m; path = Classes/WebViewJavascriptBridge.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		2C1E9E9914099B4600C5C30E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C1E9EA114099B4600C5C30E /* UIKit.framework in Frameworks */,
+				2C1E9EA314099B4600C5C30E /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2C1E9E9114099B4600C5C30E = {
+			isa = PBXGroup;
+			children = (
+				2C1E9EA414099B4600C5C30E /* WebViewJavascriptBridge */,
+				2C1E9E9F14099B4600C5C30E /* Frameworks */,
+				2C1E9E9D14099B4600C5C30E /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		2C1E9E9D14099B4600C5C30E /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2C1E9E9C14099B4600C5C30E /* WebViewJavascriptBridge.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		2C1E9E9F14099B4600C5C30E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				2C1E9EA014099B4600C5C30E /* UIKit.framework */,
+				2C1E9EA214099B4600C5C30E /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2C1E9EA414099B4600C5C30E /* WebViewJavascriptBridge */ = {
+			isa = PBXGroup;
+			children = (
+				2C1E9EAD14099B4600C5C30E /* AppDelegate.h */,
+				2C1E9EAE14099B4600C5C30E /* AppDelegate.m */,
+				2C1E9EB514099B4E00C5C30E /* Classes */,
+				2C1E9EA514099B4600C5C30E /* Supporting Files */,
+			);
+			path = WebViewJavascriptBridge;
+			sourceTree = "<group>";
+		};
+		2C1E9EA514099B4600C5C30E /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				2C1E9EA614099B4600C5C30E /* WebViewJavascriptBridge-Info.plist */,
+				2C1E9EA714099B4600C5C30E /* InfoPlist.strings */,
+				2C1E9EAA14099B4600C5C30E /* main.m */,
+				2C1E9EAC14099B4600C5C30E /* WebViewJavascriptBridge-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		2C1E9EB514099B4E00C5C30E /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				2C1E9EB614099BC900C5C30E /* WebViewJavascriptBridge.h */,
+				2C1E9EB714099BC900C5C30E /* WebViewJavascriptBridge.m */,
+			);
+			name = Classes;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		2C1E9E9B14099B4600C5C30E /* WebViewJavascriptBridge */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2C1E9EB214099B4600C5C30E /* Build configuration list for PBXNativeTarget "WebViewJavascriptBridge" */;
+			buildPhases = (
+				2C1E9E9814099B4600C5C30E /* Sources */,
+				2C1E9E9914099B4600C5C30E /* Frameworks */,
+				2C1E9E9A14099B4600C5C30E /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WebViewJavascriptBridge;
+			productName = WebViewJavascriptBridge;
+			productReference = 2C1E9E9C14099B4600C5C30E /* WebViewJavascriptBridge.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2C1E9E9314099B4600C5C30E /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = Clover;
+			};
+			buildConfigurationList = 2C1E9E9614099B4600C5C30E /* Build configuration list for PBXProject "WebViewJavascriptBridge" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 2C1E9E9114099B4600C5C30E;
+			productRefGroup = 2C1E9E9D14099B4600C5C30E /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				2C1E9E9B14099B4600C5C30E /* WebViewJavascriptBridge */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2C1E9E9A14099B4600C5C30E /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C1E9EA914099B4600C5C30E /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2C1E9E9814099B4600C5C30E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2C1E9EAB14099B4600C5C30E /* main.m in Sources */,
+				2C1E9EAF14099B4600C5C30E /* AppDelegate.m in Sources */,
+				2C1E9EB814099BC900C5C30E /* WebViewJavascriptBridge.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		2C1E9EA714099B4600C5C30E /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2C1E9EA814099B4600C5C30E /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		2C1E9EB014099B4600C5C30E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		2C1E9EB114099B4600C5C30E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		2C1E9EB314099B4600C5C30E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WebViewJavascriptBridge/WebViewJavascriptBridge-Prefix.pch";
+				INFOPLIST_FILE = "WebViewJavascriptBridge/WebViewJavascriptBridge-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		2C1E9EB414099B4600C5C30E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "WebViewJavascriptBridge/WebViewJavascriptBridge-Prefix.pch";
+				INFOPLIST_FILE = "WebViewJavascriptBridge/WebViewJavascriptBridge-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2C1E9E9614099B4600C5C30E /* Build configuration list for PBXProject "WebViewJavascriptBridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C1E9EB014099B4600C5C30E /* Debug */,
+				2C1E9EB114099B4600C5C30E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2C1E9EB214099B4600C5C30E /* Build configuration list for PBXNativeTarget "WebViewJavascriptBridge" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2C1E9EB314099B4600C5C30E /* Debug */,
+				2C1E9EB414099B4600C5C30E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 2C1E9E9314099B4600C5C30E /* Project object */;
+}
