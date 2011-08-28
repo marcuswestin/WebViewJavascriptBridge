@@ -13,7 +13,7 @@
 
 @property (nonatomic, strong) NSString* secret;
 @property (nonatomic, strong) id <WebViewJavascriptBridgeDelegate> delegate;
-@property (nonatomic, weak) UIWebView* webView;
+@property (nonatomic, retain) UIWebView* webView;
 @property (nonatomic, strong) NSMutableArray* startupMessageQueue;
 
 + (id) createWithDelegate:(id <WebViewJavascriptBridgeDelegate>) delegate;
