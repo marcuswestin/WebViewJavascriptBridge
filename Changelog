@@ -1,0 +1,7 @@
+intended v0.0.1
++ ObjC: A WebViewJavascriptBridge class (a UIWebViewDelegate) that enables message passing to and from the JS
++ ObjC: A protocol called WebViewJavascriptBridgeDelegate that lets you handle messages received from the JS
++ JS: Event when the bridge is ready - document.addEventListener('WebViewJavascriptBridgeReady', function() {}, false)
++ JS: Ability to set your message handler - WebViewJavascriptBridge.setMessageHandler(function() {})
++ JS: Function to send messages - WebViewJavascriptBridge.sendMessage('a message');
++ All messages are strings. Use JSON in your js and e.g. JSONKit in iOS to send structured messages
