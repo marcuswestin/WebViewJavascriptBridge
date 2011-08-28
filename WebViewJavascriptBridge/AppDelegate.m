@@ -43,6 +43,9 @@
      "          el.innerHTML = message;"
      "      });"
      "      WebViewJavascriptBridge.sendMessage('hello from the JS');"
+     "      var button = document.body.appendChild(document.createElement('button'));"
+     "      button.innerHTML = 'Click me to send a message to ObjC';"
+     "      button.onclick = function() { WebViewJavascriptBridge.sendMessage('hello from JS button'); };"
      "  }"
      "  </script>"
      "</body></html>" baseURL:nil];
