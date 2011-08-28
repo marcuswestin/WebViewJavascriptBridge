@@ -3,21 +3,49 @@
 @implementation AppDelegate
 
 @synthesize window = _window;
+@synthesize webView;
 @synthesize javascriptBridge;
+@synthesize javascriptBridgeDelegate;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window makeKeyAndVisible];
 
-    UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
-    javascriptBridge = [[WebViewJavascriptBridge alloc] init];
-    webView.delegate = javascriptBridge;
+    webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:webView];
 
-    [webView loadHTMLString:@"<h1 style='margin-top:20px;'>Hello World</h1>" baseURL:nil];
+    javascriptBridgeDelegate = [[ExampleWebViewJavascriptBridgeDelegate alloc] init];
+    javascriptBridge = [WebViewJavascriptBridge createWithDelegate:javascriptBridgeDelegate];
+    webView.delegate = javascriptBridge;
+
+    [javascriptBridge sendMessage:@"HI"];
+    
+    [self loadExamplePage];
+    
+    [javascriptBridge sendMessage:@"HI2"];
 
     return YES;
+}
+
+- (void) loadExamplePage {
+    [webView loadHTMLString:@""
+     "<!doctype html>"
+     "<html><head>"
+     "  <style type='text/css'>h1 { color:red; }</style>"
+     "</head><body>"
+     "  <h1>hi</h1>"
+     "  <script>"
+     "  document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false);"
+     "  function onBridgeReady() {"
+     "      WebViewJavascriptBridge.setMessageHandler(function(message) {"
+     "          var el = document.body.appendChild(document.createElement('div'));"
+     "          el.innerHTML = message;"
+     "      });"
+     "      WebViewJavascriptBridge.sendMessage('hello from the JS');"
+     "  }"
+     "  </script>"
+     "</body></html>" baseURL:nil];
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
