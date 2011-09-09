@@ -2,7 +2,6 @@
 
 @implementation WebViewJavascriptBridge
 
-@synthesize secret;
 @synthesize delegate;
 @synthesize webView;
 @synthesize startupMessageQueue;
@@ -14,7 +13,6 @@ static NSString* QUEUE_HAS_MESSAGE = @"queuehasmessage";
 + (id) createWithDelegate:(id <WebViewJavascriptBridgeDelegate>) delegate {
     WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
     bridge.delegate = delegate;
-    bridge.secret = [NSString stringWithFormat:@"%d", arc4random()];
     bridge.startupMessageQueue = [[NSMutableArray alloc] init];
     return bridge;
 }

@@ -8,10 +8,8 @@
 
 @interface WebViewJavascriptBridge : NSObject <UIWebViewDelegate> {
     id <WebViewJavascriptBridgeDelegate> delegate;
-    NSString* secret;
 }
 
-@property (nonatomic, strong) NSString* secret;
 @property (nonatomic, strong) id <WebViewJavascriptBridgeDelegate> delegate;
 @property (nonatomic, retain) UIWebView* webView;
 @property (nonatomic, strong) NSMutableArray* startupMessageQueue;
