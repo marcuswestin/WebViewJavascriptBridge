@@ -1,6 +1,6 @@
-#import "AppDelegate.h"
+#import "ExampleAppDelegate.h"
 
-@implementation AppDelegate
+@implementation ExampleAppDelegate
 
 @synthesize window = _window;
 @synthesize webView;

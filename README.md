@@ -15,39 +15,39 @@ See WebViewJavascriptBridge/AppDelegate.* and WebViewJavascriptBridge/ExampleWeb
 
 1) Copy `Classes/WebViewJavascriptBridge.h` and `Classes/WebViewJavascriptBridge.m` into your xcode project
 
-2) `#import "WebViewJavascriptBridge.h"`
+2) Instantiate a webview, a javascript bridge, and set yourself as the bridge's delegate
 
-3) Implement your javascript bridge delegate - it will handle all messages sent from the javascript
-	
-	// MyJavascriptBridgeDelegate.h
 	#import <Foundation/Foundation.h>
 	#import "WebViewJavascriptBridge.h"
 
-	@interface MyJavascriptBridgeDelegate : NSObject <WebViewJavascriptBridgeDelegate>
-
+	@interface ExampleAppDelegate : UIResponder <UIApplicationDelegate, WebViewJavascriptBridgeDelegate>
+	
 	@end
 	
-	// MyJavascriptBridgeDelegate.m
-	@implementation MyJavascriptBridgeDelegate
+	@implementation ExampleAppDelegate
 	
+	- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
+	{
+	    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+	    [self.window makeKeyAndVisible];
+		
+		webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
+	    [self.window addSubview:webView];
+	    javascriptBridge = [WebViewJavascriptBridge createWithDelegate:self];
+	    webView.delegate = javascriptBridge;
+	}
+
 	- (void) handleMessage:(NSString *)message {
 	    NSLog(@"MyJavascriptBridgeDelegate received message: %@", message);
 	}
 
 	@end
 
-4) Instantiate a bridge, your delegate, and assign it to the web view
-	
-	UIWebView *theWebView = ...;
-	javascriptBridgeDelegate = [[ExampleWebViewJavascriptBridgeDelegate alloc] init];
-	javascriptBridge = [MyJavascriptBridgeDelegate createWithDelegate:javascriptBridgeDelegate];
-	theWebView.delegate = javascriptBridge;
-
-5) Send some messages from objc to javascript
+3) Go ahead and send some messages from objc to javascript
 
 	[javascriptBridge sendMessage:@"Well hello there"];
 
-6) Finally, set up the javascript side of things
+4) Finally, set up the javascript side of things
 	
 	document.addEventListener('WebViewJavascriptBridgeReady', function() {
 		WebViewJavascriptBridge.setMessageHandler(function(message) {
