@@ -5,7 +5,6 @@
 @synthesize window = _window;
 @synthesize webView;
 @synthesize javascriptBridge;
-@synthesize javascriptBridgeDelegate;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
@@ -15,8 +14,7 @@
     webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:webView];
 
-    javascriptBridgeDelegate = [[ExampleWebViewJavascriptBridgeDelegate alloc] init];
-    javascriptBridge = [WebViewJavascriptBridge createWithDelegate:javascriptBridgeDelegate];
+    javascriptBridge = [WebViewJavascriptBridge createWithDelegate:self];
     webView.delegate = javascriptBridge;
 
     [javascriptBridge sendMessage:@"HI"];
@@ -26,6 +24,10 @@
     [javascriptBridge sendMessage:@"HI2"];
 
     return YES;
+}
+
+- (void) handleMessage:(NSString *)message {
+    NSLog(@"ExampleWebViewJavascriptBridgeDelegate received message: %@", message);
 }
 
 - (void) loadExamplePage {

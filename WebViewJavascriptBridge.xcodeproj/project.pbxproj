@@ -13,7 +13,6 @@
 		2C1E9EAB14099B4600C5C30E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E9EAA14099B4600C5C30E /* main.m */; };
 		2C1E9EAF14099B4600C5C30E /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E9EAE14099B4600C5C30E /* AppDelegate.m */; };
 		2C1E9EB814099BC900C5C30E /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E9EB714099BC900C5C30E /* WebViewJavascriptBridge.m */; };
-		2C1E9EC31409AEC200C5C30E /* ExampleWebViewJavascriptBridgeDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E9EC21409AEC100C5C30E /* ExampleWebViewJavascriptBridgeDelegate.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,8 +27,6 @@
 		2C1E9EAE14099B4600C5C30E /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2C1E9EB614099BC900C5C30E /* WebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = WebViewJavascriptBridge.h; path = Classes/WebViewJavascriptBridge.h; sourceTree = "<group>"; };
 		2C1E9EB714099BC900C5C30E /* WebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebViewJavascriptBridge.m; path = Classes/WebViewJavascriptBridge.m; sourceTree = "<group>"; };
-		2C1E9EC11409AEC100C5C30E /* ExampleWebViewJavascriptBridgeDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleWebViewJavascriptBridgeDelegate.h; sourceTree = "<group>"; };
-		2C1E9EC21409AEC100C5C30E /* ExampleWebViewJavascriptBridgeDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleWebViewJavascriptBridgeDelegate.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -76,8 +73,6 @@
 			children = (
 				2C1E9EAD14099B4600C5C30E /* AppDelegate.h */,
 				2C1E9EAE14099B4600C5C30E /* AppDelegate.m */,
-				2C1E9EC11409AEC100C5C30E /* ExampleWebViewJavascriptBridgeDelegate.h */,
-				2C1E9EC21409AEC100C5C30E /* ExampleWebViewJavascriptBridgeDelegate.m */,
 				2C1E9EB514099B4E00C5C30E /* Classes */,
 				2C1E9EA514099B4600C5C30E /* Supporting Files */,
 			);
@@ -169,7 +164,6 @@
 				2C1E9EAB14099B4600C5C30E /* main.m in Sources */,
 				2C1E9EAF14099B4600C5C30E /* AppDelegate.m in Sources */,
 				2C1E9EB814099BC900C5C30E /* WebViewJavascriptBridge.m in Sources */,
-				2C1E9EC31409AEC200C5C30E /* ExampleWebViewJavascriptBridgeDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +269,7 @@
 				2C1E9EB414099B4600C5C30E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
