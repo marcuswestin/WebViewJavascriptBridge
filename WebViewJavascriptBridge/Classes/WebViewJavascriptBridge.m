@@ -35,6 +35,14 @@ static NSString* QUEUE_HAS_MESSAGE = @"queuehasmessage";
     return self;
 }
 
+- (void) dealloc
+{
+    self.delegate = nil;
+    self.startupMessageQueue = nil;
+    
+    [super dealloc];
+}
+
 - (void)sendMessage:(NSString *)message toWebView: (UIWebView *) theWebView {
     if (self.startupMessageQueue) { [self.startupMessageQueue addObject:message]; }
     else { [self _doSendMessage:message toWebView: theWebView]; }
