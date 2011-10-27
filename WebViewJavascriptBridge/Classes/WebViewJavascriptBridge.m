@@ -1,36 +1,53 @@
 #import "WebViewJavascriptBridge.h"
 
+@interface WebViewJavascriptBridge ()
+
+@property (nonatomic, retain) id <WebViewJavascriptBridgeDelegate> delegate;
+@property (nonatomic, retain) NSMutableArray* startupMessageQueue;
+
+- (void) _flushMessageQueueFromWebView: (UIWebView *) theWebView;
+- (void) _doSendMessage:(NSString*)message toWebView:(UIWebView *) theWebView;
+
+@end
+
 @implementation WebViewJavascriptBridge
 
-@synthesize delegate;
-@synthesize webView;
-@synthesize startupMessageQueue;
+@synthesize delegate = _delegate;
+@synthesize startupMessageQueue = _startupMessageQueue;
 
 static NSString* MESSAGE_SEPERATOR = @"__wvjb_sep__";
 static NSString* CUSTOM_PROTOCOL_SCHEME = @"webviewjavascriptbridge";
 static NSString* QUEUE_HAS_MESSAGE = @"queuehasmessage";
 
-+ (id) createWithDelegate:(id <WebViewJavascriptBridgeDelegate>) delegate {
-    WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
-    bridge.delegate = delegate;
-    bridge.startupMessageQueue = [[NSMutableArray alloc] init];
-    return bridge;
++ (id) javascriptBridgeWithDelegate:(id<WebViewJavascriptBridgeDelegate>)delegate 
+{
+    return [[[self alloc] initWithDelegate: delegate] autorelease];
 }
 
-- (void)sendMessage:(NSString *)message {
-    if (startupMessageQueue) { [startupMessageQueue addObject:message]; }
-    else { [self _doSendMessage:message]; }
+- (id) initWithDelegate: (id<WebViewJavascriptBridgeDelegate>)delegate
+{
+    if ( (self = [super init]) )
+    {
+        self.delegate = delegate;
+        self.startupMessageQueue = [[NSMutableArray new] autorelease];
+    }
+    
+    return self;
 }
 
-- (void)_doSendMessage:(NSString *)message {
+- (void)sendMessage:(NSString *)message toWebView: (UIWebView *) theWebView {
+    if (self.startupMessageQueue) { [self.startupMessageQueue addObject:message]; }
+    else { [self _doSendMessage:message toWebView: theWebView]; }
+}
+
+- (void)_doSendMessage:(NSString *)message toWebView: (UIWebView *) aWebView {
 	message = [message stringByReplacingOccurrencesOfString:@"\\n" withString:@"\\\\n"];
 	message = [message stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"];
 	message = [message stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-    [webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"WebViewJavascriptBridge._handleMessageFromObjC('%@');", message]];
+    [aWebView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"WebViewJavascriptBridge._handleMessageFromObjC('%@');", message]];
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)theWebView {
-    webView = theWebView;
     NSString* js;
     js = [NSString stringWithFormat:@";(function() {"
           "if (window.WebViewJavascriptBridge) { return; };"
@@ -92,12 +109,12 @@ static NSString* QUEUE_HAS_MESSAGE = @"queuehasmessage";
           CUSTOM_PROTOCOL_SCHEME,
           QUEUE_HAS_MESSAGE];
     
-    [webView stringByEvaluatingJavaScriptFromString:js];
+    [theWebView stringByEvaluatingJavaScriptFromString:js];
     
-    for (id message in startupMessageQueue) {
-        [self _doSendMessage:message];
+    for (id message in self.startupMessageQueue) {
+        [self _doSendMessage:message toWebView: theWebView];
     }
-    startupMessageQueue = nil;
+    self.startupMessageQueue = nil;
 }
 
 
@@ -106,7 +123,7 @@ static NSString* QUEUE_HAS_MESSAGE = @"queuehasmessage";
     if (![[url scheme] isEqualToString:CUSTOM_PROTOCOL_SCHEME]) { return YES; }
 
     if ([[url host] isEqualToString:QUEUE_HAS_MESSAGE]) {
-        [self _flushMessageQueue];
+        [self _flushMessageQueueFromWebView: theWebView];
     } else {
         NSLog(@"WARNING: Received unknown WebViewJavascriptBridge command %@://%@", CUSTOM_PROTOCOL_SCHEME, [url path]);
     }
@@ -114,11 +131,11 @@ static NSString* QUEUE_HAS_MESSAGE = @"queuehasmessage";
     return NO;
 }
 
-- (void) _flushMessageQueue {
-    NSString* messageQueueString = [webView stringByEvaluatingJavaScriptFromString:@"WebViewJavascriptBridge._fetchQueue();"];
+- (void) _flushMessageQueueFromWebView: (UIWebView *) theWebView {
+    NSString* messageQueueString = [theWebView stringByEvaluatingJavaScriptFromString:@"WebViewJavascriptBridge._fetchQueue();"];
     NSArray* messages = [messageQueueString componentsSeparatedByString:MESSAGE_SEPERATOR];
     for (id message in messages) {
-        [delegate handleMessage:message];
+        [self.delegate handleMessage:message fromWebView: theWebView];
     }
 }
 
