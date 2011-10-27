@@ -11,7 +11,7 @@
 		2C1E9EA314099B4600C5C30E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1E9EA214099B4600C5C30E /* Foundation.framework */; };
 		2C1E9EA914099B4600C5C30E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C1E9EA714099B4600C5C30E /* InfoPlist.strings */; };
 		2C1E9EAB14099B4600C5C30E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E9EAA14099B4600C5C30E /* main.m */; };
-		2C1E9EB814099BC900C5C30E /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E9EB714099BC900C5C30E /* WebViewJavascriptBridge.m */; };
+		2C1E9EB814099BC900C5C30E /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1E9EB714099BC900C5C30E /* WebViewJavascriptBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2C6D2131143017AF0069FA34 /* ExampleAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C6D2130143017AF0069FA34 /* ExampleAppDelegate.m */; };
 /* End PBXBuildFile section */
 
