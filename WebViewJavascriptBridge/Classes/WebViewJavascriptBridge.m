@@ -2,8 +2,7 @@
 
 @interface WebViewJavascriptBridge ()
 
-@property (nonatomic, retain) id <WebViewJavascriptBridgeDelegate> delegate;
-@property (nonatomic, retain) NSMutableArray* startupMessageQueue;
+@property (readwrite,retain) NSMutableArray* startupMessageQueue;
 
 - (void) _flushMessageQueueFromWebView: (UIWebView *) theWebView;
 - (void) _doSendMessage:(NSString*)message toWebView:(UIWebView *) theWebView;
@@ -19,16 +18,15 @@ static NSString* MESSAGE_SEPERATOR = @"__wvjb_sep__";
 static NSString* CUSTOM_PROTOCOL_SCHEME = @"webviewjavascriptbridge";
 static NSString* QUEUE_HAS_MESSAGE = @"queuehasmessage";
 
-+ (id) javascriptBridgeWithDelegate:(id<WebViewJavascriptBridgeDelegate>)delegate 
++ (id) javascriptBridge
 {
-    return [[[self alloc] initWithDelegate: delegate] autorelease];
+    return [[[self alloc] init] autorelease];
 }
 
-- (id) initWithDelegate: (id<WebViewJavascriptBridgeDelegate>)delegate
+- (id) init
 {
     if ( (self = [super init]) )
     {
-        self.delegate = delegate;
         self.startupMessageQueue = [[NSMutableArray new] autorelease];
     }
     

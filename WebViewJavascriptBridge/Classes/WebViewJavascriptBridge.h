@@ -11,11 +11,11 @@
     NSMutableArray *_startupMessageQueue;
 }
 
-/** Creates & returns new autoreleased javascript Bridge with given delegate. */
-+ (id) javascriptBridgeWithDelegate:(id <WebViewJavascriptBridgeDelegate>) delegate;
+/** Delegate to receive messages from javascript. */
+@property (readwrite, assign) id <WebViewJavascriptBridgeDelegate> delegate;
 
-/** Initializes javascript Bridge with given delegate. */
-- (id) initWithDelegate: (id<WebViewJavascriptBridgeDelegate>)delegate;
+/** Creates & returns new autoreleased javascript Bridge with no delegate set. */
++ (id) javascriptBridge;
 
 /** Sends message to given webView. You need to integrate javascript bridge into 
  * this view before by calling WebViewJavascriptBridge#webViewDidFinishLoad: with that view. 
