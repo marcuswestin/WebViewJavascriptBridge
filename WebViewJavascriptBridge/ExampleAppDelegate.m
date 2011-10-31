@@ -14,7 +14,8 @@
     webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:webView];
 
-    javascriptBridge = [WebViewJavascriptBridge javascriptBridgeWithDelegate:self];
+    javascriptBridge = [WebViewJavascriptBridge javascriptBridge];
+    javascriptBridge.delegate = self;
     webView.delegate = javascriptBridge;
 
     [javascriptBridge sendMessage:@"HI" toWebView: webView];
