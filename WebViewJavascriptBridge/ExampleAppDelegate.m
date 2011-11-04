@@ -14,19 +14,20 @@
     webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:webView];
 
-    javascriptBridge = [WebViewJavascriptBridge createWithDelegate:self];
+    javascriptBridge = [WebViewJavascriptBridge javascriptBridge];
+    javascriptBridge.delegate = self;
     webView.delegate = javascriptBridge;
 
-    [javascriptBridge sendMessage:@"HI"];
+    [javascriptBridge sendMessage:@"HI" toWebView: webView];
     
     [self loadExamplePage];
     
-    [javascriptBridge sendMessage:@"HI2"];
+    [javascriptBridge sendMessage:@"HI2" toWebView: webView];
 
     return YES;
 }
 
-- (void) handleMessage:(NSString *)message {
+- (void) handleMessage:(NSString *)message fromWebView:(UIWebView *)theWebView {
     NSLog(@"ExampleWebViewJavascriptBridgeDelegate received message: %@", message);
 }
 
@@ -54,7 +55,7 @@
 }
 
 - (void)applicationWillResignActive:(UIApplication *)application
-{
+{    
     /*
      Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
      Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
