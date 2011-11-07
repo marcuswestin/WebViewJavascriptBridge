@@ -55,3 +55,8 @@ See WebViewJavascriptBridge/AppDelegate.* and WebViewJavascriptBridge/ExampleWeb
 		});
 		WebViewJavascriptBridge.sendMessage('Right back atcha from the JS!');
 	}, false)
+
+Contributors
+------------
+@marcuswestin Marcus Westin
+@psineur Stepan Generalov
