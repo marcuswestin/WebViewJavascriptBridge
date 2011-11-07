@@ -58,5 +58,7 @@ See WebViewJavascriptBridge/AppDelegate.* and WebViewJavascriptBridge/ExampleWeb
 
 Contributors
 ------------
-@marcuswestin Marcus Westin
-@psineur Stepan Generalov
+
+	[@marcuswestin](https://github.com/marcuswestin) Marcus Westin
+	[@psineur](https://github.com/psineur) Stepan Generalov
+
