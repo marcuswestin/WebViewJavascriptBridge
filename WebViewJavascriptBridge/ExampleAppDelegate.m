@@ -12,20 +12,20 @@
     self.webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:self.webView];
 
-    self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeWithDelegate:self];
-    self.webView.delegate = self.javascriptBridge;
-
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-    [button setTitle:@"Send message" forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [self.window insertSubview:button aboveSubview:self.webView];
-    button.frame = CGRectMake(90, 400, 130, 45);
-
-    [self.javascriptBridge sendMessage:@"Message from ObjC before Webview is complete!" toWebView:self.webView];
-
-    [self loadExamplePage];
-
-    [self.javascriptBridge sendMessage:@"Message 2 from ObjC before Webview is complete!" toWebView:self.webView];
+	self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeWithDelegate:self];
+	self.webView.delegate = self.javascriptBridge;
+	
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+	[button setTitle:@"Send message" forState:UIControlStateNormal];
+	[button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+	[self.window insertSubview:button aboveSubview:self.webView];
+	button.frame = CGRectMake(95, 400, 130, 45);
+	
+	[self.javascriptBridge sendMessage:@"Message from ObjC before Webview is complete!" toWebView:self.webView];
+	
+	[self loadExamplePage];
+	
+	[self.javascriptBridge sendMessage:@"Message 2 from ObjC before Webview is complete!" toWebView:self.webView];
 
     [self.window makeKeyAndVisible];
     return YES;
