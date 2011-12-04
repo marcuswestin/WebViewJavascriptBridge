@@ -3,41 +3,53 @@
 @implementation ExampleAppDelegate
 
 @synthesize window = _window;
-@synthesize webView;
-@synthesize javascriptBridge;
+@synthesize webView = _webView;
+@synthesize javascriptBridge = _javascriptBridge;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    [self.window makeKeyAndVisible];
 
-    webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
-    [self.window addSubview:webView];
+    self.webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
+    [self.window addSubview:self.webView];
 
-    javascriptBridge = [WebViewJavascriptBridge javascriptBridge];
-    javascriptBridge.delegate = self;
-    webView.delegate = javascriptBridge;
-
-    [javascriptBridge sendMessage:@"HI" toWebView: webView];
+    self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeWithDelegate:self];
+    self.webView.delegate = self.javascriptBridge;
+	
+	UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+	[button setTitle:@"Send message" forState:UIControlStateNormal];
+	[button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+	[self.window insertSubview:button aboveSubview:self.webView];
+	button.frame = CGRectMake(90, 400, 130, 45);
+	
+	[self.javascriptBridge sendMessage:@"Message from ObjC before Webview is complete!" toWebView:self.webView];
     
     [self loadExamplePage];
     
-    [javascriptBridge sendMessage:@"HI2" toWebView: webView];
+    [self.javascriptBridge sendMessage:@"Message 2 from ObjC before Webview is complete!" toWebView:self.webView];
 
+	[self.window makeKeyAndVisible];
     return YES;
 }
 
-- (void) handleMessage:(NSString *)message fromWebView:(UIWebView *)theWebView {
-    NSLog(@"ExampleWebViewJavascriptBridgeDelegate received message: %@", message);
+- (void)buttonPressed:(id)sender
+{
+	[self.javascriptBridge sendMessage:@"Message from ObjC on normal situations!" toWebView:self.webView];
 }
 
-- (void) loadExamplePage {
-    [webView loadHTMLString:@""
+- (void)javascriptBridge:(WebViewJavascriptBridge *)bridge receivedMessage:(NSString *)message fromWebView:(UIWebView *)webView
+{
+	UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message from Javascript" message:message delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+	[alert show];
+}
+
+- (void)loadExamplePage {
+    [self.webView loadHTMLString:@""
      "<!doctype html>"
      "<html><head>"
      "  <style type='text/css'>h1 { color:red; }</style>"
      "</head><body>"
-     "  <h1>hi</h1>"
+     "  <h1>Javascript Bridge Demo</h1>"
      "  <script>"
      "  document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false);"
      "  function onBridgeReady() {"
