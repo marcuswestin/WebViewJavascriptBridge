@@ -31,7 +31,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
 
 - (id)init
 {
-    return [[[WebViewJavascriptBridge alloc] initWithDelegate:nil] autorelease];
+    return [self initWithDelegate:nil];
 }
 
 + (id)javascriptBridgeWithDelegate:(id <WebViewJavascriptBridgeDelegate>)delegate
