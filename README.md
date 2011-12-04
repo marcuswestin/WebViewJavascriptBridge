@@ -11,13 +11,13 @@ Just open the Xcode project (requires Xcode > 4.2) and hit run to see the exampl
 Usage
 -----
 
-See WebViewJavascriptBridge/AppDelegate.* and WebViewJavascriptBridge/ExampleWebViewJavascriptBridgeDelegate.* for example code that works. Or, follow these steps:
+See ExampleAppDelegate.* for example code. To use it in your own project:
 
 1) Copy `Classes/WebViewJavascriptBridge.h` and `Classes/WebViewJavascriptBridge.m` into your Xcode project
 
 2) Instantiate a UIWebView, a WebViewJavascriptBridge, and set yourself as the bridge's delegate
 
-	#import <Foundation/Foundation.h>
+	#import <UIKit/UIKit.h>
 	#import "WebViewJavascriptBridge.h"
 
 	@interface ExampleAppDelegate : UIResponder <UIApplicationDelegate, WebViewJavascriptBridgeDelegate>
@@ -52,17 +52,16 @@ See WebViewJavascriptBridge/AppDelegate.* and WebViewJavascriptBridge/ExampleWeb
 
 4) Finally, set up the javascript side of things
 	
-	document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false);
-	function onBridgeReady() {
+	document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady() {
 		WebViewJavascriptBridge.setMessageHandler(function(message) {
-			alert('Received message: ' + message);
-		});
-		WebViewJavascriptBridge.sendMessage('Hello from the JS scope!');
-	}
+			alert('Received message: ' + message)
+		})
+		WebViewJavascriptBridge.sendMessage('Hello from the javascript')
+	}, false)
 	
-Notes
------
-If you're using the new ARC features, please remind yourself to add `-fno-objc-arc` as a compiler flag to the `WebViewJavascriptBridge.m` file. This will disable ARC for this specific class.
+ARC
+---
+If you're using ARC in your project, add `-fno-objc-arc` as a compiler flag to the `WebViewJavascriptBridge.m` file.
 
 Contributors
 ------------
