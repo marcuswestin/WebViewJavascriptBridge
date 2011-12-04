@@ -59,6 +59,10 @@ See WebViewJavascriptBridge/AppDelegate.* and WebViewJavascriptBridge/ExampleWeb
 		});
 		WebViewJavascriptBridge.sendMessage('Hello from the JS scope!');
 	}
+	
+Notes
+-----
+If you're using the new ARC features, please remind yourself to add `-fno-objc-arc` as a compiler flag to the `WebViewJavascriptBridge.m` file. This will disable ARC for this specific class.
 
 Contributors
 ------------
