@@ -7,6 +7,6 @@
 @property (strong, nonatomic) UIWebView *webView;
 @property (strong, nonatomic) WebViewJavascriptBridge *javascriptBridge;
 
-- (void) loadExamplePage;
+- (void)loadExamplePage;
 
 @end
