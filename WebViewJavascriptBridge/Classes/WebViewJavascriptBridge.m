@@ -18,25 +18,11 @@ static NSString *MESSAGE_SEPARATOR = @"__wvjb_sep__";
 static NSString *CUSTOM_PROTOCOL_SCHEME = @"webviewjavascriptbridge";
 static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
 
-- (id)initWithDelegate:(id <WebViewJavascriptBridgeDelegate>)delegate {
-    if ((self = [super init])) {
-        self.delegate = delegate;
-        self.startupMessageQueue = [[[NSMutableArray alloc] init] autorelease];
-    }
-
-    return self;
-}
-
-- (id)init {
-    return [[[WebViewJavascriptBridge alloc] initWithDelegate:nil] autorelease];
-}
-
 + (id)javascriptBridgeWithDelegate:(id <WebViewJavascriptBridgeDelegate>)delegate {
-    return [[[self alloc] initWithDelegate:delegate] autorelease];
-}
-
-+ (id)javascriptBridge {
-    return [[[self alloc] init] autorelease];
+    WebViewJavascriptBridge* bridge = [[[WebViewJavascriptBridge alloc] init] autorelease];
+    bridge.delegate = delegate;
+    bridge.startupMessageQueue = [[[NSMutableArray alloc] init] autorelease];
+    return bridge;
 }
 
 - (void)dealloc {
