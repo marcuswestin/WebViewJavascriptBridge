@@ -20,7 +20,7 @@
 	[button setTitle:@"Send message" forState:UIControlStateNormal];
 	[button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
 	[self.window insertSubview:button aboveSubview:self.webView];
-	button.frame = CGRectMake(90, 400, 130, 45);
+	button.frame = CGRectMake(95, 400, 130, 45);
 	
 	[self.javascriptBridge sendMessage:@"Message from ObjC before Webview is complete!" toWebView:self.webView];
 	
