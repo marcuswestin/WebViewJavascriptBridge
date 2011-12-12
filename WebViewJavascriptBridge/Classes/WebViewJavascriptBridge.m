@@ -103,13 +103,12 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
         "     _handleMessageFromObjC: _handleMessageFromObjC"
         "};"
         ""
-        "setTimeout(function() {"
-        "     var doc = document;"
-        "     _createQueueReadyIframe(doc);"
-        "     var readyEvent = doc.createEvent('Events');"
-        "     readyEvent.initEvent('WebViewJavascriptBridgeReady');"
-        "     doc.dispatchEvent(readyEvent);"
-        "}, 0);"
+        "var doc = document;"
+        "_createQueueReadyIframe(doc);"
+        "var readyEvent = doc.createEvent('Events');"
+        "readyEvent.initEvent('WebViewJavascriptBridgeReady');"
+        "doc.dispatchEvent(readyEvent);"
+        ""
         "})();",
         MESSAGE_SEPARATOR,
         CUSTOM_PROTOCOL_SCHEME,
