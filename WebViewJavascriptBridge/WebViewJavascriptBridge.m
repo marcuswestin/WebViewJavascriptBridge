@@ -114,7 +114,9 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
         CUSTOM_PROTOCOL_SCHEME,
         QUEUE_HAS_MESSAGE];
     
-    [webView stringByEvaluatingJavaScriptFromString:js];
+    if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
+        [webView stringByEvaluatingJavaScriptFromString:js];
+    }
     
     for (id message in self.startupMessageQueue) {
         [self _doSendMessage:message toWebView: webView];
