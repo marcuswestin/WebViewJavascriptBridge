@@ -139,7 +139,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
     NSURL *url = [request URL];
     if (![[url scheme] isEqualToString:CUSTOM_PROTOCOL_SCHEME]) {
         if (self.delegate != nil && [self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
-            [self.delegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
+            return [self.delegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
         }
         return YES;
     }
