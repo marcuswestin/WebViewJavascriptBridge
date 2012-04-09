@@ -33,7 +33,7 @@ See ExampleAppDelegate.* for example code. To use it in your own project:
 		self.webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
 	    [self.window addSubview:webView];
 	    self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeWithDelegate:self];
-	    self.webView.delegate = javascriptBridge;
+	    self.webView.delegate = self.javascriptBridge;
 		
 		[self.window makeKeyAndVisible];
 		return YES;
