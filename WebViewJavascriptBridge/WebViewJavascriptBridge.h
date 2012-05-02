@@ -19,4 +19,7 @@
  * of the webview before calling this method (see ExampleAppDelegate.m) */
 - (void)sendMessage:(NSString *)message toWebView:(UIWebView *)webView;
 
+/* Reset startup messaging queue */
+- (void)resetQueue;
+
 @end

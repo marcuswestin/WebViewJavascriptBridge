@@ -21,7 +21,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
 + (id)javascriptBridgeWithDelegate:(id <WebViewJavascriptBridgeDelegate>)delegate {
     WebViewJavascriptBridge* bridge = [[[WebViewJavascriptBridge alloc] init] autorelease];
     bridge.delegate = delegate;
-    bridge.startupMessageQueue = [[[NSMutableArray alloc] init] autorelease];
+	[bridge resetQueue];
     return bridge;
 }
 
@@ -35,6 +35,10 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
 - (void)sendMessage:(NSString *)message toWebView:(UIWebView *)webView {
     if (self.startupMessageQueue) { [self.startupMessageQueue addObject:message]; }
     else { [self _doSendMessage:message toWebView: webView]; }
+}
+
+- (void)resetQueue {
+    self.startupMessageQueue = [[[NSMutableArray alloc] init] autorelease];
 }
 
 - (void)_doSendMessage:(NSString *)message toWebView:(UIWebView *)webView {
