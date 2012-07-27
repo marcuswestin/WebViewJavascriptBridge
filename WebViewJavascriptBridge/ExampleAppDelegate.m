@@ -20,6 +20,12 @@
 	[button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
 	[self.window insertSubview:button aboveSubview:self.webView];
 	button.frame = CGRectMake(95, 400, 130, 45);
+    
+    // register a callback
+    [self.javascriptBridge registerJavascriptCallback:@"testCallback" withCallback:^(NSDictionary *params){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Javascript Callback" message:[NSString stringWithFormat:@"params: %@", params] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }];
 	
 	[self.javascriptBridge sendMessage:@"Message from ObjC before Webview is complete!" toWebView:self.webView];
 	
@@ -58,43 +64,10 @@
          "      var button = document.body.appendChild(document.createElement('button'));"
          "      button.innerHTML = 'Click me to send a message to ObjC';"
          "      button.onclick = button.ontouchstart = function() { WebViewJavascriptBridge.sendMessage('hello from JS button'); };"
+         "      WebViewJavascriptBridge.callCallback('testCallback', {'arg1': 'foo', 'arg2': 'bar'});"
          "  }"
          "  </script>"
          "</body></html>" baseURL:nil];
-}
-
-- (void)applicationWillResignActive:(UIApplication *)application {
-    /*
-     Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-     Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-     */
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-    /*
-     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-     If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-     */
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    /*
-     Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-     */
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    /*
-     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-     */
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-    /*
-     Called when the application is about to terminate.
-     Save data if appropriate.
-     See also applicationDidEnterBackground:.
-     */
 }
 
 @end

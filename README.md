@@ -58,7 +58,23 @@ See ExampleAppDelegate.* for example code. To use it in your own project:
 		})
 		WebViewJavascriptBridge.sendMessage('Hello from the javascript')
 	}, false)
-	
+
+### Registering callbacks
+
+You can register Objc blocks and call them from Javascript. In Objc register a block with the JS bridge:
+
+    [self.javascriptBridge registerJavascriptCallback:@"testCallback" withCallback:^(NSDictionary *params){
+        NSLog(@"JS callback [testCallback] called with params: %@", params);
+    }];
+
+Then call from Javascript using:
+
+    WebViewJavascriptBridge.callCallback('testCallback', { 'foo': 'bar' });
+
+This will result in the following being logged:
+
+    JS callback [testCallback] called with params: { 'foo' = 'bar'; }
+
 ARC
 ---
 If you're using ARC in your project, add `-fno-objc-arc` as a compiler flag to the `WebViewJavascriptBridge.m` file.

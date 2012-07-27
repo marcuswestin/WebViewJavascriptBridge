@@ -22,4 +22,8 @@
 /* Reset startup messaging queue */
 - (void)resetQueue;
 
+- (void)registerJavascriptCallback:(NSString *)name withCallback:(void (^)(NSDictionary *params))callback;
+
+- (void)unregisterJavascriptCallback:(NSString *)name;
+
 @end

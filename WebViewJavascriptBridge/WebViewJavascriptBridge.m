@@ -1,8 +1,10 @@
 #import "WebViewJavascriptBridge.h"
+#import "JSONKit.h"
 
 @interface WebViewJavascriptBridge ()
 
 @property (nonatomic,strong) NSMutableArray *startupMessageQueue;
+@property (nonatomic,strong) NSMutableDictionary *javascriptCallbacks;
 
 - (void)_flushMessageQueueFromWebView:(UIWebView *)webView;
 - (void)_doSendMessage:(NSString*)message toWebView:(UIWebView *)webView;
@@ -17,6 +19,9 @@
 static NSString *MESSAGE_SEPARATOR = @"__wvjb_sep__";
 static NSString *CUSTOM_PROTOCOL_SCHEME = @"webviewjavascriptbridge";
 static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
+static NSString *CALLBACK_MESSAGE_PREFIX = @"__wvjb_cb__";
+static NSString *CALLBACK_FUNCTION_KEY = @"wvjb_function";
+static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
 
 + (id)javascriptBridgeWithDelegate:(id <WebViewJavascriptBridgeDelegate>)delegate {
     WebViewJavascriptBridge* bridge = [[[WebViewJavascriptBridge alloc] init] autorelease];
@@ -25,9 +30,18 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
     return bridge;
 }
 
+- (id)init {
+    if (self = [super init]) {
+        self.javascriptCallbacks = [NSMutableDictionary dictionary];
+    }
+    
+    return self;
+}
+
 - (void)dealloc {
     _delegate = nil;
     [_startupMessageQueue release];
+    [_javascriptCallbacks release];
 
     [super dealloc];
 }
@@ -41,6 +55,14 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
     self.startupMessageQueue = [[[NSMutableArray alloc] init] autorelease];
 }
 
+- (void)registerJavascriptCallback:(NSString *)name withCallback:(void (^)(NSDictionary *params))callback {
+    [self.javascriptCallbacks setObject:callback forKey:name];
+}
+
+- (void)unregisterJavascriptCallback:(NSString *)name {
+    [self.javascriptCallbacks removeObjectForKey:name];
+}
+
 - (void)_doSendMessage:(NSString *)message toWebView:(UIWebView *)webView {
     message = [message stringByReplacingOccurrencesOfString:@"\\n" withString:@"\\\\n"];
     message = [message stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"];
@@ -51,8 +73,26 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
 - (void)_flushMessageQueueFromWebView:(UIWebView *)webView {
     NSString *messageQueueString = [webView stringByEvaluatingJavaScriptFromString:@"WebViewJavascriptBridge._fetchQueue();"];
     NSArray* messages = [messageQueueString componentsSeparatedByString:MESSAGE_SEPARATOR];
-    for (id message in messages) {
-        [self.delegate javascriptBridge:self receivedMessage:message fromWebView:webView];
+    for (NSString *message in messages) {
+        if ([message hasPrefix:CALLBACK_MESSAGE_PREFIX]) {
+            // should be a JSON encoded callback
+            NSDictionary *decodedMessage = [[message stringByReplacingOccurrencesOfString:CALLBACK_MESSAGE_PREFIX withString:@""] objectFromJSONString];
+            NSString *callbackName = [decodedMessage objectForKey:CALLBACK_FUNCTION_KEY];
+
+            void (^callback)(NSDictionary *params) = [self.javascriptCallbacks objectForKey:callbackName];
+
+            if (callback == NULL) {
+                // don't have a callback - pass to bridge
+                [self.delegate javascriptBridge:self receivedMessage:message fromWebView:webView];
+            } else {
+                // call the callback
+                callback([decodedMessage objectForKey:CALLBACK_ARGUMENTS_KEY]);
+            }
+        }
+        else {
+            // normal message - pass to bridge
+            [self.delegate javascriptBridge:self receivedMessage:message fromWebView:webView];
+        }
     }
 }
 
@@ -66,8 +106,11 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
         "     _receiveMessageQueue = [],"
         "     _MESSAGE_SEPERATOR = '%@',"
         "     _CUSTOM_PROTOCOL_SCHEME = '%@',"
-        "     _QUEUE_HAS_MESSAGE = '%@';"
-        ""
+        "     _QUEUE_HAS_MESSAGE = '%@',"
+        "     _CALLBACK_MESSAGE_PREFIX = '%@',"
+        "     _CALLBACK_FUNCTION_KEY = '%@',"
+        "     _CALLBACK_ARGUMENTS_KEY = '%@';"
+        ""                    
         "function _createQueueReadyIframe(doc) {"
         "     _readyMessageIframe = doc.createElement('iframe');"
         "     _readyMessageIframe.style.display = 'none';"
@@ -77,6 +120,12 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
         "function _sendMessage(message) {"
         "     _sendMessageQueue.push(message);"
         "     _readyMessageIframe.src = _CUSTOM_PROTOCOL_SCHEME + '://' + _QUEUE_HAS_MESSAGE;"
+        "};"
+        "function _callCallback(name, params) {"
+        "     var payload = {};"
+        "     payload[_CALLBACK_FUNCTION_KEY] = name;"
+        "     payload[_CALLBACK_ARGUMENTS_KEY] = params;"
+        "     _sendMessage(_CALLBACK_MESSAGE_PREFIX + JSON.stringify(payload));"
         "};"
         ""
         "function _fetchQueue() {"
@@ -103,6 +152,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
         "window.WebViewJavascriptBridge = {"
         "     setMessageHandler: _setMessageHandler,"
         "     sendMessage: _sendMessage,"
+        "     callCallback: _callCallback,"
         "     _fetchQueue: _fetchQueue,"
         "     _handleMessageFromObjC: _handleMessageFromObjC"
         "};"
@@ -116,7 +166,10 @@ static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
         "})();",
         MESSAGE_SEPARATOR,
         CUSTOM_PROTOCOL_SCHEME,
-        QUEUE_HAS_MESSAGE];
+        QUEUE_HAS_MESSAGE,
+        CALLBACK_MESSAGE_PREFIX,
+        CALLBACK_FUNCTION_KEY,
+        CALLBACK_ARGUMENTS_KEY];
     
     if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
         [webView stringByEvaluatingJavaScriptFromString:js];
