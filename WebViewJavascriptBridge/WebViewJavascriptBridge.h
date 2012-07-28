@@ -22,8 +22,12 @@
 /* Reset startup messaging queue */
 - (void)resetQueue;
 
-- (void)registerJavascriptCallback:(NSString *)name withCallback:(void (^)(NSDictionary *params))callback;
+- (void)callJavascriptCallback:(NSString *)name toWebView:(UIWebView *)webView;
 
-- (void)unregisterJavascriptCallback:(NSString *)name;
+- (void)callJavascriptCallback:(NSString *)name withParams:(NSDictionary *)params toWebView:(UIWebView *)webView;
+
+- (void)registerObjcCallback:(NSString *)name withCallback:(void (^)(NSDictionary *params))callback;
+
+- (void)unregisterObjcCallback:(NSString *)name;
 
 @end

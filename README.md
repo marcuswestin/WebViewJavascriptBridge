@@ -61,19 +61,40 @@ See ExampleAppDelegate.* for example code. To use it in your own project:
 
 ### Registering callbacks
 
-You can register Objc blocks and call them from Javascript. In Objc register a block with the JS bridge:
+#### JS to ObjC
 
-    [self.javascriptBridge registerJavascriptCallback:@"testCallback" withCallback:^(NSDictionary *params){
-        NSLog(@"JS callback [testCallback] called with params: %@", params);
+You can register Objective-C blocks and call them from Javascript. In Objective-C register a block with the bridge:
+
+    [self.javascriptBridge registerObjcCallback:@"testObjcCallback" withCallback:^(NSDictionary *params){
+        NSLog(@"ObjC callback [testObjcCallback] called with params: %@", params);
     }];
 
 Then call from Javascript using:
 
-    WebViewJavascriptBridge.callCallback('testCallback', { 'foo': 'bar' });
+    WebViewJavascriptBridge.callObjcCallback('testObjcCallback', { 'foo': 'bar' });
 
 This will result in the following being logged:
 
-    JS callback [testCallback] called with params: { 'foo' = 'bar'; }
+    ObjC callback [testObjcCallback] called with params: { 'foo' = 'bar'; }
+
+#### ObjC to JS
+
+You can also register Javascript functions and call them from Objective-C. In Javascript register a function with the bridge:
+
+    WebViewJavascriptBridge.registerJsCallback('testJsCallback', function(params) {
+        var el = document.body.appendChild(document.createElement('div'));
+        el.innerHTML = 'JS [testJsCallback] called with params: ' + JSON.stringify(params);
+    });
+
+Then call from Objective-C using:
+
+    [self.javascriptBridge callJavascriptCallback:@"testJsCallback"
+                                       withParams:[NSDictionary dictionaryWithObjectsAndKeys:@"bar", @"foo", nil]
+                                        toWebView:self.webView];
+
+This will result in a div with the following getting added to the HTML:
+
+    JS [testJsCallback] called with params: {"foo":"bar"}
 
 ARC
 ---

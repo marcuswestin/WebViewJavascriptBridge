@@ -47,19 +47,38 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
 }
 
 - (void)sendMessage:(NSString *)message toWebView:(UIWebView *)webView {
-    if (self.startupMessageQueue) { [self.startupMessageQueue addObject:message]; }
-    else { [self _doSendMessage:message toWebView: webView]; }
+    if (self.startupMessageQueue) {
+        [self.startupMessageQueue addObject:message];
+    } else {
+        NSLog(@"msg: %@", message);
+        [self _doSendMessage:message toWebView: webView];
+    }
 }
 
 - (void)resetQueue {
     self.startupMessageQueue = [[[NSMutableArray alloc] init] autorelease];
 }
 
-- (void)registerJavascriptCallback:(NSString *)name withCallback:(void (^)(NSDictionary *params))callback {
+- (void)callJavascriptCallback:(NSString *)name toWebView:(UIWebView *)webView {
+    [self callJavascriptCallback:name withParams:[NSDictionary dictionary] toWebView:webView];
+}
+
+- (void)callJavascriptCallback:(NSString *)name withParams:(NSDictionary *)params toWebView:(UIWebView *)webView {
+    NSDictionary *callParams = [NSDictionary dictionaryWithObjectsAndKeys:
+                                name, CALLBACK_FUNCTION_KEY,
+                                params, CALLBACK_ARGUMENTS_KEY,
+                                nil];
+    NSString *encodedParams = [callParams JSONString];
+
+    [self sendMessage:[NSString stringWithFormat:@"%@%@", CALLBACK_MESSAGE_PREFIX, encodedParams]
+            toWebView:webView];
+}
+
+- (void)registerObjcCallback:(NSString *)name withCallback:(void (^)(NSDictionary *params))callback {
     [self.javascriptCallbacks setObject:callback forKey:name];
 }
 
-- (void)unregisterJavascriptCallback:(NSString *)name {
+- (void)unregisterObjcCallback:(NSString *)name {
     [self.javascriptCallbacks removeObjectForKey:name];
 }
 
@@ -104,6 +123,7 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
         "var _readyMessageIframe,"
         "     _sendMessageQueue = [],"
         "     _receiveMessageQueue = [],"
+        "     _jsCallbacks = [],"
         "     _MESSAGE_SEPERATOR = '%@',"
         "     _CUSTOM_PROTOCOL_SCHEME = '%@',"
         "     _QUEUE_HAS_MESSAGE = '%@',"
@@ -121,7 +141,7 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
         "     _sendMessageQueue.push(message);"
         "     _readyMessageIframe.src = _CUSTOM_PROTOCOL_SCHEME + '://' + _QUEUE_HAS_MESSAGE;"
         "};"
-        "function _callCallback(name, params) {"
+        "function _callObjcCallback(name, params) {"
         "     var payload = {};"
         "     payload[_CALLBACK_FUNCTION_KEY] = name;"
         "     payload[_CALLBACK_ARGUMENTS_KEY] = params;"
@@ -144,15 +164,34 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
         "     }"
         "};"
         ""
+        "function _registerJsCallback(name, callback) {"
+        "     _jsCallbacks[name] = callback;"
+        "};"
+        ""
         "function _handleMessageFromObjC(message) {"
-        "     if (_receiveMessageQueue) { _receiveMessageQueue.push(message); }"
-        "     else { WebViewJavascriptBridge._messageHandler(message); }"
+        "     if (_receiveMessageQueue) {"
+        "         _receiveMessageQueue.push(message);"
+        "     } else if (message.indexOf(_CALLBACK_MESSAGE_PREFIX) == 0) {"
+        "         var payload = message.replace(_CALLBACK_MESSAGE_PREFIX, '');"
+        "         var parsedPayload = JSON.parse(payload);"
+        "         var callbackName = parsedPayload[_CALLBACK_FUNCTION_KEY];"
+        "         var callback = _jsCallbacks[callbackName];"
+        ""
+        "         if (callback) {"
+        "             callback(parsedPayload[_CALLBACK_ARGUMENTS_KEY]);"
+        "         } else {"
+        "             WebViewJavascriptBridge._messageHandler(message);"
+        "         }"
+        "     } else {"
+        "         WebViewJavascriptBridge._messageHandler(message);"
+        "     }"
         "};"
         ""
         "window.WebViewJavascriptBridge = {"
         "     setMessageHandler: _setMessageHandler,"
         "     sendMessage: _sendMessage,"
-        "     callCallback: _callCallback,"
+        "     callObjcCallback: _callObjcCallback,"
+        "     registerJsCallback: _registerJsCallback,"
         "     _fetchQueue: _fetchQueue,"
         "     _handleMessageFromObjC: _handleMessageFromObjC"
         "};"

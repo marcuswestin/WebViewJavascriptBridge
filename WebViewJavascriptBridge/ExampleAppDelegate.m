@@ -15,15 +15,25 @@
 	self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeWithDelegate:self];
 	self.webView.delegate = self.javascriptBridge;
 	
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-	[button setTitle:@"Send message" forState:UIControlStateNormal];
-	[button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-	[self.window insertSubview:button aboveSubview:self.webView];
-	button.frame = CGRectMake(95, 400, 130, 45);
+	UIButton *messageButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+	[messageButton setTitle:@"Send message" forState:UIControlStateNormal];
+	[messageButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+	[self.window insertSubview:messageButton aboveSubview:self.webView];
+	messageButton.frame = CGRectMake(20, 400, 130, 45);
+    
+    UIButton *callbackButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [callbackButton setTitle:@"Call callback" forState:UIControlStateNormal];
+    [callbackButton addTarget:self action:@selector(callbackPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.window insertSubview:callbackButton aboveSubview:self.webView];
+	callbackButton.frame = CGRectMake(170, 400, 130, 45);
     
     // register a callback
-    [self.javascriptBridge registerJavascriptCallback:@"testCallback" withCallback:^(NSDictionary *params){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Javascript Callback" message:[NSString stringWithFormat:@"params: %@", params] delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+    [self.javascriptBridge registerObjcCallback:@"testObjcCallback" withCallback:^(NSDictionary *params){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Javascript called Objc callback"
+                                                        message:[NSString stringWithFormat:@"params: %@", params]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
         [alert show];
     }];
 	
@@ -39,6 +49,12 @@
 
 - (void)buttonPressed:(id)sender {
     [self.javascriptBridge sendMessage:@"Message from ObjC on normal situations!" toWebView:self.webView];
+}
+
+- (void)callbackPressed:(id)sender {
+    [self.javascriptBridge callJavascriptCallback:@"testJsCallback"
+                                     withParams:[NSDictionary dictionaryWithObjectsAndKeys:@"bar", @"foo", nil]
+                                      toWebView:self.webView];
 }
 
 - (void)javascriptBridge:(WebViewJavascriptBridge *)bridge receivedMessage:(NSString *)message fromWebView:(UIWebView *)webView {
@@ -64,7 +80,11 @@
          "      var button = document.body.appendChild(document.createElement('button'));"
          "      button.innerHTML = 'Click me to send a message to ObjC';"
          "      button.onclick = button.ontouchstart = function() { WebViewJavascriptBridge.sendMessage('hello from JS button'); };"
-         "      WebViewJavascriptBridge.callCallback('testCallback', {'arg1': 'foo', 'arg2': 'bar'});"
+         "      WebViewJavascriptBridge.callObjcCallback('testObjcCallback', {'arg1': 'foo', 'arg2': 'bar'});"
+         "      WebViewJavascriptBridge.registerJsCallback('testJsCallback', function(params) {"
+         "          var el = document.body.appendChild(document.createElement('div'));"
+         "          el.innerHTML = 'Callback called foo is [' + params.foo + ']';"
+         "      });"
          "  }"
          "  </script>"
          "</body></html>" baseURL:nil];
