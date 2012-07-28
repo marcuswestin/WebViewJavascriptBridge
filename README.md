@@ -58,7 +58,48 @@ See ExampleAppDelegate.* for example code. To use it in your own project:
 		})
 		WebViewJavascriptBridge.sendMessage('Hello from the javascript')
 	}, false)
-	
+
+### Registering callbacks
+
+The JS to ObjC and ObjC to JS callbacks use `NSJSONSerialization` to convert to/from JSON. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/) by adding `USE_JSONKIT` to the preprocessor macros for your project (you will need to include JSONKit in your project).
+
+#### JS to ObjC
+
+You can register Objective-C blocks and call them from Javascript. In Objective-C register a block with the bridge:
+
+    [self.javascriptBridge registerObjcCallback:@"testObjcCallback" withCallback:^(NSDictionary *params){
+        NSLog(@"ObjC callback [testObjcCallback] called with params: %@", params);
+    }];
+
+Then call from Javascript using:
+
+    WebViewJavascriptBridge.callObjcCallback('testObjcCallback', { 'foo': 'bar' });
+
+This will result in the following being logged:
+
+    ObjC callback [testObjcCallback] called with params: { 'foo' = 'bar'; }
+
+#### ObjC to JS
+
+You can also register Javascript functions and call them from Objective-C. In Javascript register a function with the bridge:
+
+    WebViewJavascriptBridge.registerJsCallback('testJsCallback', function(params) {
+        var el = document.body.appendChild(document.createElement('div'));
+        el.innerHTML = 'JS [testJsCallback] called with params: ' + JSON.stringify(params);
+    });
+
+Then call from Objective-C using:
+
+    [self.javascriptBridge callJavascriptCallback:@"testJsCallback"
+                                       withParams:[NSDictionary dictionaryWithObjectsAndKeys:@"bar", @"foo", nil]
+                                        toWebView:self.webView];
+
+This will result in a div with the following getting added to the HTML:
+
+    JS [testJsCallback] called with params: {"foo":"bar"}
+
+*Note:* You should register any callbacks before you call `WebViewJavascriptBridge.setMessageHandler` otherwise any callback calls received before the HTML is fully loaded will be delivered as normal messages.
+
 ARC
 ---
 If you're using ARC in your project, add `-fno-objc-arc` as a compiler flag to the `WebViewJavascriptBridge.m` file.
