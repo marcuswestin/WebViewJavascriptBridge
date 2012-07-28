@@ -98,6 +98,8 @@ This will result in a div with the following getting added to the HTML:
 
     JS [testJsCallback] called with params: {"foo":"bar"}
 
+*Note:* You should register any callbacks before you call `WebViewJavascriptBridge.setMessageHandler` otherwise any callback calls received before the HTML is fully loaded will be delivered as normal messages.
+
 ARC
 ---
 If you're using ARC in your project, add `-fno-objc-arc` as a compiler flag to the `WebViewJavascriptBridge.m` file.

@@ -38,6 +38,9 @@
     }];
 	
 	[self.javascriptBridge sendMessage:@"Message from ObjC before Webview is complete!" toWebView:self.webView];
+    [self.javascriptBridge callJavascriptCallback:@"testJsCallback"
+                                       withParams:[NSDictionary dictionaryWithObjectsAndKeys:@"before ready", @"foo", nil]
+                                        toWebView:self.webView];
 	
 	[self loadExamplePage];
 	
@@ -72,6 +75,11 @@
          "  <script>"
          "  document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false);"
          "  function onBridgeReady() {"
+         "      WebViewJavascriptBridge.registerJsCallback('testJsCallback', function(params) {"
+         "          var el = document.body.appendChild(document.createElement('div'));"
+         "          el.innerHTML = 'JS Callback called foo is [' + params.foo + ']';"
+         "      });"
+         ""
          "      WebViewJavascriptBridge.setMessageHandler(function(message) {"
          "          var el = document.body.appendChild(document.createElement('div'));"
          "          el.innerHTML = message;"
@@ -87,11 +95,6 @@
          "      var callbackButton = document.body.appendChild(document.createElement('button'));"
          "      callbackButton.innerHTML = 'Click me to call ObjC callback';"
          "      callbackButton.onclick = button.ontouchstart = function() { WebViewJavascriptBridge.callObjcCallback('testObjcCallback', {'foo': 'bar'}); };"
-         ""
-         "      WebViewJavascriptBridge.registerJsCallback('testJsCallback', function(params) {"
-         "          var el = document.body.appendChild(document.createElement('div'));"
-         "          el.innerHTML = 'JS Callback called foo is [' + params.foo + ']';"
-         "      });"
          "  }"
          "  </script>"
          "</body></html>" baseURL:nil];
