@@ -1,5 +1,8 @@
 #import "WebViewJavascriptBridge.h"
+
+#ifdef USE_JSONKIT
 #import "JSONKit.h"
+#endif
 
 @interface WebViewJavascriptBridge ()
 
@@ -50,7 +53,6 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
     if (self.startupMessageQueue) {
         [self.startupMessageQueue addObject:message];
     } else {
-        NSLog(@"msg: %@", message);
         [self _doSendMessage:message toWebView: webView];
     }
 }
@@ -68,7 +70,12 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
                                 name, CALLBACK_FUNCTION_KEY,
                                 params, CALLBACK_ARGUMENTS_KEY,
                                 nil];
+#ifdef USE_JSONKIT
     NSString *encodedParams = [callParams JSONString];
+#else
+    NSString *encodedParams = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:callParams options:0 error:nil]
+                                                    encoding:NSUTF8StringEncoding];
+#endif
 
     [self sendMessage:[NSString stringWithFormat:@"%@%@", CALLBACK_MESSAGE_PREFIX, encodedParams]
             toWebView:webView];
@@ -95,7 +102,14 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
     for (NSString *message in messages) {
         if ([message hasPrefix:CALLBACK_MESSAGE_PREFIX]) {
             // should be a JSON encoded callback
-            NSDictionary *decodedMessage = [[message stringByReplacingOccurrencesOfString:CALLBACK_MESSAGE_PREFIX withString:@""] objectFromJSONString];
+            NSString *payload = [message stringByReplacingOccurrencesOfString:CALLBACK_MESSAGE_PREFIX withString:@""];
+#ifdef USE_JSONKIT
+            NSDictionary *decodedMessage = [payload objectFromJSONString];
+#else
+            NSDictionary *decodedMessage = [NSJSONSerialization JSONObjectWithData:[payload dataUsingEncoding:NSUTF8StringEncoding]
+                                                                           options:0
+                                                                             error:nil];
+#endif
             NSString *callbackName = [decodedMessage objectForKey:CALLBACK_FUNCTION_KEY];
 
             void (^callback)(NSDictionary *params) = [self.javascriptCallbacks objectForKey:callbackName];

@@ -7,9 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		273AB9BC15C2AFDF00C804E7 /* CHANGELOG.md in Resources */ = {isa = PBXBuildFile; fileRef = 273AB9B815C2AFDF00C804E7 /* CHANGELOG.md */; };
-		273AB9BD15C2AFDF00C804E7 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 273AB9BA15C2AFDF00C804E7 /* JSONKit.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		273AB9BE15C2AFDF00C804E7 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 273AB9BB15C2AFDF00C804E7 /* README.md */; };
 		2C1E9EA114099B4600C5C30E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1E9EA014099B4600C5C30E /* UIKit.framework */; };
 		2C1E9EA314099B4600C5C30E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C1E9EA214099B4600C5C30E /* Foundation.framework */; };
 		2C1E9EA914099B4600C5C30E /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C1E9EA714099B4600C5C30E /* InfoPlist.strings */; };
@@ -19,10 +16,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		273AB9B815C2AFDF00C804E7 /* CHANGELOG.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGELOG.md; sourceTree = "<group>"; };
-		273AB9B915C2AFDF00C804E7 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
-		273AB9BA15C2AFDF00C804E7 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
-		273AB9BB15C2AFDF00C804E7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 		2C1E9E9C14099B4600C5C30E /* WebViewJavascriptBridge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebViewJavascriptBridge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C1E9EA014099B4600C5C30E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2C1E9EA214099B4600C5C30E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -49,17 +42,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		273AB9B715C2AFDF00C804E7 /* JSONKit */ = {
-			isa = PBXGroup;
-			children = (
-				273AB9B815C2AFDF00C804E7 /* CHANGELOG.md */,
-				273AB9B915C2AFDF00C804E7 /* JSONKit.h */,
-				273AB9BA15C2AFDF00C804E7 /* JSONKit.m */,
-				273AB9BB15C2AFDF00C804E7 /* README.md */,
-			);
-			path = JSONKit;
-			sourceTree = SOURCE_ROOT;
-		};
 		2C1E9E9114099B4600C5C30E = {
 			isa = PBXGroup;
 			children = (
@@ -93,7 +75,6 @@
 				2C66C03D14C787BA0050C940 /* WebViewJavascriptBridge.m */,
 				2C6D212F143017AF0069FA34 /* ExampleAppDelegate.h */,
 				2C6D2130143017AF0069FA34 /* ExampleAppDelegate.m */,
-				273AB9B715C2AFDF00C804E7 /* JSONKit */,
 				2C1E9EA514099B4600C5C30E /* Supporting Files */,
 			);
 			path = WebViewJavascriptBridge;
@@ -162,8 +143,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2C1E9EA914099B4600C5C30E /* InfoPlist.strings in Resources */,
-				273AB9BC15C2AFDF00C804E7 /* CHANGELOG.md in Resources */,
-				273AB9BE15C2AFDF00C804E7 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -177,7 +156,6 @@
 				2C1E9EAB14099B4600C5C30E /* main.m in Sources */,
 				2C6D2131143017AF0069FA34 /* ExampleAppDelegate.m in Sources */,
 				2C66C03E14C787BA0050C940 /* WebViewJavascriptBridge.m in Sources */,
-				273AB9BD15C2AFDF00C804E7 /* JSONKit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

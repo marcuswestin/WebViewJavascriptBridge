@@ -29,8 +29,8 @@
     
     // register a callback
     [self.javascriptBridge registerObjcCallback:@"testObjcCallback" withCallback:^(NSDictionary *params){
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Javascript called Objc callback"
-                                                        message:[NSString stringWithFormat:@"params: %@", params]
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ObjC callback called"
+                                                        message:[NSString stringWithFormat:@"Foo: %@", [params objectForKey:@"foo"]]
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
@@ -77,13 +77,20 @@
          "          el.innerHTML = message;"
          "      });"
          "      WebViewJavascriptBridge.sendMessage('hello from the JS');"
+         ""
          "      var button = document.body.appendChild(document.createElement('button'));"
          "      button.innerHTML = 'Click me to send a message to ObjC';"
          "      button.onclick = button.ontouchstart = function() { WebViewJavascriptBridge.sendMessage('hello from JS button'); };"
-         "      WebViewJavascriptBridge.callObjcCallback('testObjcCallback', {'arg1': 'foo', 'arg2': 'bar'});"
+         ""
+         "      document.body.appendChild(document.createElement('br'));"
+         ""
+         "      var callbackButton = document.body.appendChild(document.createElement('button'));"
+         "      callbackButton.innerHTML = 'Click me to call ObjC callback';"
+         "      callbackButton.onclick = button.ontouchstart = function() { WebViewJavascriptBridge.callObjcCallback('testObjcCallback', {'foo': 'bar'}); };"
+         ""
          "      WebViewJavascriptBridge.registerJsCallback('testJsCallback', function(params) {"
          "          var el = document.body.appendChild(document.createElement('div'));"
-         "          el.innerHTML = 'Callback called foo is [' + params.foo + ']';"
+         "          el.innerHTML = 'JS Callback called foo is [' + params.foo + ']';"
          "      });"
          "  }"
          "  </script>"

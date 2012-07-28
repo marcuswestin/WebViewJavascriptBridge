@@ -61,6 +61,8 @@ See ExampleAppDelegate.* for example code. To use it in your own project:
 
 ### Registering callbacks
 
+The JS to ObjC and ObjC to JS callbacks use `NSJSONSerialization` to convert to/from JSON. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/) by adding `USE_JSONKIT` to the preprocessor macros for your project (you will need to include JSONKit in your project).
+
 #### JS to ObjC
 
 You can register Objective-C blocks and call them from Javascript. In Objective-C register a block with the bridge:
