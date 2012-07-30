@@ -110,4 +110,4 @@ Contributors
 - [@marcuswestin](https://github.com/marcuswestin) Marcus Westin
 - [@psineur](https://github.com/psineur) Stepan Generalov
 - [@sergiocampama](https://github.com/sergiocampama) Sergio Campamá
-
+- [@stringbean](https://github.com/stringbean) Michael Stringer
