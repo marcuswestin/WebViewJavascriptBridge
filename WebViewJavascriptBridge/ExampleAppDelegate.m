@@ -15,13 +15,32 @@
 	self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeWithDelegate:self];
 	self.webView.delegate = self.javascriptBridge;
 	
-	UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
-	[button setTitle:@"Send message" forState:UIControlStateNormal];
-	[button addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-	[self.window insertSubview:button aboveSubview:self.webView];
-	button.frame = CGRectMake(95, 400, 130, 45);
+	UIButton *messageButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+	[messageButton setTitle:@"Send message" forState:UIControlStateNormal];
+	[messageButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
+	[self.window insertSubview:messageButton aboveSubview:self.webView];
+	messageButton.frame = CGRectMake(20, 400, 130, 45);
+    
+    UIButton *callbackButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [callbackButton setTitle:@"Call callback" forState:UIControlStateNormal];
+    [callbackButton addTarget:self action:@selector(callbackPressed:) forControlEvents:UIControlEventTouchUpInside];
+    [self.window insertSubview:callbackButton aboveSubview:self.webView];
+	callbackButton.frame = CGRectMake(170, 400, 130, 45);
+    
+    // register a callback
+    [self.javascriptBridge registerObjcCallback:@"testObjcCallback" withCallback:^(NSDictionary *params){
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ObjC callback called"
+                                                        message:[NSString stringWithFormat:@"Foo: %@", [params objectForKey:@"foo"]]
+                                                       delegate:nil
+                                              cancelButtonTitle:@"OK"
+                                              otherButtonTitles:nil];
+        [alert show];
+    }];
 	
 	[self.javascriptBridge sendMessage:@"Message from ObjC before Webview is complete!" toWebView:self.webView];
+    [self.javascriptBridge callJavascriptCallback:@"testJsCallback"
+                                       withParams:[NSDictionary dictionaryWithObjectsAndKeys:@"before ready", @"foo", nil]
+                                        toWebView:self.webView];
 	
 	[self loadExamplePage];
 	
@@ -33,6 +52,12 @@
 
 - (void)buttonPressed:(id)sender {
     [self.javascriptBridge sendMessage:@"Message from ObjC on normal situations!" toWebView:self.webView];
+}
+
+- (void)callbackPressed:(id)sender {
+    [self.javascriptBridge callJavascriptCallback:@"testJsCallback"
+                                     withParams:[NSDictionary dictionaryWithObjectsAndKeys:@"bar", @"foo", nil]
+                                      toWebView:self.webView];
 }
 
 - (void)javascriptBridge:(WebViewJavascriptBridge *)bridge receivedMessage:(NSString *)message fromWebView:(UIWebView *)webView {
@@ -50,51 +75,29 @@
          "  <script>"
          "  document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false);"
          "  function onBridgeReady() {"
+         "      WebViewJavascriptBridge.registerJsCallback('testJsCallback', function(params) {"
+         "          var el = document.body.appendChild(document.createElement('div'));"
+         "          el.innerHTML = 'JS Callback called foo is [' + params.foo + ']';"
+         "      });"
+         ""
          "      WebViewJavascriptBridge.setMessageHandler(function(message) {"
          "          var el = document.body.appendChild(document.createElement('div'));"
          "          el.innerHTML = message;"
          "      });"
          "      WebViewJavascriptBridge.sendMessage('hello from the JS');"
+         ""
          "      var button = document.body.appendChild(document.createElement('button'));"
          "      button.innerHTML = 'Click me to send a message to ObjC';"
          "      button.onclick = button.ontouchstart = function() { WebViewJavascriptBridge.sendMessage('hello from JS button'); };"
+         ""
+         "      document.body.appendChild(document.createElement('br'));"
+         ""
+         "      var callbackButton = document.body.appendChild(document.createElement('button'));"
+         "      callbackButton.innerHTML = 'Click me to call ObjC callback';"
+         "      callbackButton.onclick = button.ontouchstart = function() { WebViewJavascriptBridge.callObjcCallback('testObjcCallback', {'foo': 'bar'}); };"
          "  }"
          "  </script>"
          "</body></html>" baseURL:nil];
-}
-
-- (void)applicationWillResignActive:(UIApplication *)application {
-    /*
-     Sent when the application is about to move from active to inactive state. This can occur for certain types of temporary interruptions (such as an incoming phone call or SMS message) or when the user quits the application and it begins the transition to the background state.
-     Use this method to pause ongoing tasks, disable timers, and throttle down OpenGL ES frame rates. Games should use this method to pause the game.
-     */
-}
-
-- (void)applicationDidEnterBackground:(UIApplication *)application {
-    /*
-     Use this method to release shared resources, save user data, invalidate timers, and store enough application state information to restore your application to its current state in case it is terminated later. 
-     If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
-     */
-}
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    /*
-     Called as part of the transition from the background to the inactive state; here you can undo many of the changes made on entering the background.
-     */
-}
-
-- (void)applicationDidBecomeActive:(UIApplication *)application {
-    /*
-     Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
-     */
-}
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-    /*
-     Called when the application is about to terminate.
-     Save data if appropriate.
-     See also applicationDidEnterBackground:.
-     */
 }
 
 @end
