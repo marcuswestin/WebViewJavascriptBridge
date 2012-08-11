@@ -78,7 +78,7 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
 }
 
 - (void)registerObjcCallback:(NSString *)name withCallback:(void (^)(NSDictionary *params))callback {
-    [self.javascriptCallbacks setObject:callback forKey:name];
+    [self.javascriptCallbacks setObject:[callback copy] forKey:name];
 }
 
 - (void)unregisterObjcCallback:(NSString *)name {
