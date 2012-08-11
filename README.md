@@ -13,7 +13,7 @@ Usage
 
 See ExampleAppDelegate.* for example code. To use it in your own project:
 
-1) Copy `WebViewJavascriptBridge/WebViewJavascriptBridge.h` and `WebViewJavascriptBridge/WebViewJavascriptBridge.m` into your Xcode project
+1) Copy `WebViewJavascriptBridge/WebViewJavascriptBridge.h`, `WebViewJavascriptBridge/WebViewJavascriptBridge.m` and `WebViewJavascriptBridge/WebViewJavascriptBridge-template.js` into your Xcode project
 
 2) Instantiate a UIWebView, a WebViewJavascriptBridge, and set yourself as the bridge's delegate
 
