@@ -27,7 +27,7 @@ static NSString *CALLBACK_FUNCTION_KEY = @"wvjb_function";
 static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
 
 + (id)javascriptBridgeWithDelegate:(id <WebViewJavascriptBridgeDelegate>)delegate {
-    WebViewJavascriptBridge* bridge = [[[WebViewJavascriptBridge alloc] init] autorelease];
+    WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
     bridge.delegate = delegate;
 	[bridge resetQueue];
     return bridge;
@@ -43,10 +43,6 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
 
 - (void)dealloc {
     _delegate = nil;
-    [_startupMessageQueue release];
-    [_javascriptCallbacks release];
-
-    [super dealloc];
 }
 
 - (void)sendMessage:(NSString *)message toWebView:(UIWebView *)webView {
@@ -58,7 +54,7 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
 }
 
 - (void)resetQueue {
-    self.startupMessageQueue = [[[NSMutableArray alloc] init] autorelease];
+    self.startupMessageQueue = [[NSMutableArray alloc] init];
 }
 
 - (void)callJavascriptCallback:(NSString *)name toWebView:(UIWebView *)webView {
