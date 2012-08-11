@@ -50,20 +50,22 @@
 	}
 
 	function _dispatchMessageFromObjC(message) {
-		if (message.indexOf(_CALLBACK_MESSAGE_PREFIX) == 0) {
-			var payload = message.replace(_CALLBACK_MESSAGE_PREFIX, '')
-			var parsedPayload = JSON.parse(payload)
-			var callbackName = parsedPayload[_CALLBACK_FUNCTION_KEY]
-			var callback = _jsCallbacks[callbackName]
+		setTimeout(function _timeoutDispatchMessageFromObjC() {
+			if (message.indexOf(_CALLBACK_MESSAGE_PREFIX) == 0) {
+				var payload = message.replace(_CALLBACK_MESSAGE_PREFIX, '')
+				var parsedPayload = JSON.parse(payload)
+				var callbackName = parsedPayload[_CALLBACK_FUNCTION_KEY]
+				var callback = _jsCallbacks[callbackName]
 
-			if (callback) {
-				callback(parsedPayload[_CALLBACK_ARGUMENTS_KEY])
+				if (callback) {
+					callback(parsedPayload[_CALLBACK_ARGUMENTS_KEY])
+				} else {
+					WebViewJavascriptBridge._messageHandler(message)
+				}
 			} else {
 				WebViewJavascriptBridge._messageHandler(message)
 			}
-		} else {
-			WebViewJavascriptBridge._messageHandler(message)
-		}
+		})
 	}
 
 	function _handleMessageFromObjC(message) {
