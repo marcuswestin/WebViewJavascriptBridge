@@ -13,7 +13,7 @@ Usage
 
 See ExampleAppDelegate.* for example code. To use it in your own project:
 
-1) Copy `Classes/WebViewJavascriptBridge.h` and `Classes/WebViewJavascriptBridge.m` into your Xcode project
+1) Copy `WebViewJavascriptBridge/WebViewJavascriptBridge.h` and `WebViewJavascriptBridge/WebViewJavascriptBridge.m` into your Xcode project
 
 2) Instantiate a UIWebView, a WebViewJavascriptBridge, and set yourself as the bridge's delegate
 
@@ -30,13 +30,13 @@ See ExampleAppDelegate.* for example code. To use it in your own project:
 	{
 	    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 		
-		self.webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
-	    [self.window addSubview:webView];
+	    self.webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
+	    [self.window addSubview:self.webView];
 	    self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeWithDelegate:self];
 	    self.webView.delegate = self.javascriptBridge;
 		
-		[self.window makeKeyAndVisible];
-		return YES;
+	    [self.window makeKeyAndVisible];
+	    return YES;
 	}
 
 	- (void)javascriptBridge:(WebViewJavascriptBridge *)bridge receivedMessage:(NSString *)message fromWebView:(UIWebView *)webView 
