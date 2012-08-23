@@ -128,7 +128,8 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
 #pragma mark UIWebViewDelegate
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    NSString* jsTemplate = [NSString stringWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"WebViewJavascriptBridge-template" ofType:@"js"] encoding:NSUTF8StringEncoding error:nil];
+    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"WebViewJavascriptBridge" ofType:@"js"];
+    NSString *jsTemplate = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
     NSString *js = [NSString stringWithFormat:jsTemplate,
         MESSAGE_SEPARATOR,
         CUSTOM_PROTOCOL_SCHEME,
