@@ -94,7 +94,7 @@
          ""
          "      var callbackButton = document.body.appendChild(document.createElement('button'));"
          "      callbackButton.innerHTML = 'Click me to call ObjC callback';"
-         "      callbackButton.onclick = button.ontouchstart = function() { WebViewJavascriptBridge.callObjcCallback('testObjcCallback', {'foo': 'bar'}); };"
+         "      callbackButton.onclick = callbackButton.ontouchstart = function() { WebViewJavascriptBridge.callObjcCallback('testObjcCallback', {'foo': 'bar'}); };"
          "  }"
          "  </script>"
          "</body></html>" baseURL:nil];
