@@ -50,49 +50,19 @@ In the dialog that appears:
 		WebViewJavascriptBridge.send('Hello from the javascript')
 	}, false)
 
-5) Optional API: Registered handlers
-
-This lets you register named handlers for e.g. command handling. You should register handlers 
-
-*Note:* You need to 1) register ObjC handlers before loading the UIWebView, and 2) register javascript handlers before calling `WebViewJavascriptBridge.init`.
-
-In ObjC:
-	
-	// Register handler
-	[javascriptBridge registerHandler:@"greetPerson" handler:^(id responseData, WVJBResponseHandler callback) {
-		callback([NSString stringWithFormat:@"Hello, %@", [data objectForKey:@"name"]]);
-	}];
-	// Call javascript handlers
-	[javascriptBridge callHandler:@"showAlert" data:@"FooBar"];
-	[javascriptBridge callHandler:@"getUrl" data:nil callback:^(id data) {
-		NSLog(@"UIWebView url is %@", data);
-	}];
-
-In javascript:
-	
-	// Register handlers
-	WebViewJavascriptBridge.registerHandler('showAlert', function(data) {
-		alert(data)
-	})
-	WebViewJavascriptBridge.registerHandler('getUrl', function(data, responseCallback) {
-		responseCallback(document.location.toString())
-	})
-	// Call ObjC handler
-	WebViewJavascriptBridge.callHandler('greetPerson', { name:'Marcus' }, function responseCallback(data) {
-		alert("ObjC created greeting: "+ data)
-	})
-
 iOS4 support (with JSONKit)
 ---------------------------
 
-	WebViewJavascriptBridge uses `NSJSONSerialization` by default. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/), and add `USE_JSONKIT` to the preprocessor macros for your project.
+*Note*: iOS4 support has not yet been tested in v2.
+
+WebViewJavascriptBridge uses `NSJSONSerialization` by default. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/), and add `USE_JSONKIT` to the preprocessor macros for your project.
 
 API Reference
 -------------
 
 ### ObjC
 
-#### `WebViewJavascriptBridge* bridge = [WebViewJavascriptBridge javascriptBridgeForWebView:(UIWebView*)webview handler:(WVJBHandler)handler]`
+##### `[WebViewJavascriptBridge javascriptBridgeForWebView:(UIWebView*)webview handler:(WVJBHandler)handler]`
 
 Create a javascript bridge for the given UIWebView.
 
@@ -107,8 +77,8 @@ Example:
 
 The handler's `responseCallback` will be a block if javascript sent the message with a function responseCallback, or `nil` otherwise.
 
-#### `[bridge send:(id)data]`
-#### `[bridge send:(id)data responseCallback:(WVJBResponseCallback)responseCallback]`
+##### `[bridge send:(id)data]`
+##### `[bridge send:(id)data responseCallback:(WVJBResponseCallback)responseCallback]`
 
 Send a message to javascript. Optionally expect a response by giving a `responseCallback` block.
 
@@ -120,7 +90,7 @@ Example:
 		NSLog(@"Got response: %@", data);
 	}];
 
-#### `[bridge registerHandler:(NSString*)handlerName handler:(WVJBHandler)handler]`
+##### `[bridge registerHandler:(NSString*)handlerName handler:(WVJBHandler)handler]`
 
 Register a handler called `handlerName`. The javascript can then call this handler with `WebViewJavascriptBridge.callHandler("handlerName", function(response) { ... })`.
 
@@ -130,8 +100,8 @@ Example:
 		responseCallback([NSNumber numberWithInt:[UIScreen mainScreen].bounds.size.height]);
 	}];
 
-#### `[bridge callHandler:(NSString*)handlerName data:(id)data]`
-#### `[bridge callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback]`
+##### `[bridge callHandler:(NSString*)handlerName data:(id)data]`
+##### `[bridge callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)callback]`
 
 Call the javascript handler called `handlerName`. Optionally expect a response by giving a `responseCallback` block.
 
@@ -145,7 +115,7 @@ Example:
 
 ### Javascript
 
-#### `document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReadyHandler() { ... }, false)`
+##### `document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReadyHandler() { ... }, false)`
 
 Always wait for the `WebViewJavascriptBridgeReady` DOM event before using `WebViewJavascriptBridge`.
 
@@ -155,7 +125,7 @@ Example:
 		// Start using WebViewJavascriptBridge
 	}, false)
 
-#### `WebViewJavascriptBridge.init(function messageHandler(data, responseCallback) { ... })`
+##### `WebViewJavascriptBridge.init(function messageHandler(data, responseCallback) { ... })`
 
 Initialize the WebViewJavascriptBridge. This should be called inside of the `'WebViewJavascriptBridgeReady'` event handler.
 
@@ -172,9 +142,9 @@ Example:
 		}
 	})
 
-#### `WebViewJavascriptBridge.send("Hi there!")`
-#### `WebViewJavascriptBridge.send({ Foo:"Bar" })`
-#### `WebViewJavascriptBridge.send(data, function responseCallback(responseData) { ... })`
+##### `WebViewJavascriptBridge.send("Hi there!")`
+##### `WebViewJavascriptBridge.send({ Foo:"Bar" })`
+##### `WebViewJavascriptBridge.send(data, function responseCallback(responseData) { ... })`
 
 Send a message to ObjC. Optionally expect a response by giving a `responseCallback` function.
 
@@ -185,7 +155,7 @@ Example:
 		alert("I got a response! "+JSON.stringify(response))
 	})
 
-#### `WebViewJavascriptBridge.registerHandler("handlerName", function(data, responseCallback) { ... })`
+##### `WebViewJavascriptBridge.registerHandler("handlerName", function(data, responseCallback) { ... })`
 
 Register a handler called `handlerName`. The ObjC can then call this handler with `[bridge callHandler:"handlerName" data:@"Foo"]` and `[bridge callHandler:"handlerName" data:@"Foo" responseCallback:^(id responseData) { ... }]`
 
