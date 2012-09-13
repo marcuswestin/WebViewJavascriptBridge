@@ -111,3 +111,5 @@ Contributors
 - [@psineur](https://github.com/psineur) Stepan Generalov
 - [@sergiocampama](https://github.com/sergiocampama) Sergio Campamá
 - [@stringbean](https://github.com/stringbean) Michael Stringer
+- [@tanis2000](https://github.com/tanis2000) Valerio Santinelli
+
