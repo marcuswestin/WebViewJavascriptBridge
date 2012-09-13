@@ -89,7 +89,9 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
 #else
     NSString *messageJSON = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:0 error:nil] encoding:NSUTF8StringEncoding];
 #endif
+    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\\\" withString:@"\\\\\\\\"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\n" withString:@"\\\\n"];
+    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\r" withString:@"\\\\r"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
     [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"WebViewJavascriptBridge._handleMessageFromObjC('%@');", messageJSON]];
