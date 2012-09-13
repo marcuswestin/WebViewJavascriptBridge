@@ -1,5 +1,5 @@
 //
-// Prefix header for all source files of the 'WebViewJavascriptBridge' target in the 'WebViewJavascriptBridge' project
+// Prefix header for all source files of the 'ExampleApp' target in the 'ExampleApp' project
 //
 
 #import <Availability.h>

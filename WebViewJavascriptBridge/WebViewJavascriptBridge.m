@@ -51,6 +51,10 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     [self _queueData:data responseCallback:responseCallback handlerName:nil];
 }
 
+- (void)callHandler:(NSString *)handlerName {
+    [self callHandler:handlerName data:nil responseCallback:nil];
+}
+
 - (void)callHandler:(NSString *)handlerName data:(id)data {
     [self callHandler:handlerName data:data responseCallback:nil];
 }
@@ -139,7 +143,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     if (webView != _webView) { return; }
 
     if (![[_webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
-        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"WebViewJavascriptBridge" ofType:@"js"];
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
         NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         [_webView stringByEvaluatingJavaScriptFromString:js];
     }

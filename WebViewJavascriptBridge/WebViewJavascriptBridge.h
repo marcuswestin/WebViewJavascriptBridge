@@ -15,6 +15,7 @@ typedef void (^WVJBHandler)(id data, WVJBCallback callback);
 
 - (void)registerHandler:(NSString*)handlerName callback:(WVJBHandler)handler;
 
+- (void)callHandler:(NSString*)handlerName;
 - (void)callHandler:(NSString*)handlerName data:(id)data;
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBCallback)responseCallback;
 

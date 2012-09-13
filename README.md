@@ -1,21 +1,21 @@
 WebViewJavascriptBridge
 =======================
 
-An iOS bridge for sending messages to and from javascript in a UIWebView
+An iOS bridge for sending messages to and from javascript in a UIWebView.
 
 Getting started
 ---------------
 
-Just open the Xcode project (requires Xcode > 4.2) and hit run to see the example application work.
+Just open the Xcode project and hit run to see the example application.
 
-Usage
+Setup
 -----
 
 See ExampleAppDelegate.* for example code. To use it in your own project:
 
-1) Copy `WebViewJavascriptBridge/WebViewJavascriptBridge.h`, `WebViewJavascriptBridge/WebViewJavascriptBridge.m` and `WebViewJavascriptBridge/WebViewJavascriptBridge-template.js` into your Xcode project
+1) Copy `WebViewJavascriptBridge` folder into your project.
 
-2) Instantiate a UIWebView, a WebViewJavascriptBridge, and set yourself as the bridge's delegate
+2) Instantiate a UIWebView and a WebViewJavascriptBridge:
 
 	#import <UIKit/UIKit.h>
 	#import "WebViewJavascriptBridge.h"
@@ -26,38 +26,35 @@ See ExampleAppDelegate.* for example code. To use it in your own project:
 	
 	@implementation ExampleAppDelegate
 	
-	- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
-	{
-	    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-		
-	    self.webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
-	    [self.window addSubview:self.webView];
-	    self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeWithDelegate:self];
-	    self.webView.delegate = self.javascriptBridge;
-		
-	    [self.window makeKeyAndVisible];
-	    return YES;
-	}
+	- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+		self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 
-	- (void)javascriptBridge:(WebViewJavascriptBridge *)bridge receivedMessage:(NSString *)message fromWebView:(UIWebView *)webView 
-	{
-	    NSLog(@"MyJavascriptBridgeDelegate received message: %@", message);
+		UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
+		WebViewJavascriptBridge* javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBCallback callback) {
+			NSLog(@"Received message from javascript: %@", data);
+		}];
+		
+		[self.window addSubview:self.webView];
+		[self.window makeKeyAndVisible];
+		return YES;
 	}
 
 	@end
 
 3) Go ahead and send some messages from Objc to javascript
 
-	[self.javascriptBridge sendMessage:@"Well hello there" toWebView:self.webView];
+	[javascriptBridge sendMessage:@"Well hello there" toWebView:self.webView];
 
 4) Finally, set up the javascript side of things
 	
 	document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady() {
-		WebViewJavascriptBridge.setMessageHandler(function(message) {
+		WebViewJavascriptBridge.init(function(message) {
 			alert('Received message: ' + message)
 		})
-		WebViewJavascriptBridge.sendMessage('Hello from the javascript')
+		WebViewJavascriptBridge.send('Hello from the javascript')
 	}, false)
+
+5) Additional APIs: Responses
 
 ### Registering callbacks
 
