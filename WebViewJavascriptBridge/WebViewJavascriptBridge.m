@@ -103,7 +103,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     for (NSString *messageJSON in messages) {
         // normal message - pass to bridge
 #ifdef USE_JSONKIT
-        NSDictionary *message = [payload objectFromJSONString];
+        NSDictionary *message = [messageJSON objectFromJSONString];
 #else
         NSDictionary *message = [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
 #endif
