@@ -51,8 +51,8 @@
 }
 
 - (void)callHandler:(id)sender {
-    [self.javascriptBridge callHandler:@"testJavascriptHandler" data:[NSDictionary dictionaryWithObject:@"Hi there, JS!" forKey:@"greetingFromObjC"] responseCallback:^(id data) {
-        NSLog(@"testJavascriptHandler responded: %@", data);
+    [self.javascriptBridge callHandler:@"testJavascriptHandler" data:[NSDictionary dictionaryWithObject:@"Hi there, JS!" forKey:@"greetingFromObjC"] responseCallback:^(id responseData) {
+        NSLog(@"testJavascriptHandler responded: %@", responseData);
     }];
 }
 

@@ -1,6 +1,6 @@
 #import <UIKit/UIKit.h>
 
-typedef void (^WVJBResponseCallback)(id data);
+typedef void (^WVJBResponseCallback)(id responseData);
 typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 
 @class WebViewJavascriptBridge;
