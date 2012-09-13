@@ -10,14 +10,14 @@
     UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:webView];
     
-    self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBCallback callback) {
+    self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Message from Javascript" message:data delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }];
     
-    [self.javascriptBridge registerHandler:@"testObjcCallback" callback:^(id data, WVJBCallback callback) {
+    [self.javascriptBridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
-        callback(@"Response from testObjcCallback");
+        responseCallback(@"Response from testObjcCallback");
     }];
     
     [self.javascriptBridge send:@"A string sent from ObjC before Webview has loaded."];

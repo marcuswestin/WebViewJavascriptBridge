@@ -8,98 +8,100 @@ Getting started
 
 Just open the Xcode project and hit run to see the example application.
 
-Setup
------
+Setup your project
+------------------
 
-See ExampleAppDelegate.* for example code. To use it in your own project:
+See ExampleApp/* for example code. To use it in your own project:
 
-1) Copy `WebViewJavascriptBridge` folder into your project.
+1) Drag the `WebViewJavascriptBridge` folder into your project.
 
-2) Instantiate a UIWebView and a WebViewJavascriptBridge:
+In the dialog that appears:
+- Uncheck "Copy items into destination group's folder (if needed)"
+- Select "Create groups for any folders"
 
-	#import <UIKit/UIKit.h>
+2) Import the header file:
+
 	#import "WebViewJavascriptBridge.h"
 
-	@interface ExampleAppDelegate : UIResponder <UIApplicationDelegate, WebViewJavascriptBridgeDelegate>
-	
-	@end
-	
-	@implementation ExampleAppDelegate
-	
-	- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-		self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+3) Instantiate a UIWebView and a WebViewJavascriptBridge:
 
-		UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
-		WebViewJavascriptBridge* javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBCallback callback) {
-			NSLog(@"Received message from javascript: %@", data);
-		}];
-		
-		[self.window addSubview:self.webView];
-		[self.window makeKeyAndVisible];
-		return YES;
-	}
+	UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
+	WebViewJavascriptBridge* javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBCallback callback) {
+		NSLog(@"Received message from javascript: %@", data);
+	}];
 
-	@end
+4) Go ahead and send some messages from Objc to javascript:
 
-3) Go ahead and send some messages from Objc to javascript
+	[javascriptBridge send:@"Well hello there"];
+	[javascriptBridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
+	[javascriptBridge send:@"Give me a response, will you?" responseCallback:^(id data) {
+		NSLog(@"I got a response! %@", data);
+	}];
 
-	[javascriptBridge sendMessage:@"Well hello there" toWebView:self.webView];
-
-4) Finally, set up the javascript side of things
+4) Finally, set up the javascript side of things:
 	
 	document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady() {
-		WebViewJavascriptBridge.init(function(message) {
-			alert('Received message: ' + message)
+		WebViewJavascriptBridge.init(function(message, responseCallback) {
+			alert('Received message: ' + message)   
+			if (responseCallback) {
+				responseCallback("Right back atcha")
+			}
 		})
 		WebViewJavascriptBridge.send('Hello from the javascript')
 	}, false)
 
-5) Additional APIs: Responses
+5) Optional API: Registered handlers
 
-### Registering callbacks
+This lets you register named handlers for e.g. command handling. You should register handlers 
 
-The JS to ObjC and ObjC to JS callbacks use `NSJSONSerialization` to convert to/from JSON. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/) by adding `USE_JSONKIT` to the preprocessor macros for your project (you will need to include JSONKit in your project).
+*Note:* You need to 1) register ObjC handlers before loading the UIWebView, and 2) register javascript handlers before calling `WebViewJavascriptBridge.init`.
 
-#### JS to ObjC
+In ObjC:
+	
+	// Register handler
+	[javascriptBridge registerHandler:@"greetPerson" responseCallback:^(id data, WVJBCallback callback) {
+		callback([NSString stringWithFormat:@"Hello, %@", [data objectForKey:@"name"]]);
+	}];
+	// Call javascript handlers
+	[javascriptBridge callHandler:@"showAlert" data:@"FooBar"];
+	[javascriptBridge callHandler:@"getUrl" data:nil callback:^(id data) {
+		NSLog(@"UIWebView url is %@", data);
+	}];
 
-You can register Objective-C blocks and call them from Javascript. In Objective-C register a block with the bridge:
+In javascript:
+	
+	// Register handlers
+	WebViewJavascriptBridge.registerHandler('showAlert', function(data) {
+		alert(data)
+	})
+	WebViewJavascriptBridge.registerHandler('getUrl', function(data, responseCallback) {
+		responseCallback(document.location.toString())
+	})
+	// Call ObjC handler
+	WebViewJavascriptBridge.callHandler('greetPerson', { name:'Marcus' }, function responseCallback(data) {
+		alert("ObjC created greeting: "+ data)
+	})
 
-    [self.javascriptBridge registerObjcCallback:@"testObjcCallback" withCallback:^(NSDictionary *params){
-        NSLog(@"ObjC callback [testObjcCallback] called with params: %@", params);
-    }];
+### iOS4 support (with JSONKit)
 
-Then call from Javascript using:
+	WebViewJavascriptBridge uses `NSJSONSerialization` by default. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/), and add `USE_JSONKIT` to the preprocessor macros for your project.
 
-    WebViewJavascriptBridge.callObjcCallback('testObjcCallback', { 'foo': 'bar' });
+### ObjC API Reference
 
-This will result in the following being logged:
+- `[WebViewJavascriptBridge javascriptBridgeForWebView:(UIWebView*) handler:(WVJBHandler)]`
 
-    ObjC callback [testObjcCallback] called with params: { 'foo' = 'bar'; }
+Create a javascript bridge for the given webview.
 
-#### ObjC to JS
+Example:
+	
+	[WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBCallback responseCallback) {
+		NSLog(@"Received message from javascript: %@", data);
+		if (responseCallback) {
+			responseCallback(@"Right back atcha")
+		}
+	}]
 
-You can also register Javascript functions and call them from Objective-C. In Javascript register a function with the bridge:
-
-    WebViewJavascriptBridge.registerJsCallback('testJsCallback', function(params) {
-        var el = document.body.appendChild(document.createElement('div'));
-        el.innerHTML = 'JS [testJsCallback] called with params: ' + JSON.stringify(params);
-    });
-
-Then call from Objective-C using:
-
-    [self.javascriptBridge callJavascriptCallback:@"testJsCallback"
-                                       withParams:[NSDictionary dictionaryWithObjectsAndKeys:@"bar", @"foo", nil]
-                                        toWebView:self.webView];
-
-This will result in a div with the following getting added to the HTML:
-
-    JS [testJsCallback] called with params: {"foo":"bar"}
-
-*Note:* You should register any callbacks before you call `WebViewJavascriptBridge.setMessageHandler` otherwise any callback calls received before the HTML is fully loaded will be delivered as normal messages.
-
-ARC
----
-If you're using ARC in your project, add `-fno-objc-arc` as a compiler flag to the `WebViewJavascriptBridge.m` file.
+... More to come soon ...
 
 Contributors
 ------------
@@ -109,4 +111,3 @@ Contributors
 - [@sergiocampama](https://github.com/sergiocampama) Sergio Campamá
 - [@stringbean](https://github.com/stringbean) Michael Stringer
 - [@tanis2000](https://github.com/tanis2000) Valerio Santinelli
-

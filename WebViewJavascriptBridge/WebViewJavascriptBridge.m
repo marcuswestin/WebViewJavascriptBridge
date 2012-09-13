@@ -15,7 +15,7 @@
 @property (nonatomic, copy) WVJBHandler messageHandler;
 
 - (void)_flushMessageQueue;
-- (void)_queueData:(NSDictionary*)data responseCallback:(WVJBCallback)responseCallback handlerName:(NSString*)handlerName;
+- (void)_queueData:(NSDictionary*)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName;
 - (void)_dispatchMessage:(NSDictionary*)message;
 
 @end
@@ -47,7 +47,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     [self send:data responseCallback:nil];
 }
 
-- (void)send:(NSDictionary *)data responseCallback:(WVJBCallback)responseCallback {
+- (void)send:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback {
     [self _queueData:data responseCallback:responseCallback handlerName:nil];
 }
 
@@ -59,15 +59,15 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     [self callHandler:handlerName data:data responseCallback:nil];
 }
 
-- (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(WVJBCallback)responseCallback {
+- (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
     [self _queueData:data responseCallback:responseCallback handlerName:handlerName];
 }
 
-- (void)registerHandler:(NSString *)handlerName callback:(WVJBHandler)handler {
+- (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
     [self.messageHandlers setObject:handler forKey:handlerName];
 }
 
-- (void)_queueData:(NSDictionary *)data responseCallback:(WVJBCallback)responseCallback handlerName:(NSString*)handlerName {
+- (void)_queueData:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
     NSMutableDictionary* message = [NSMutableDictionary dictionaryWithObject:data forKey:@"data"];
     
     if (responseCallback) {
@@ -112,7 +112,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
 #else
         NSDictionary *message = [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
 #endif
-        WVJBCallback responseCallback = NULL;
+        WVJBResponseCallback responseCallback = NULL;
         if ([message objectForKey:@"callbackId"]) {
             __block NSString* responseId = [message objectForKey:@"callbackId"];
             responseCallback = ^(NSDictionary* data) {
