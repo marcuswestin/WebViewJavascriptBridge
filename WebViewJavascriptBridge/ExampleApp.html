@@ -1,0 +1,44 @@
+<!doctype html>
+<html><head>
+	<style type='text/css'>h1 { color:red; }</style>
+</head><body>
+	<h1>Javascript Bridge Demo</h1>
+	<script>
+	document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false)
+	function onBridgeReady() {
+
+		function log(message, data) {
+			var log = document.getElementById('log')
+			var el = document.createElement('div')
+			el.innerHTML = message + ': ' + JSON.stringify(data)
+			if (log.children.length) { log.insertBefore(el, log.children[0]) }
+			else { log.appendChild(el) }
+		}
+		WebViewJavascriptBridge.init(function(message) {
+			log('JS got a message', message)
+		})
+
+		WebViewJavascriptBridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
+			log('testJavascriptHandler', data)
+			responseCallback({ 'foo':'Right back atcha!' })
+		})
+
+		var button = document.getElementById('buttons').appendChild(document.createElement('button'))
+		button.innerHTML = 'Send message to ObjC'
+		button.ontouchstart = function() {
+			WebViewJavascriptBridge.send('Hello from JS button')
+		}
+
+		document.body.appendChild(document.createElement('br'))
+
+		var callbackButton = document.getElementById('buttons').appendChild(document.createElement('button'))
+		callbackButton.innerHTML = 'Fire testObjcCallback'
+		callbackButton.ontouchstart = function() {
+			WebViewJavascriptBridge.fireHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+				log('Got response:', response)
+			})
+		}
+	}
+	</script>
+	<div id='buttons'></div> <div id='log'></div>
+</body></html>

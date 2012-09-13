@@ -14,6 +14,7 @@
 		2C66C03E14C787BA0050C940 /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C66C03D14C787BA0050C940 /* WebViewJavascriptBridge.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		2C6D2131143017AF0069FA34 /* ExampleAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C6D2130143017AF0069FA34 /* ExampleAppDelegate.m */; };
 		2C8D041515E699AA0016052D /* WebViewJavascriptBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = 2C8D041415E699AA0016052D /* WebViewJavascriptBridge.js */; };
+		2CEB3E7D160155CF00548120 /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = 2CEB3E7C160155CF00548120 /* ExampleApp.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,7 @@
 		2C6D212F143017AF0069FA34 /* ExampleAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleAppDelegate.h; sourceTree = "<group>"; };
 		2C6D2130143017AF0069FA34 /* ExampleAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleAppDelegate.m; sourceTree = "<group>"; };
 		2C8D041415E699AA0016052D /* WebViewJavascriptBridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = WebViewJavascriptBridge.js; sourceTree = "<group>"; };
+		2CEB3E7C160155CF00548120 /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +80,7 @@
 				2C8D041415E699AA0016052D /* WebViewJavascriptBridge.js */,
 				2C6D212F143017AF0069FA34 /* ExampleAppDelegate.h */,
 				2C6D2130143017AF0069FA34 /* ExampleAppDelegate.m */,
+				2CEB3E7C160155CF00548120 /* ExampleApp.html */,
 				2C1E9EA514099B4600C5C30E /* Supporting Files */,
 			);
 			path = WebViewJavascriptBridge;
@@ -147,6 +150,7 @@
 			files = (
 				2C1E9EA914099B4600C5C30E /* InfoPlist.strings in Resources */,
 				2C8D041515E699AA0016052D /* WebViewJavascriptBridge.js in Resources */,
+				2CEB3E7D160155CF00548120 /* ExampleApp.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
