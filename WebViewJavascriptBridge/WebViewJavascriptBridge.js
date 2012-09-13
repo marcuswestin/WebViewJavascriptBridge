@@ -1,89 +1,104 @@
 ;(function() {
 	if (window.WebViewJavascriptBridge) { return }
-	var _readyMessageIframe,
-		_sendMessageQueue = [],
-		_receiveMessageQueue = [],
-		_jsCallbacks = [],
-		_MESSAGE_SEPERATOR = '%@',
-		_CUSTOM_PROTOCOL_SCHEME = '%@',
-		_QUEUE_HAS_MESSAGE = '%@',
-		_CALLBACK_MESSAGE_PREFIX = '%@',
-		_CALLBACK_FUNCTION_KEY = '%@',
-		_CALLBACK_ARGUMENTS_KEY = '%@'
-
+	var messagingIframe
+	var sendMessageQueue = []
+	var receiveMessageQueue = []
+	var messageHandlers = {}
+	
+	var MESSAGE_SEPARATOR = '__WVJB_MESSAGE_SEPERATOR__'
+	var CUSTOM_PROTOCOL_SCHEME = 'wvjbscheme'
+	var QUEUE_HAS_MESSAGE = '__WVJB_QUEUE_MESSAGE__'
+	
+	var responseCallbacks = {}
+	var uniqueId = 1
+	
 	function _createQueueReadyIframe(doc) {
-		_readyMessageIframe = doc.createElement('iframe')
-		_readyMessageIframe.style.display = 'none'
-		doc.documentElement.appendChild(_readyMessageIframe)
+		messagingIframe = doc.createElement('iframe')
+		messagingIframe.style.display = 'none'
+		doc.documentElement.appendChild(messagingIframe)
 	}
 
-	function _sendMessage(message) {
-		_sendMessageQueue.push(message)
-		_readyMessageIframe.src = _CUSTOM_PROTOCOL_SCHEME + '://' + _QUEUE_HAS_MESSAGE
-	}
-
-	function _callObjcCallback(name, params) {
-		var payload = {}
-		payload[_CALLBACK_FUNCTION_KEY] = name
-		payload[_CALLBACK_ARGUMENTS_KEY] = params
-		_sendMessage(_CALLBACK_MESSAGE_PREFIX + JSON.stringify(payload))
-	}
-
-	function _fetchQueue() {
-		var messageQueueString = _sendMessageQueue.join(_MESSAGE_SEPERATOR)
-		_sendMessageQueue = []
-		return messageQueueString
-	}
-
-	function _setMessageHandler(messageHandler) {
-		if (WebViewJavascriptBridge._messageHandler) { return alert('WebViewJavascriptBridge.setMessageHandler called twice') }
+	function init(messageHandler) {
+		if (WebViewJavascriptBridge._messageHandler) { throw new Error('WebViewJavascriptBridge.init called twice') }
 		WebViewJavascriptBridge._messageHandler = messageHandler
-		var receivedMessages = _receiveMessageQueue
-		_receiveMessageQueue = null
+		var receivedMessages = receiveMessageQueue
+		receiveMessageQueue = null
 		for (var i=0; i<receivedMessages.length; i++) {
-			WebViewJavascriptBridge._dispatchMessageFromObjC(receivedMessages[i])
+			_dispatchMessageFromObjC(receivedMessages[i])
 		}
 	}
 
-	function _registerJsCallback(name, callback) {
-		_jsCallbacks[name] = callback
+	function send(data, responseCallback) {
+		_doSend({ data:data }, responseCallback)
+	}
+	
+	function registerHandler(handlerName, handler) {
+		messageHandlers[handlerName] = handler
+	}
+	
+	function fireHandler(handlerName, data, responseCallback) {
+		_doSend({ data:data, handlerName:handlerName }, responseCallback)
+	}
+	
+	function _doSend(message, responseCallback) {
+		if (responseCallback) {
+			var callbackId = 'js_cb_'+(uniqueId++)
+			responseCallbacks[callbackId] = responseCallback
+			message['callbackId'] = callbackId
+		}
+		sendMessageQueue.push(JSON.stringify(message))
+		messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE
 	}
 
-	function _dispatchMessageFromObjC(message) {
-		setTimeout(function _timeoutDispatchMessageFromObjC() {
-			if (message.indexOf(_CALLBACK_MESSAGE_PREFIX) == 0) {
-				var payload = message.replace(_CALLBACK_MESSAGE_PREFIX, '')
-				var parsedPayload = JSON.parse(payload)
-				var callbackName = parsedPayload[_CALLBACK_FUNCTION_KEY]
-				var callback = _jsCallbacks[callbackName]
+	function _fetchQueue() {
+		var messageQueueString = sendMessageQueue.join(MESSAGE_SEPARATOR)
+		sendMessageQueue = []
+		return messageQueueString
+	}
 
-				if (callback) {
-					callback(parsedPayload[_CALLBACK_ARGUMENTS_KEY])
-				} else {
-					WebViewJavascriptBridge._messageHandler(message)
-				}
+	function _createResponseCallback(responseId) {
+		return function(data) {
+			_doSend({ responseId:responseId, data:data })
+		}
+	}
+
+	function _dispatchMessageFromObjC(messageJSON) {
+		setTimeout(function _timeoutDispatchMessageFromObjC() {
+			var message = JSON.parse(messageJSON)
+			var messageHandler
+			
+			if (message.responseId) {
+				handler = responseCallbacks[message.responseId]
+				delete responseCallbacks[message.responseId]
+			} else if (message.handlerName) {
+				handler = messageHandlers[message.handlerName]
 			} else {
-				WebViewJavascriptBridge._messageHandler(message)
+				handler = WebViewJavascriptBridge._messageHandler
+			}
+			
+			if (message.callbackId) {
+				handler(message.data, _createResponseCallback(message.callbackId))
+			} else {
+				handler(message.data)
 			}
 		})
 	}
-
-	function _handleMessageFromObjC(message) {
-		if (_receiveMessageQueue) {
-			_receiveMessageQueue.push(message)
+	
+	function _handleMessageFromObjC(messageJSON) {
+		if (receiveMessageQueue) {
+			receiveMessageQueue.push(messageJSON)
 		} else {
-			WebViewJavascriptBridge._dispatchMessageFromObjC(message)
+			_dispatchMessageFromObjC(messageJSON)
 		}
 	}
 
 	window.WebViewJavascriptBridge = {
-		setMessageHandler: _setMessageHandler,
-		sendMessage: _sendMessage,
-		callObjcCallback: _callObjcCallback,
-		registerJsCallback: _registerJsCallback,
+		init: init,
+		send: send,
+		registerHandler: registerHandler,
+		fireHandler: fireHandler,
 		_fetchQueue: _fetchQueue,
-		_handleMessageFromObjC: _handleMessageFromObjC,
-		_dispatchMessageFromObjC: _dispatchMessageFromObjC
+		_handleMessageFromObjC: _handleMessageFromObjC
 	}
 
 	var doc = document

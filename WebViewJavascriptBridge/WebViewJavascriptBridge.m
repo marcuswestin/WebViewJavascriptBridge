@@ -7,120 +7,125 @@
 @interface WebViewJavascriptBridge ()
 
 @property (nonatomic,strong) NSMutableArray *startupMessageQueue;
-@property (nonatomic,strong) NSMutableDictionary *javascriptCallbacks;
+@property (nonatomic,strong) NSMutableDictionary *responseCallbacks;
+@property (nonatomic,strong) NSMutableDictionary *messageHandlers;
+@property (atomic,assign) NSInteger uniqueId;
+@property (nonatomic, strong) UIWebView* webView;
+@property (nonatomic, strong) id <UIWebViewDelegate> webViewDelegate;
+@property (nonatomic, copy) WVJBHandler messageHandler;
 
-- (void)_flushMessageQueueFromWebView:(UIWebView *)webView;
-- (void)_doSendMessage:(NSString*)message toWebView:(UIWebView *)webView;
+- (void)_flushMessageQueue;
+- (void)_queueData:(NSDictionary*)data responseCallback:(WVJBCallback)responseCallback handlerName:(NSString*)handlerName;
+- (void)_dispatchMessage:(NSDictionary*)message;
 
 @end
 
 @implementation WebViewJavascriptBridge
 
-@synthesize delegate = _delegate;
-@synthesize startupMessageQueue = _startupMessageQueue;
+static NSString *MESSAGE_SEPARATOR = @"__WVJB_MESSAGE_SEPERATOR__";
+static NSString *CUSTOM_PROTOCOL_SCHEME = @"wvjbscheme";
+static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
 
-static NSString *MESSAGE_SEPARATOR = @"__wvjb_sep__";
-static NSString *CUSTOM_PROTOCOL_SCHEME = @"webviewjavascriptbridge";
-static NSString *QUEUE_HAS_MESSAGE = @"queuehasmessage";
-static NSString *CALLBACK_MESSAGE_PREFIX = @"__wvjb_cb__";
-static NSString *CALLBACK_FUNCTION_KEY = @"wvjb_function";
-static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
-
-+ (id)javascriptBridgeWithDelegate:(id <WebViewJavascriptBridgeDelegate>)delegate {
++ (id)javascriptBridgeForWebView:(UIWebView *)webView handler:(WVJBHandler)handler {
+    return [self javascriptBridgeForWebView:webView handler:handler webViewDelegate:nil];
+}
+    
++ (id)javascriptBridgeForWebView:(UIWebView *)webView handler:(WVJBHandler)messageHandler webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate {
     WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
-    bridge.delegate = delegate;
-	[bridge resetQueue];
+    bridge.messageHandler = messageHandler;
+    bridge.startupMessageQueue = [NSMutableArray array];
+    bridge.responseCallbacks = [NSMutableDictionary dictionary];
+    bridge.messageHandlers = [NSMutableDictionary dictionary];
+    bridge.uniqueId = 0;
+    bridge.webView = webView;
+    bridge.webViewDelegate = webViewDelegate;
+    webView.delegate = bridge;
     return bridge;
 }
 
-- (id)init {
-    if (self = [super init]) {
-        self.javascriptCallbacks = [NSMutableDictionary dictionary];
+- (void)send:(NSDictionary *)data {
+    [self send:data responseCallback:nil];
+}
+
+- (void)send:(NSDictionary *)data responseCallback:(WVJBCallback)responseCallback {
+    [self _queueData:data responseCallback:responseCallback handlerName:nil];
+}
+
+- (void)callHandler:(NSString *)handlerName data:(id)data {
+    [self callHandler:handlerName data:data responseCallback:nil];
+}
+
+- (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(WVJBCallback)responseCallback {
+    [self _queueData:data responseCallback:responseCallback handlerName:handlerName];
+}
+
+- (void)registerHandler:(NSString *)handlerName callback:(WVJBHandler)handler {
+    [self.messageHandlers setObject:handler forKey:handlerName];
+}
+
+- (void)_queueData:(NSDictionary *)data responseCallback:(WVJBCallback)responseCallback handlerName:(NSString*)handlerName {
+    NSMutableDictionary* message = [NSMutableDictionary dictionaryWithObject:data forKey:@"data"];
+    
+    if (responseCallback) {
+        NSString* callbackId = [NSString stringWithFormat:@"objc_cb_%d", ++_uniqueId];
+        [self.responseCallbacks setObject:responseCallback forKey:callbackId];
+        [message setObject:callbackId forKey:@"callbackId"];
+    }
+
+    if (handlerName) {
+        [message setObject:handlerName forKey:@"handlerName"];
     }
     
-    return self;
-}
-
-- (void)dealloc {
-    _delegate = nil;
-}
-
-- (void)sendMessage:(NSString *)message toWebView:(UIWebView *)webView {
     if (self.startupMessageQueue) {
         [self.startupMessageQueue addObject:message];
     } else {
-        [self _doSendMessage:message toWebView: webView];
+        [self _dispatchMessage:message];
     }
 }
 
-- (void)resetQueue {
-    self.startupMessageQueue = [[NSMutableArray alloc] init];
-}
-
-- (void)callJavascriptCallback:(NSString *)name toWebView:(UIWebView *)webView {
-    [self callJavascriptCallback:name withParams:[NSDictionary dictionary] toWebView:webView];
-}
-
-- (void)callJavascriptCallback:(NSString *)name withParams:(NSDictionary *)params toWebView:(UIWebView *)webView {
-    NSDictionary *callParams = [NSDictionary dictionaryWithObjectsAndKeys:
-                                name, CALLBACK_FUNCTION_KEY,
-                                params, CALLBACK_ARGUMENTS_KEY,
-                                nil];
+- (void)_dispatchMessage:(NSDictionary *)message {
 #ifdef USE_JSONKIT
-    NSString *encodedParams = [callParams JSONString];
+    NSString *messageJSON = [message JSONString];
 #else
-    NSString *encodedParams = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:callParams options:0 error:nil]
-                                                    encoding:NSUTF8StringEncoding];
+    NSString *messageJSON = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:0 error:nil] encoding:NSUTF8StringEncoding];
 #endif
-
-    [self sendMessage:[NSString stringWithFormat:@"%@%@", CALLBACK_MESSAGE_PREFIX, encodedParams]
-            toWebView:webView];
+    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\n" withString:@"\\\\n"];
+    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"];
+    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
+    [_webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"WebViewJavascriptBridge._handleMessageFromObjC('%@');", messageJSON]];
 }
 
-- (void)registerObjcCallback:(NSString *)name withCallback:(void (^)(NSDictionary *params))callback {
-    [self.javascriptCallbacks setObject:[callback copy] forKey:name];
-}
-
-- (void)unregisterObjcCallback:(NSString *)name {
-    [self.javascriptCallbacks removeObjectForKey:name];
-}
-
-- (void)_doSendMessage:(NSString *)message toWebView:(UIWebView *)webView {
-    message = [message stringByReplacingOccurrencesOfString:@"\\n" withString:@"\\\\n"];
-    message = [message stringByReplacingOccurrencesOfString:@"'" withString:@"\\'"];
-    message = [message stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-    [webView stringByEvaluatingJavaScriptFromString:[NSString stringWithFormat:@"WebViewJavascriptBridge._handleMessageFromObjC('%@');", message]];
-}
-
-- (void)_flushMessageQueueFromWebView:(UIWebView *)webView {
-    NSString *messageQueueString = [webView stringByEvaluatingJavaScriptFromString:@"WebViewJavascriptBridge._fetchQueue();"];
+- (void)_flushMessageQueue {
+    NSString *messageQueueString = [_webView stringByEvaluatingJavaScriptFromString:@"WebViewJavascriptBridge._fetchQueue();"];
     NSArray* messages = [messageQueueString componentsSeparatedByString:MESSAGE_SEPARATOR];
-    for (NSString *message in messages) {
-        if ([message hasPrefix:CALLBACK_MESSAGE_PREFIX]) {
-            // should be a JSON encoded callback
-            NSString *payload = [message stringByReplacingOccurrencesOfString:CALLBACK_MESSAGE_PREFIX withString:@""];
+    for (NSString *messageJSON in messages) {
+        // normal message - pass to bridge
 #ifdef USE_JSONKIT
-            NSDictionary *decodedMessage = [payload objectFromJSONString];
+        NSDictionary *message = [payload objectFromJSONString];
 #else
-            NSDictionary *decodedMessage = [NSJSONSerialization JSONObjectWithData:[payload dataUsingEncoding:NSUTF8StringEncoding]
-                                                                           options:0
-                                                                             error:nil];
+        NSDictionary *message = [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
 #endif
-            NSString *callbackName = [decodedMessage objectForKey:CALLBACK_FUNCTION_KEY];
-
-            void (^callback)(NSDictionary *params) = [self.javascriptCallbacks objectForKey:callbackName];
-
-            if (callback == NULL) {
-                // don't have a callback - pass to bridge
-                [self.delegate javascriptBridge:self receivedMessage:message fromWebView:webView];
-            } else {
-                // call the callback
-                callback([decodedMessage objectForKey:CALLBACK_ARGUMENTS_KEY]);
-            }
+        WVJBCallback responseCallback = NULL;
+        if ([message objectForKey:@"callbackId"]) {
+            __block NSString* responseId = [message objectForKey:@"callbackId"];
+            responseCallback = ^(NSDictionary* data) {
+                NSDictionary* response = [NSDictionary dictionaryWithObjectsAndKeys: responseId, @"responseId", data, @"data", nil];
+                [self send:response];
+            };
         }
-        else {
-            // normal message - pass to bridge
-            [self.delegate javascriptBridge:self receivedMessage:message fromWebView:webView];
+        
+        WVJBHandler handler = self.messageHandler;
+        if ([message objectForKey:@"handlerName"]) {
+            handler = [self.messageHandlers objectForKey:[message objectForKey:@"handlerName"]];
+        } else if ([message objectForKey:@"responseId"]) {
+            handler = [self.responseCallbacks objectForKey:[message objectForKey:@"responseId"]];
+        }
+        
+        @try {
+            handler([message objectForKey:@"data"], responseCallback);
+        }
+        @catch (NSException *exception) {
+            NSLog(@"WebViewJavascriptBridge: WARNING: handler threw. %@ %@", message, exception);
         }
     }
 }
@@ -128,58 +133,54 @@ static NSString *CALLBACK_ARGUMENTS_KEY = @"wvjb_arguments";
 #pragma mark UIWebViewDelegate
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
-    NSString *filePath = [[NSBundle mainBundle] pathForResource:@"WebViewJavascriptBridge" ofType:@"js"];
-    NSString *jsTemplate = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-    NSString *js = [NSString stringWithFormat:jsTemplate,
-        MESSAGE_SEPARATOR,
-        CUSTOM_PROTOCOL_SCHEME,
-        QUEUE_HAS_MESSAGE,
-        CALLBACK_MESSAGE_PREFIX,
-        CALLBACK_FUNCTION_KEY,
-        CALLBACK_ARGUMENTS_KEY];
-    
-    if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
-        [webView stringByEvaluatingJavaScriptFromString:js];
+    if (webView != _webView) { return; }
+
+    if (![[_webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
+        NSString *filePath = [[NSBundle mainBundle] pathForResource:@"WebViewJavascriptBridge" ofType:@"js"];
+        NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+        [_webView stringByEvaluatingJavaScriptFromString:js];
     }
     
-    for (id message in self.startupMessageQueue) {
-        [self _doSendMessage:message toWebView: webView];
+    if (self.startupMessageQueue) {
+        for (id queuedMessage in self.startupMessageQueue) {
+            [self _dispatchMessage:queuedMessage];
+        }
+        self.startupMessageQueue = nil;
     }
-
-    self.startupMessageQueue = nil;
-
-    if(self.delegate != nil && [self.delegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
-        [self.delegate webViewDidFinishLoad:webView];
+    
+    if (self.webViewDelegate) {
+        [self.webViewDelegate webViewDidFinishLoad:webView];
     }
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    if(self.delegate != nil && [self.delegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
-        [self.delegate webView:webView didFailLoadWithError:error];
+    if (webView != _webView) { return; }
+    if (self.webViewDelegate) {
+        [self.webViewDelegate webView:_webView didFailLoadWithError:error];
     }
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
+    if (webView != _webView) { return YES; }
     NSURL *url = [request URL];
-    if (![[url scheme] isEqualToString:CUSTOM_PROTOCOL_SCHEME]) {
-        if (self.delegate != nil && [self.delegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
-            return [self.delegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
+    if ([[url scheme] isEqualToString:CUSTOM_PROTOCOL_SCHEME]) {
+        if ([[url host] isEqualToString:QUEUE_HAS_MESSAGE]) {
+            [self _flushMessageQueue];
+        } else {
+            NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@://%@", CUSTOM_PROTOCOL_SCHEME, [url path]);
         }
+        return NO;
+    } else if (self.webViewDelegate) {
+        return [self.webViewDelegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
+    } else {
         return YES;
     }
-
-    if ([[url host] isEqualToString:QUEUE_HAS_MESSAGE]) {
-        [self _flushMessageQueueFromWebView: webView];
-    } else {
-        NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@://%@", CUSTOM_PROTOCOL_SCHEME, [url path]);
-    }
-
-    return NO;
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
-    if(self.delegate != nil && [self.delegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
-        [self.delegate webViewDidStartLoad:webView];
+    if (webView != _webView) { return; }
+    if (self.webViewDelegate) {
+        [self.webViewDelegate webViewDidStartLoad:webView];
     }
 }
 
