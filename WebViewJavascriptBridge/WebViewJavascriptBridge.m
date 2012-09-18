@@ -68,7 +68,12 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
 }
 
 - (void)_queueData:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
-    NSMutableDictionary* message = [NSMutableDictionary dictionaryWithObject:data forKey:@"data"];
+    NSMutableDictionary* message;
+	if ([data objectForKey:@"responseId"]) {
+	        message = [NSMutableDictionary dictionaryWithDictionary:data];
+	} else {
+	        message = [NSMutableDictionary dictionaryWithObject:data forKey:@"data"];
+	}
     
     if (responseCallback) {
         NSString* callbackId = [NSString stringWithFormat:@"objc_cb_%d", ++_uniqueId];
