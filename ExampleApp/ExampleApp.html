@@ -1,16 +1,21 @@
 <!doctype html>
 <html><head>
-	<style type='text/css'>h1 { color:red; }</style>
+	<style type='text/css'>
+		h1 { color:red; }
+		.logLine { border-bottom:1px solid #ccc; padding:4px 2px; font-family:courier; font-size:11px; }
+	</style>
 </head><body>
 	<h1>Javascript Bridge Demo</h1>
 	<script>
 	document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false)
 	function onBridgeReady() {
 
+		var uniqueId = 1
 		function log(message, data) {
 			var log = document.getElementById('log')
 			var el = document.createElement('div')
-			el.innerHTML = message + ': ' + JSON.stringify(data)
+			el.className = 'logLine'
+			el.innerHTML = uniqueId++ + '. ' + message + (data ? ': ' + JSON.stringify(data) : '')
 			if (log.children.length) { log.insertBefore(el, log.children[0]) }
 			else { log.appendChild(el) }
 		}
@@ -19,13 +24,14 @@
 		})
 
 		WebViewJavascriptBridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
-			log('testJavascriptHandler', data)
-			responseCallback({ 'foo':'Right back atcha!' })
+			log('JS handler testJavascriptHandler was called', data)
+			responseCallback({ 'Javascript Says':'Right back atcha!' })
 		})
 
 		var button = document.getElementById('buttons').appendChild(document.createElement('button'))
 		button.innerHTML = 'Send message to ObjC'
-		button.ontouchstart = function() {
+		button.ontouchstart = function(e) {
+			e.preventDefault()
 			WebViewJavascriptBridge.send('Hello from JS button')
 		}
 
@@ -33,9 +39,11 @@
 
 		var callbackButton = document.getElementById('buttons').appendChild(document.createElement('button'))
 		callbackButton.innerHTML = 'Fire testObjcCallback'
-		callbackButton.ontouchstart = function() {
+		callbackButton.ontouchstart = function(e) {
+			e.preventDefault()
+			log("Calling handler testObjcCallback")
 			WebViewJavascriptBridge.fireHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
-				log('Got response:', response)
+				log('Got response from testObjcCallback:', response)
 			})
 		}
 	}
