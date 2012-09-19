@@ -15,7 +15,8 @@
 @property (nonatomic, copy) WVJBHandler messageHandler;
 
 - (void)_flushMessageQueue;
-- (void)_queueData:(NSDictionary*)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName;
+- (void)_sendData:(NSDictionary*)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName;
+- (void)_queueMessage:(NSDictionary*)message;
 - (void)_dispatchMessage:(NSDictionary*)message;
 
 @end
@@ -48,7 +49,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
 }
 
 - (void)send:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback {
-    [self _queueData:data responseCallback:responseCallback handlerName:nil];
+    [self _sendData:data responseCallback:responseCallback handlerName:nil];
 }
 
 - (void)callHandler:(NSString *)handlerName {
@@ -60,14 +61,14 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
 }
 
 - (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
-    [self _queueData:data responseCallback:responseCallback handlerName:handlerName];
+    [self _sendData:data responseCallback:responseCallback handlerName:handlerName];
 }
 
 - (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
     [self.messageHandlers setObject:handler forKey:handlerName];
 }
 
-- (void)_queueData:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
+- (void)_sendData:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
     NSMutableDictionary* message = [NSMutableDictionary dictionaryWithObject:data forKey:@"data"];
     
     if (responseCallback) {
@@ -79,7 +80,10 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     if (handlerName) {
         [message setObject:handlerName forKey:@"handlerName"];
     }
-    
+    [self _queueMessage:message];
+}
+
+- (void)_queueMessage:(NSDictionary *)message {
     if (self.startupMessageQueue) {
         [self.startupMessageQueue addObject:message];
     } else {
@@ -116,8 +120,8 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
         if ([message objectForKey:@"callbackId"]) {
             __block NSString* responseId = [message objectForKey:@"callbackId"];
             responseCallback = ^(NSDictionary* data) {
-                NSDictionary* response = [NSDictionary dictionaryWithObjectsAndKeys: responseId, @"responseId", data, @"data", nil];
-                [self send:response];
+                NSDictionary* responseMessage = [NSDictionary dictionaryWithObjectsAndKeys: responseId, @"responseId", data, @"data", nil];
+                [self _queueMessage:responseMessage];
             };
         }
         
