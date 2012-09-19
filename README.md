@@ -63,6 +63,7 @@ API Reference
 ### ObjC
 
 ##### `[WebViewJavascriptBridge javascriptBridgeForWebView:(UIWebView*)webview handler:(WVJBHandler)handler]`
+##### `[WebViewJavascriptBridge javascriptBridgeForWebView:(UIWebView*)webview webViewDelegate:(UIWebViewDelegate*)webViewDelegate handler:(WVJBHandler)handler]`
 
 Create a javascript bridge for the given UIWebView.
 
@@ -74,8 +75,13 @@ Example:
 			responseCallback(@"Right back atcha")
 		}
 	}]
+	
+	[WebViewJavascriptBridge javascriptBridgeForWebView:webView webViewDelegate:self handler:^(id data, WVJBCallback responseCallback) { /* ... */ }];
 
 The handler's `responseCallback` will be a block if javascript sent the message with a function responseCallback, or `nil` otherwise.
+
+Optionally, pass in `webViewDelegate:(UIWebViewDelegate*)webViewDelegate` if you need to respond to the [UIWebView's lifecycle events](http://developer.apple.com/library/ios/documentation/uikit/reference/UIWebViewDelegate_Protocol/Reference/Reference.html).
+
 
 ##### `[bridge send:(id)data]`
 ##### `[bridge send:(id)data responseCallback:(WVJBResponseCallback)responseCallback]`

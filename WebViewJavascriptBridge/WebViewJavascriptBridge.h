@@ -8,7 +8,7 @@ typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 @interface WebViewJavascriptBridge : NSObject <UIWebViewDelegate>
 
 + (id)javascriptBridgeForWebView:(UIWebView*)webView handler:(WVJBHandler)handler;
-+ (id)javascriptBridgeForWebView:(UIWebView*)webView handler:(WVJBHandler)handler webViewDelegate:(id <UIWebViewDelegate>)webViewDelegate;
++ (id)javascriptBridgeForWebView:(UIWebView*)webView webViewDelegate:(id <UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)handler;
 
 - (void)send:(id)message;
 - (void)send:(id)message responseCallback:(WVJBResponseCallback)responseCallback;
