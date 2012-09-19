@@ -1,11 +1,13 @@
 <!doctype html>
 <html><head>
 	<style type='text/css'>
-		h1 { color:red; }
+		html { font-family:Helvetica; color:#222; }
+		h1 { color:steelblue; font-size:24px; margin-top:24px; }
+		button { margin:0 3px 10px; font-size:12px; }
 		.logLine { border-bottom:1px solid #ccc; padding:4px 2px; font-family:courier; font-size:11px; }
 	</style>
 </head><body>
-	<h1>Javascript Bridge Demo</h1>
+	<h1>WebViewJavascriptBridge Demo</h1>
 	<script>
 	document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false)
 	function onBridgeReady() {
@@ -43,7 +45,7 @@
 			e.preventDefault()
 			log("Calling handler testObjcCallback")
 			WebViewJavascriptBridge.fireHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
-				log('Got response from testObjcCallback:', response)
+				log('Got response from testObjcCallback', response)
 			})
 		}
 	}

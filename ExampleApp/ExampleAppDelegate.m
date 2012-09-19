@@ -38,13 +38,13 @@
 	[messageButton setTitle:@"Send message" forState:UIControlStateNormal];
 	[messageButton addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];
 	[self.window insertSubview:messageButton aboveSubview:webView];
-	messageButton.frame = CGRectMake(20, 400, 130, 45);
+	messageButton.frame = CGRectMake(20, 414, 130, 45);
     
     UIButton *callbackButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [callbackButton setTitle:@"Call handler" forState:UIControlStateNormal];
     [callbackButton addTarget:self action:@selector(callHandler:) forControlEvents:UIControlEventTouchUpInside];
     [self.window insertSubview:callbackButton aboveSubview:webView];
-	callbackButton.frame = CGRectMake(170, 400, 130, 45);
+	callbackButton.frame = CGRectMake(170, 414, 130, 45);
 }
 
 - (void)sendMessage:(id)sender {
