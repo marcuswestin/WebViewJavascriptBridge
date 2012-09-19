@@ -26,7 +26,7 @@ In the dialog that appears:
 3) Instantiate a UIWebView and a WebViewJavascriptBridge:
 
 	UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
-	WebViewJavascriptBridge* javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBCallback callback) {
+	WebViewJavascriptBridge* javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponseCallback callback) {
 		NSLog(@"Received message from javascript: %@", data);
 	}];
 
@@ -68,7 +68,7 @@ Create a javascript bridge for the given UIWebView.
 
 Example:
 	
-	[WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBCallback responseCallback) {
+	[WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
 		NSLog(@"Received message from javascript: %@", data);
 		if (responseCallback) {
 			responseCallback(@"Right back atcha")
