@@ -132,11 +132,15 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
             handler = [self.responseCallbacks objectForKey:[message objectForKey:@"responseId"]];
         }
         
-        @try {
-            handler([message objectForKey:@"data"], responseCallback);
-        }
-        @catch (NSException *exception) {
-            NSLog(@"WebViewJavascriptBridge: WARNING: handler threw. %@ %@", message, exception);
+        if (handler) {
+            @try {
+                handler([message objectForKey:@"data"], responseCallback);
+            }
+            @catch (NSException *exception) {
+                NSLog(@"WebViewJavascriptBridge: WARNING: handler threw. %@ %@", message, exception);
+            }
+        } else {
+            NSLog(@"WebViewJavascriptBridge: WARNING: handler not found (%@)", [message objectForKey:@"handlerName"]);
         }
     }
 }
