@@ -18,6 +18,8 @@
 - (void)_sendData:(NSDictionary*)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName;
 - (void)_queueMessage:(NSDictionary*)message;
 - (void)_dispatchMessage:(NSDictionary*)message;
+- (NSString*)_serializeMessage:(NSDictionary*)message;
+- (NSDictionary*)_deserializeMessageJSON:(NSString*)messageJSON;
 
 @end
 
@@ -92,11 +94,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
 }
 
 - (void)_dispatchMessage:(NSDictionary *)message {
-#ifdef USE_JSONKIT
-    NSString *messageJSON = [message JSONString];
-#else
-    NSString *messageJSON = [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:0 error:nil] encoding:NSUTF8StringEncoding];
-#endif
+    NSString *messageJSON = [self _serializeMessage:message];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
@@ -110,12 +108,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     NSString *messageQueueString = [_webView stringByEvaluatingJavaScriptFromString:@"WebViewJavascriptBridge._fetchQueue();"];
     NSArray* messages = [messageQueueString componentsSeparatedByString:MESSAGE_SEPARATOR];
     for (NSString *messageJSON in messages) {
-        // normal message - pass to bridge
-#ifdef USE_JSONKIT
-        NSDictionary *message = [messageJSON objectFromJSONString];
-#else
-        NSDictionary *message = [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-#endif
+        NSDictionary* message = [self _deserializeMessageJSON:messageJSON];
         WVJBResponseCallback responseCallback = NULL;
         if ([message objectForKey:@"callbackId"]) {
             __block NSString* responseId = [message objectForKey:@"callbackId"];
@@ -143,6 +136,22 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
             NSLog(@"WebViewJavascriptBridge: WARNING: handler not found (%@)", [message objectForKey:@"handlerName"]);
         }
     }
+}
+
+- (NSString *)_serializeMessage:(NSDictionary *)message {
+    #ifdef USE_JSONKIT
+        return [message JSONString];
+    #else
+        return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:0 error:nil] encoding:NSUTF8StringEncoding];
+    #endif
+}
+
+- (NSDictionary *)_deserializeMessageJSON:(NSString *)messageJSON {
+    #ifdef USE_JSONKIT
+        return [messageJSON objectFromJSONString];
+    #else
+        return [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
+    #endif
 }
 
 #pragma mark UIWebViewDelegate
