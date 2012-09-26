@@ -10,8 +10,8 @@
 	<h1>WebViewJavascriptBridge Demo</h1>
 	<script>
 	document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false)
-	function onBridgeReady() {
-
+	function onBridgeReady(event) {
+		var bridge = event.bridge
 		var uniqueId = 1
 		function log(message, data) {
 			var log = document.getElementById('log')
@@ -21,11 +21,11 @@
 			if (log.children.length) { log.insertBefore(el, log.children[0]) }
 			else { log.appendChild(el) }
 		}
-		WebViewJavascriptBridge.init(function(message) {
+		bridge.init(function(message) {
 			log('JS got a message', message)
 		})
 
-		WebViewJavascriptBridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
+		bridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
 			log('JS handler testJavascriptHandler was called', data)
 			responseCallback({ 'Javascript Says':'Right back atcha!' })
 		})
@@ -34,7 +34,7 @@
 		button.innerHTML = 'Send message to ObjC'
 		button.ontouchstart = function(e) {
 			e.preventDefault()
-			WebViewJavascriptBridge.send('Hello from JS button')
+			bridge.send('Hello from JS button')
 		}
 
 		document.body.appendChild(document.createElement('br'))
@@ -44,7 +44,7 @@
 		callbackButton.ontouchstart = function(e) {
 			e.preventDefault()
 			log("Calling handler testObjcCallback")
-			WebViewJavascriptBridge.fireHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+			bridge.fireHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
 				log('Got response from testObjcCallback', response)
 			})
 		}
