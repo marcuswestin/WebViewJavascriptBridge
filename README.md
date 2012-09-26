@@ -12,7 +12,7 @@ To use a WebViewJavascriptBridge in your own project:
 
 1) Drag the `WebViewJavascriptBridge` folder into your project.
 
-(In the dialog, uncheck "Copy items into destination group's folder" and select "Create groups for any folders")
+  - In the dialog that appears, uncheck "Copy items into destination group's folder" and select "Create groups for any folders"
 
 2) Import the header file:
 
