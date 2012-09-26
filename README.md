@@ -35,7 +35,8 @@ To use a WebViewJavascriptBridge in your own project:
 
 4) Finally, set up the javascript side:
 	
-	document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady(bridge) {
+	document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady(event) {
+		var bridge = event.bridge
 		bridge.init(function(message, responseCallback) {
 			alert('Received message: ' + message)   
 			if (responseCallback) {
