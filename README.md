@@ -3,21 +3,16 @@ WebViewJavascriptBridge
 
 An iOS bridge for sending messages to and from javascript in a UIWebView.
 
-Getting started
----------------
+Setup & Examples
+----------------
 
-Just open the Xcode project and hit run to see the example application.
+Just open the Xcode project and hit run to see ExampleApp run.
 
-Setup your project
-------------------
-
-See ExampleApp/* for example code. To use it in your own project:
+To use a WebViewJavascriptBridge in your own project:
 
 1) Drag the `WebViewJavascriptBridge` folder into your project.
 
-In the dialog that appears:
-- Uncheck "Copy items into destination group's folder (if needed)"
-- Select "Create groups for any folders"
+(In the dialog, uncheck "Copy items into destination group's folder" and select "Create groups for any folders")
 
 2) Import the header file:
 
@@ -30,7 +25,7 @@ In the dialog that appears:
 		NSLog(@"Received message from javascript: %@", data);
 	}];
 
-4) Go ahead and send some messages from Objc to javascript:
+4) Go ahead and send some messages from ObjC to javascript:
 
 	[javascriptBridge send:@"Well hello there"];
 	[javascriptBridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
@@ -38,24 +33,17 @@ In the dialog that appears:
 		NSLog(@"I got a response! %@", responseData);
 	}];
 
-4) Finally, set up the javascript side of things:
+4) Finally, set up the javascript side:
 	
-	document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady() {
-		WebViewJavascriptBridge.init(function(message, responseCallback) {
+	document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady(bridge) {
+		bridge.init(function(message, responseCallback) {
 			alert('Received message: ' + message)   
 			if (responseCallback) {
 				responseCallback("Right back atcha")
 			}
 		})
-		WebViewJavascriptBridge.send('Hello from the javascript')
+		bridge.send('Hello from the javascript')
 	}, false)
-
-iOS4 support (with JSONKit)
----------------------------
-
-*Note*: iOS4 support has not yet been tested in v2.
-
-WebViewJavascriptBridge uses `NSJSONSerialization` by default. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/), and add `USE_JSONKIT` to the preprocessor macros for your project.
 
 API Reference
 -------------
@@ -121,19 +109,19 @@ Example:
 
 ### Javascript
 
-##### `document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReadyHandler() { ... }, false)`
+##### `document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady(bridge) { ... }, false)`
 
-Always wait for the `WebViewJavascriptBridgeReady` DOM event before using `WebViewJavascriptBridge`.
+Always wait for the `WebViewJavascriptBridgeReady` DOM event.
 
 Example:
 
-	document.addEventListener('WebViewJavascriptBridgeReady', function() {
-		// Start using WebViewJavascriptBridge
+	document.addEventListener('WebViewJavascriptBridgeReady', function(bridge) {
+		// Start using the bridge
 	}, false)
 
-##### `WebViewJavascriptBridge.init(function messageHandler(data, responseCallback) { ... })`
+##### `bridge.init(function messageHandler(data, responseCallback) { ... })`
 
-Initialize the WebViewJavascriptBridge. This should be called inside of the `'WebViewJavascriptBridgeReady'` event handler.
+Initialize the bridge. This should be called inside of the `'WebViewJavascriptBridgeReady'` event handler.
 
 The `messageHandler` function will receive all messages sent from ObjC via `[bridge send:(id)data]` and `[bridge send:(id)data responseCallback:(WVJBResponseCallback)responseCallback]`.
 
@@ -141,36 +129,45 @@ The `responseCallback` will be a function if ObjC sent the message with a `WVJBR
 
 Example:
 
-	WebViewJavascriptBridge.init(function(data, responseCallback) {
+	bridge.init(function(data, responseCallback) {
 		alert("Got data " + JSON.stringify(data))
 		if (responseCallback) {
 			responseCallback("Right back atcha!")
 		}
 	})
 
-##### `WebViewJavascriptBridge.send("Hi there!")`
-##### `WebViewJavascriptBridge.send({ Foo:"Bar" })`
-##### `WebViewJavascriptBridge.send(data, function responseCallback(responseData) { ... })`
+##### `bridge.send("Hi there!")`
+##### `bridge.send({ Foo:"Bar" })`
+##### `bridge.send(data, function responseCallback(responseData) { ... })`
 
 Send a message to ObjC. Optionally expect a response by giving a `responseCallback` function.
 
 Example:
 
-	WebViewJavascriptBridge.send("Hi there!")
-	WebViewJavascriptBridge.send("Hi there!", function(response) {
+	bridge.send("Hi there!")
+	bridge.send("Hi there!", function(response) {
 		alert("I got a response! "+JSON.stringify(response))
 	})
 
-##### `WebViewJavascriptBridge.registerHandler("handlerName", function(data, responseCallback) { ... })`
+##### `WebViewJavascrbridgeiptBridge.registerHandler("handlerName", function(data, responseCallback) { ... })`
 
 Register a handler called `handlerName`. The ObjC can then call this handler with `[bridge callHandler:"handlerName" data:@"Foo"]` and `[bridge callHandler:"handlerName" data:@"Foo" responseCallback:^(id responseData) { ... }]`
 
 Example:
 
-	WebViewJavascriptBridge.registerHandler("showAlert", function(data) { alert(data) })
-	WebViewJavascriptBridge.registerHandler("getCurrentPageUrl", function(data, responseCallback) {
+	bridge.registerHandler("showAlert", function(data) { alert(data) })
+	bridge.registerHandler("getCurrentPageUrl", function(data, responseCallback) {
 		responseCallback(document.location.toString())
 	})
+
+
+iOS4 support (with JSONKit)
+---------------------------
+
+*Note*: iOS4 support has not yet been tested in v2.
+
+WebViewJavascriptBridge uses `NSJSONSerialization` by default. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/), and add `USE_JSONKIT` to the preprocessor macros for your project.
+
 
 Contributors
 ------------
