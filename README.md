@@ -49,7 +49,7 @@ To use a WebViewJavascriptBridge in your own project:
 API Reference
 -------------
 
-### ObjC
+### ObjC API
 
 ##### `[WebViewJavascriptBridge javascriptBridgeForWebView:(UIWebView*)webview handler:(WVJBHandler)handler]`
 ##### `[WebViewJavascriptBridge javascriptBridgeForWebView:(UIWebView*)webview webViewDelegate:(UIWebViewDelegate*)webViewDelegate handler:(WVJBHandler)handler]`
@@ -108,15 +108,16 @@ Example:
 	}];
 
 
-### Javascript
+### Javascript API
 
-##### `document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady(bridge) { ... }, false)`
+##### `document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady(event) { ... }, false)`
 
 Always wait for the `WebViewJavascriptBridgeReady` DOM event.
 
 Example:
 
-	document.addEventListener('WebViewJavascriptBridgeReady', function(bridge) {
+	document.addEventListener('WebViewJavascriptBridgeReady', function(event) {
+		var bridge = event.bridge
 		// Start using the bridge
 	}, false)
 
@@ -150,7 +151,7 @@ Example:
 		alert("I got a response! "+JSON.stringify(response))
 	})
 
-##### `WebViewJavascrbridgeiptBridge.registerHandler("handlerName", function(data, responseCallback) { ... })`
+##### `bridge.registerHandler("handlerName", function(data, responseCallback) { ... })`
 
 Register a handler called `handlerName`. The ObjC can then call this handler with `[bridge callHandler:"handlerName" data:@"Foo"]` and `[bridge callHandler:"handlerName" data:@"Foo" responseCallback:^(id responseData) { ... }]`
 
