@@ -170,7 +170,6 @@ iOS4 support (with JSONKit)
 
 WebViewJavascriptBridge uses `NSJSONSerialization` by default. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/), and add `USE_JSONKIT` to the preprocessor macros for your project.
 
-
 Contributors
 ------------
 
