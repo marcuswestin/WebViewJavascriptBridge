@@ -25,9 +25,9 @@
 			log('JS got a message', message)
 		})
 
-		bridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
+		bridge.registerHandler('testJavascriptHandler', function(data, response) {
 			log('JS handler testJavascriptHandler was called', data)
-			responseCallback({ 'Javascript Says':'Right back atcha!' })
+			response.respondWith({ 'Javascript Says':'Right back atcha!' })
 		})
 
 		var button = document.getElementById('buttons').appendChild(document.createElement('button'))

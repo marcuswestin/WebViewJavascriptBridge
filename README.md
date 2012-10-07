@@ -21,29 +21,35 @@ To use a WebViewJavascriptBridge in your own project:
 3) Instantiate a UIWebView and a WebViewJavascriptBridge:
 
 	UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
-	WebViewJavascriptBridge* javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponseCallback callback) {
+	WebViewJavascriptBridge* javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponse* response) {
 		NSLog(@"Received message from javascript: %@", data);
+		[response respondWith:@"Right back atcha"];
+		// or [response respondWithError:]
 	}];
 
 4) Go ahead and send some messages from ObjC to javascript:
 
 	[javascriptBridge send:@"Well hello there"];
 	[javascriptBridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
-	[javascriptBridge send:@"Give me a response, will you?" responseCallback:^(id responseData) {
-		NSLog(@"I got a response! %@", responseData);
+	[javascriptBridge send:@"Give me a response, will you?" responseCallback:^(id error, id responseData) {
+		NSLog(@"objc got its response! %@ %@", error, responseData);
 	}];
 
 4) Finally, set up the javascript side:
 	
 	document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady(event) {
 		var bridge = event.bridge
-		bridge.init(function(message, responseCallback) {
+		bridge.init(function(message, response) {
 			alert('Received message: ' + message)   
-			if (responseCallback) {
-				responseCallback("Right back atcha")
+			if (response) {
+				response.respondWith("Right back atcha")
+				// or use response.respondWithError("Booh!")
 			}
 		})
 		bridge.send('Hello from the javascript')
+		bridge.send('Please respond to this', function responseCallback(error, responseData) {
+			console.log("javascript got its response", error, responseData)
+		})
 	}, false)
 
 API Reference
@@ -56,21 +62,20 @@ API Reference
 
 Create a javascript bridge for the given UIWebView.
 
-Example:
-	
-	[WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
-		NSLog(@"Received message from javascript: %@", data);
-		if (responseCallback) {
-			responseCallback(@"Right back atcha")
-		}
-	}]
-	
-	[WebViewJavascriptBridge javascriptBridgeForWebView:webView webViewDelegate:self handler:^(id data, WVJBCallback responseCallback) { /* ... */ }];
-
-The handler's `responseCallback` will be a block if javascript sent the message with a function responseCallback, or `nil` otherwise.
+The `WVJBResponse` will not be `nil` if the javascript expects a response.
 
 Optionally, pass in `webViewDelegate:(UIWebViewDelegate*)webViewDelegate` if you need to respond to the [UIWebView's lifecycle events](http://developer.apple.com/library/ios/documentation/uikit/reference/UIWebViewDelegate_Protocol/Reference/Reference.html).
 
+Example:
+	
+	[WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponse response) {
+		NSLog(@"Received message from javascript: %@", data);
+		if (response) {
+			[response respondWith:@"Right back atcha"];
+		}
+	}]
+	
+	[WebViewJavascriptBridge javascriptBridgeForWebView:webView webViewDelegate:self handler:^(id data, WVJBResponse response) { /* ... */ }];
 
 ##### `[bridge send:(id)data]`
 ##### `[bridge send:(id)data responseCallback:(WVJBResponseCallback)responseCallback]`
@@ -81,18 +86,19 @@ Example:
 
 	[bridge send:@"Hi"];
 	[bridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
-	[bridge send:@"I expect a response!" responseCallback:^(id data) {
-		NSLog(@"Got response: %@", data);
+	[bridge send:@"I expect a response!" responseCallback:^(id error, id responseData) {
+		if (error) { return NSLog(@"Uh oh, I got an error: %@", error); }
+		NSLog(@"Got response! %@", responseData);
 	}];
 
 ##### `[bridge registerHandler:(NSString*)handlerName handler:(WVJBHandler)handler]`
 
-Register a handler called `handlerName`. The javascript can then call this handler with `WebViewJavascriptBridge.callHandler("handlerName", function(response) { ... })`.
+Register a handler called `handlerName`. The javascript can then call this handler with `WebViewJavascriptBridge.callHandler("handlerName")`.
 
 Example:
 
-	[bridge registerHandler:@"getScreenHeight" handler:^(id data, WVJBResponseCallback responseCallback) {
-		responseCallback([NSNumber numberWithInt:[UIScreen mainScreen].bounds.size.height]);
+	[bridge registerHandler:@"getScreenHeight" handler:^(id data, WVJBResponse response) {
+		[response respondWith:[NSNumber numberWithInt:[UIScreen mainScreen].bounds.size.height]];
 	}];
 
 ##### `[bridge callHandler:(NSString*)handlerName data:(id)data]`
@@ -103,7 +109,8 @@ Call the javascript handler called `handlerName`. Optionally expect a response b
 Example:
 
 	[bridge callHandler:@"showAlert" data:@"Hi from ObjC to JS!"];
-	[bridge callHandler:@"getCurrentPageUrl" data:nil responseCallback:^(id responseData) {
+	[bridge callHandler:@"getCurrentPageUrl" data:nil responseCallback:^(id error, id responseData) {
+		if (error) { return NSLog(@"Huston, we got a problem: %@", error); }
 		NSLog(@"Current UIWebView page URL is: %@", responseData);
 	}];
 
@@ -121,45 +128,47 @@ Example:
 		// Start using the bridge
 	}, false)
 
-##### `bridge.init(function messageHandler(data, responseCallback) { ... })`
+##### `bridge.init(function messageHandler(data, response) { ... })`
 
 Initialize the bridge. This should be called inside of the `'WebViewJavascriptBridgeReady'` event handler.
 
 The `messageHandler` function will receive all messages sent from ObjC via `[bridge send:(id)data]` and `[bridge send:(id)data responseCallback:(WVJBResponseCallback)responseCallback]`.
 
-The `responseCallback` will be a function if ObjC sent the message with a `WVJBResponseCallback` block, or `undefined` otherwise.
+The `response` object will be defined if if ObjC sent the message with a `WVJBResponseCallback` block.
 
 Example:
 
-	bridge.init(function(data, responseCallback) {
+	bridge.init(function(data, response) {
 		alert("Got data " + JSON.stringify(data))
-		if (responseCallback) {
-			responseCallback("Right back atcha!")
+		if (response) {
+			response.respondWith("Right back atcha!")
+			// or, response.respondWithError("It went wrong!")
 		}
 	})
 
 ##### `bridge.send("Hi there!")`
 ##### `bridge.send({ Foo:"Bar" })`
-##### `bridge.send(data, function responseCallback(responseData) { ... })`
+##### `bridge.send(data, function responseCallback(error, responseData) { ... })`
 
 Send a message to ObjC. Optionally expect a response by giving a `responseCallback` function.
 
 Example:
 
 	bridge.send("Hi there!")
-	bridge.send("Hi there!", function(response) {
-		alert("I got a response! "+JSON.stringify(response))
+	bridge.send("Hi there!", function(error, responseData) {
+		if (error) { return alert("Uh oh, we got an error: "+error) }
+		alert("I got a response! "+JSON.stringify(data))
 	})
 
-##### `bridge.registerHandler("handlerName", function(data, responseCallback) { ... })`
+##### `bridge.registerHandler("handlerName", function(error, responseData) { ... })`
 
-Register a handler called `handlerName`. The ObjC can then call this handler with `[bridge callHandler:"handlerName" data:@"Foo"]` and `[bridge callHandler:"handlerName" data:@"Foo" responseCallback:^(id responseData) { ... }]`
+Register a handler called `handlerName`. The ObjC can then call this handler with `[bridge callHandler:"handlerName" data:@"Foo"]` and `[bridge callHandler:"handlerName" data:@"Foo" responseCallback:^(id error, id responseData) { ... }]`
 
 Example:
 
 	bridge.registerHandler("showAlert", function(data) { alert(data) })
-	bridge.registerHandler("getCurrentPageUrl", function(data, responseCallback) {
-		responseCallback(document.location.toString())
+	bridge.registerHandler("getCurrentPageUrl", function(data, response) {
+		response.respondWith(document.location.toString())
 	})
 
 

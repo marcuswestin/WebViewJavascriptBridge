@@ -109,31 +109,31 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     NSArray* messages = [messageQueueString componentsSeparatedByString:MESSAGE_SEPARATOR];
     for (NSString *messageJSON in messages) {
         NSDictionary* message = [self _deserializeMessageJSON:messageJSON];
-        WVJBResponseCallback responseCallback = NULL;
-        if ([message objectForKey:@"callbackId"]) {
-            __block NSString* responseId = [message objectForKey:@"callbackId"];
-            responseCallback = ^(NSDictionary* data) {
-                NSDictionary* responseMessage = [NSDictionary dictionaryWithObjectsAndKeys: responseId, @"responseId", data, @"data", nil];
-                [self _queueMessage:responseMessage];
-            };
-        }
         
-        WVJBHandler handler = self.messageHandler;
-        if ([message objectForKey:@"handlerName"]) {
-            handler = [self.messageHandlers objectForKey:[message objectForKey:@"handlerName"]];
-        } else if ([message objectForKey:@"responseId"]) {
-            handler = [self.responseCallbacks objectForKey:[message objectForKey:@"responseId"]];
-        }
-        
-        if (handler) {
+        NSString* responseId = [message objectForKey:@"responseId"];
+        if (responseId) {
+            WVJBResponseCallback responseCallback = [_responseCallbacks objectForKey:responseId];
+            responseCallback([message objectForKey:@"error"], [message objectForKey:@"data"]);
+            [_responseCallbacks removeObjectForKey:responseId];
+        } else {
+            WVJBResponse* response = nil;
+            if ([message objectForKey:@"callbackId"]) {
+                response = [[WVJBResponse alloc] initWithCallbackId:[message objectForKey:@"callbackId"] bridge:self];
+            }
+            
+            WVJBHandler handler = self.messageHandler;
+
+            NSString* handlerName = [message objectForKey:@"handlerName"];
+            if (handlerName) {
+                handler = [_messageHandlers objectForKey:handlerName];
+            }
+            
             @try {
-                handler([message objectForKey:@"data"], responseCallback);
+                handler([message objectForKey:@"data"], response);
             }
             @catch (NSException *exception) {
-                NSLog(@"WebViewJavascriptBridge: WARNING: handler threw. %@ %@", message, exception);
+                NSLog(@"WebViewJavascriptBridge: WARNING: objc handler threw. %@ %@", message, exception);
             }
-        } else {
-            NSLog(@"WebViewJavascriptBridge: WARNING: handler not found (%@)", [message objectForKey:@"handlerName"]);
         }
     }
 }
@@ -208,4 +208,25 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     }
 }
 
+@end
+
+@implementation WVJBResponse {
+    NSString* _responseId;
+    WebViewJavascriptBridge* _bridge;
+}
+- (WVJBResponse*) initWithCallbackId:(NSString*)callbackId bridge:(WebViewJavascriptBridge*)bridge {
+    if (self = [super init]) {
+        _responseId = callbackId;
+        _bridge = bridge;
+    }
+    return self;
+}
+- (void) respondWith:(id)responseData {
+    NSDictionary* message = [NSDictionary dictionaryWithObjectsAndKeys: _responseId, @"responseId", responseData, @"responseData", nil];
+    [_bridge _queueMessage:message];
+}
+- (void) respondWithError:(id)error {
+    NSDictionary* message = [NSDictionary dictionaryWithObjectsAndKeys: _responseId, @"responseId", error, @"error", nil];
+    [_bridge _queueMessage:message];
+}
 @end

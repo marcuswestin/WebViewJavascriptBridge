@@ -3,31 +3,35 @@
 @implementation ExampleAppDelegate
 
 @synthesize window = _window;
-@synthesize javascriptBridge = _javascriptBridge;
+@synthesize javascriptBridge = _bridge;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:webView];
     
-    self.javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
+    _bridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponse *response) {
         NSLog(@"ObjC received message from JS: %@", data);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ObjC got message from Javascript:" message:data delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
     }];
     
-    [self.javascriptBridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
+    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponse *response) {
         NSLog(@"testObjcCallback called: %@", data);
-        responseCallback(@"Response from testObjcCallback");
+        [response respondWith:@"Response from testObjcCallback"];
     }];
     
-    [self.javascriptBridge send:@"A string sent from ObjC before Webview has loaded."];
-    [self.javascriptBridge callHandler:@"testJavascriptHandler" data:[NSDictionary dictionaryWithObject:@"before ready" forKey:@"foo"]];
+    [_bridge send:@"A string sent from ObjC before Webview has loaded." responseCallback:^(id error, id responseData) {
+        if (error) { return NSLog(@"Uh oh - I got an error: %@", error); }
+        NSLog(@"objc got response! %@ %@", error, responseData);
+    }];
+    
+    [_bridge callHandler:@"testJavascriptHandler" data:[NSDictionary dictionaryWithObject:@"before ready" forKey:@"foo"]];
     
     [self renderButtons:webView];
     [self loadExamplePage:webView];
     
-    [self.javascriptBridge send:@"A string sent from ObjC after Webview has loaded."];
+    [_bridge send:@"A string sent from ObjC after Webview has loaded."];
     
     [self.window makeKeyAndVisible];
     return YES;
@@ -48,12 +52,12 @@
 }
 
 - (void)sendMessage:(id)sender {
-    [self.javascriptBridge send:@"A string sent from ObjC to JS"];
+    [_bridge send:@"A string sent from ObjC to JS"];
 }
 
 - (void)callHandler:(id)sender {
-    [self.javascriptBridge callHandler:@"testJavascriptHandler" data:[NSDictionary dictionaryWithObject:@"Hi there, JS!" forKey:@"greetingFromObjC"] responseCallback:^(id responseData) {
-        NSLog(@"testJavascriptHandler responded: %@", responseData);
+    [_bridge callHandler:@"testJavascriptHandler" data:[NSDictionary dictionaryWithObject:@"Hi there, JS!" forKey:@"greetingFromObjC"] responseCallback:^(id error, id response) {
+        NSLog(@"testJavascriptHandler responded: %@ %@", error, response);
     }];
 }
 

@@ -56,30 +56,39 @@
 		return messageQueueString
 	}
 
-	function _createResponseCallback(responseId) {
-		return function(data) {
-			_doSend({ responseId:responseId, data:data })
-		}
-	}
-
 	function _dispatchMessageFromObjC(messageJSON) {
 		setTimeout(function _timeoutDispatchMessageFromObjC() {
 			var message = JSON.parse(messageJSON)
 			var messageHandler
 			
 			if (message.responseId) {
-				handler = responseCallbacks[message.responseId]
+				var responseCallback = responseCallbacks[message.responseId]
+				responseCallback(message.error, message.responseData)
 				delete responseCallbacks[message.responseId]
-			} else if (message.handlerName) {
-				handler = messageHandlers[message.handlerName]
 			} else {
-				handler = WebViewJavascriptBridge._messageHandler
-			}
-			
-			if (message.callbackId) {
-				handler(message.data, _createResponseCallback(message.callbackId))
-			} else {
-				handler(message.data)
+				var response
+				if (message.callbackId) {
+					var callbackResponseId = message.callbackId
+					response = {
+						respondWith: function(data) {
+							_doSend({ responseId:callbackResponseId, data:data })
+						},
+						respondWithError: function(error) {
+							_doSend({ responseId:callbackResponseId, data:data })
+						}
+					}
+				}
+				
+				var handler = WebViewJavascriptBridge._messageHandler
+				if (message.handlerName) {
+					handler = messageHandlers[message.handlerName]
+				}
+				
+				try {
+					handler(message.data, response)
+				} catch(exception) {
+					console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception)
+				}
 			}
 		})
 	}

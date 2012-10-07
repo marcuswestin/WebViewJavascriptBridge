@@ -1,8 +1,9 @@
 intended v2.0.0
 + Messages are objects instead of strings. Supports NSDictionary*/Objects, NSArray*/Arrays, NSNumber*/Number & NSString*/String.
 + Messages are encoded with NSJSONSerialization. Optional fallback to JSONKit for iOS 4 support.
-+ Messages can expect responses. A message received with an expected response is accompanied by a WVJBResponseCallback/Function.
++ Messages can expect responses. A message received with an expected response is accompanied by a WVJBResponse* object.
 + Handlers can be registered by name, and called with data and an optional expected response.
++ Responses expect either an error or data (`-(void)respond:(id)data`, -(void)respondWithError:(id)error)
 
 v0.0.1
 + ObjC: A WebViewJavascriptBridge class (a UIWebViewDelegate) that enables message passing to and from the JS
