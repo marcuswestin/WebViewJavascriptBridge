@@ -21,7 +21,7 @@ To use a WebViewJavascriptBridge in your own project:
 3) Instantiate a UIWebView and a WebViewJavascriptBridge:
 
 	UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
-	WebViewJavascriptBridge* javascriptBridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponse* response) {
+	WebViewJavascriptBridge* bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponse* response) {
 		NSLog(@"Received message from javascript: %@", data);
 		[response respondWith:@"Right back atcha"];
 		// or [response respondWithError:]
@@ -29,9 +29,9 @@ To use a WebViewJavascriptBridge in your own project:
 
 4) Go ahead and send some messages from ObjC to javascript:
 
-	[javascriptBridge send:@"Well hello there"];
-	[javascriptBridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
-	[javascriptBridge send:@"Give me a response, will you?" responseCallback:^(id error, id responseData) {
+	[bridge send:@"Well hello there"];
+	[bridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
+	[bridge send:@"Give me a response, will you?" responseCallback:^(id error, id responseData) {
 		NSLog(@"objc got its response! %@ %@", error, responseData);
 	}];
 
@@ -57,8 +57,8 @@ API Reference
 
 ### ObjC API
 
-##### `[WebViewJavascriptBridge javascriptBridgeForWebView:(UIWebView*)webview handler:(WVJBHandler)handler]`
-##### `[WebViewJavascriptBridge javascriptBridgeForWebView:(UIWebView*)webview webViewDelegate:(UIWebViewDelegate*)webViewDelegate handler:(WVJBHandler)handler]`
+##### `[WebViewJavascriptBridge bridgeForWebView:(UIWebView*)webview handler:(WVJBHandler)handler]`
+##### `[WebViewJavascriptBridge bridgeForWebView:(UIWebView*)webview webViewDelegate:(UIWebViewDelegate*)webViewDelegate handler:(WVJBHandler)handler]`
 
 Create a javascript bridge for the given UIWebView.
 
@@ -68,14 +68,14 @@ Optionally, pass in `webViewDelegate:(UIWebViewDelegate*)webViewDelegate` if you
 
 Example:
 	
-	[WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponse response) {
+	[WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponse response) {
 		NSLog(@"Received message from javascript: %@", data);
 		if (response) {
 			[response respondWith:@"Right back atcha"];
 		}
 	}]
 	
-	[WebViewJavascriptBridge javascriptBridgeForWebView:webView webViewDelegate:self handler:^(id data, WVJBResponse response) { /* ... */ }];
+	[WebViewJavascriptBridge bridgeForWebView:webView webViewDelegate:self handler:^(id data, WVJBResponse response) { /* ... */ }];
 
 ##### `[bridge send:(id)data]`
 ##### `[bridge send:(id)data responseCallback:(WVJBResponseCallback)responseCallback]`

@@ -29,11 +29,11 @@ static NSString *MESSAGE_SEPARATOR = @"__WVJB_MESSAGE_SEPERATOR__";
 static NSString *CUSTOM_PROTOCOL_SCHEME = @"wvjbscheme";
 static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
 
-+ (id)javascriptBridgeForWebView:(UIWebView *)webView handler:(WVJBHandler)handler {
-    return [self javascriptBridgeForWebView:webView webViewDelegate:nil handler:handler];
++ (id)bridgeForWebView:(UIWebView *)webView handler:(WVJBHandler)handler {
+    return [self bridgeForWebView:webView webViewDelegate:nil handler:handler];
 }
     
-+ (id)javascriptBridgeForWebView:(UIWebView *)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler {
++ (id)bridgeForWebView:(UIWebView *)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler {
     WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
     bridge.messageHandler = messageHandler;
     bridge.startupMessageQueue = [NSMutableArray array];

@@ -10,7 +10,7 @@
     UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
     [self.window addSubview:webView];
     
-    _bridge = [WebViewJavascriptBridge javascriptBridgeForWebView:webView handler:^(id data, WVJBResponse *response) {
+    _bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponse *response) {
         NSLog(@"ObjC received message from JS: %@", data);
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ObjC got message from Javascript:" message:data delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
         [alert show];
