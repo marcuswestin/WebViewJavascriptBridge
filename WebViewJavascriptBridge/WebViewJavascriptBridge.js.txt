@@ -36,7 +36,7 @@
 		messageHandlers[handlerName] = handler
 	}
 	
-	function fireHandler(handlerName, data, responseCallback) {
+	function callHandler(handlerName, data, responseCallback) {
 		_doSend({ data:data, handlerName:handlerName }, responseCallback)
 	}
 	
@@ -105,7 +105,7 @@
 		init: init,
 		send: send,
 		registerHandler: registerHandler,
-		fireHandler: fireHandler,
+		callHandler: callHandler,
 		_fetchQueue: _fetchQueue,
 		_handleMessageFromObjC: _handleMessageFromObjC
 	}
