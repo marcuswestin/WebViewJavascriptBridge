@@ -46,6 +46,9 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     return bridge;
 }
 
+static bool logging = false;
++ (void)enableLogging { logging = true; }
+
 - (void)send:(NSDictionary *)data {
     [self send:data responseCallback:nil];
 }
@@ -95,6 +98,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
 
 - (void)_dispatchMessage:(NSDictionary *)message {
     NSString *messageJSON = [self _serializeMessage:message];
+    if (logging) { NSLog(@"WVJB: send %@", messageJSON); }
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
@@ -112,10 +116,12 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
         
         NSString* responseId = [message objectForKey:@"responseId"];
         if (responseId) {
+            if (logging) { NSLog(@"WVJB response: %@", messageJSON); }
             WVJBResponseCallback responseCallback = [_responseCallbacks objectForKey:responseId];
             responseCallback([message objectForKey:@"error"], [message objectForKey:@"responseData"]);
             [_responseCallbacks removeObjectForKey:responseId];
         } else {
+            if (logging) { NSLog(@"WVJB message: %@", messageJSON); }
             WVJBResponse* response = nil;
             if ([message objectForKey:@"callbackId"]) {
                 response = [[WVJBResponse alloc] initWithCallbackId:[message objectForKey:@"callbackId"] bridge:self];
