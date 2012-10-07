@@ -70,11 +70,11 @@
 				if (message.callbackId) {
 					var callbackResponseId = message.callbackId
 					response = {
-						respondWith: function(data) {
-							_doSend({ responseId:callbackResponseId, data:data })
+						respondWith: function(responseData) {
+							_doSend({ responseId:callbackResponseId, responseData:responseData })
 						},
 						respondWithError: function(error) {
-							_doSend({ responseId:callbackResponseId, data:data })
+							_doSend({ responseId:callbackResponseId, error:error })
 						}
 					}
 				}

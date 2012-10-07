@@ -113,7 +113,7 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
         NSString* responseId = [message objectForKey:@"responseId"];
         if (responseId) {
             WVJBResponseCallback responseCallback = [_responseCallbacks objectForKey:responseId];
-            responseCallback([message objectForKey:@"error"], [message objectForKey:@"data"]);
+            responseCallback([message objectForKey:@"error"], [message objectForKey:@"responseData"]);
             [_responseCallbacks removeObjectForKey:responseId];
         } else {
             WVJBResponse* response = nil;
