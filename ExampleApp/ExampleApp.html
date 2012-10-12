@@ -44,7 +44,7 @@
 		callbackButton.ontouchstart = function(e) {
 			e.preventDefault()
 			log("Calling handler testObjcCallback")
-			bridge.fireHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+			bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
 				log('Got response from testObjcCallback', response)
 			})
 		}
