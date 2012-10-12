@@ -9,6 +9,9 @@
 </head><body>
 	<h1>WebViewJavascriptBridge Demo</h1>
 	<script>
+	window.onerror = function(err) {
+		alert('window.onerror: ' + err)
+	}
 	document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false)
 	function onBridgeReady(event) {
 		var bridge = event.bridge
