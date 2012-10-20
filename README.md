@@ -11,6 +11,7 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 
 - [Yardsale](https://www.getyardsale.com/)
 - [EverTrue](http://www.evertrue.com/)
+- [Game Insight](http://www.game-insight.com/)
 - Flutterby Labs
 
 Are you using WebViewJavascript at your company? Add it and send us a pull request!
