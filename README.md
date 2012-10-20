@@ -10,6 +10,7 @@ In the Wild
 WebViewJavascriptBridge is used by a range of companies and projects. This list was just started and is still very incomplete.
 
 - [Yardsale](https://www.getyardsale.com/)
+- [EverTrue](http://www.evertrue.com/)
 - Flutterby Labs
 
 Are you using WebViewJavascript at your company? Add it and send us a pull request!
