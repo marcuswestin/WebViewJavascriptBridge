@@ -13,6 +13,7 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 - [EverTrue](http://www.evertrue.com/)
 - [Game Insight](http://www.game-insight.com/)
 - Flutterby Labs
+- JD Media and its first App: [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
 
 Are you using WebViewJavascript at your company? Add it and send us a pull request!
 
