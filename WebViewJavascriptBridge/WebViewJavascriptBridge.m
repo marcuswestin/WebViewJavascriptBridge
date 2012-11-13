@@ -98,7 +98,13 @@ static bool logging = false;
 
 - (void)_dispatchMessage:(NSDictionary *)message {
     NSString *messageJSON = [self _serializeMessage:message];
-    if (logging) { NSLog(@"WVJB: send %@", messageJSON); }
+    if (logging) {
+        if (messageJSON.length > 500) {
+            NSLog(@"WVJB: send %@", [[messageJSON substringToIndex:500] stringByAppendingString:@" [...]"]);
+        } else {
+            NSLog(@"WVJB: send %@", messageJSON);
+        }
+    }
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
