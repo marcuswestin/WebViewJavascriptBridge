@@ -20,6 +20,7 @@
 - (void)_dispatchMessage:(NSDictionary*)message;
 - (NSString*)_serializeMessage:(NSDictionary*)message;
 - (NSDictionary*)_deserializeMessageJSON:(NSString*)messageJSON;
+- (void)_log:(NSString*)type json:(NSString*)output;
 
 @end
 
@@ -98,13 +99,7 @@ static bool logging = false;
 
 - (void)_dispatchMessage:(NSDictionary *)message {
     NSString *messageJSON = [self _serializeMessage:message];
-    if (logging) {
-        if (messageJSON.length > 500) {
-            NSLog(@"WVJB: send %@", [[messageJSON substringToIndex:500] stringByAppendingString:@" [...]"]);
-        } else {
-            NSLog(@"WVJB: send %@", messageJSON);
-        }
-    }
+    [self _log:@"send" json:messageJSON];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
@@ -122,12 +117,12 @@ static bool logging = false;
         
         NSString* responseId = [message objectForKey:@"responseId"];
         if (responseId) {
-            if (logging) { NSLog(@"WVJB response: %@", messageJSON); }
+            [self _log:@"response" json:messageJSON];
             WVJBResponseCallback responseCallback = [_responseCallbacks objectForKey:responseId];
             responseCallback([message objectForKey:@"error"], [message objectForKey:@"responseData"]);
             [_responseCallbacks removeObjectForKey:responseId];
         } else {
-            if (logging) { NSLog(@"WVJB message: %@", messageJSON); }
+            [self _log:@"messages" json:messageJSON];
             WVJBResponse* response = nil;
             if ([message objectForKey:@"callbackId"]) {
                 response = [[WVJBResponse alloc] initWithCallbackId:[message objectForKey:@"callbackId"] bridge:self];
@@ -164,6 +159,15 @@ static bool logging = false;
     #else
         return [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
     #endif
+}
+
+- (void)_log:(NSString *)type json:(NSString *)json {
+    if (!logging) { return; }
+    if (json.length > 500) {
+        NSLog(@"WVJB: %@ %@", type, [[json substringToIndex:500] stringByAppendingString:@" [...]"]);
+    } else {
+        NSLog(@"WVJB: %@ %@", type, json);
+    }
 }
 
 #pragma mark UIWebViewDelegate
