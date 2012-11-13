@@ -3,6 +3,20 @@ WebViewJavascriptBridge
 
 An iOS bridge for sending messages to and from javascript in a UIWebView.
 
+If you like WebViewJavascriptBridge you should also check out [WebViewProxy](https://github.com/marcuswestin/WebViewProxy).
+
+In the Wild
+-----------
+WebViewJavascriptBridge is used by a range of companies and projects. This list was just started and is still very incomplete.
+
+- [Yardsale](https://www.getyardsale.com/)
+- [EverTrue](http://www.evertrue.com/)
+- [Game Insight](http://www.game-insight.com/)
+- Flutterby Labs
+- JD Media's [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
+
+Are you using WebViewJavascript at your company? Add it and send us a pull request!
+
 Setup & Examples
 ----------------
 
