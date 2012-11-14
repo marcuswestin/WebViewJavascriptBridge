@@ -12,6 +12,7 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 - [Yardsale](https://www.getyardsale.com/)
 - [EverTrue](http://www.evertrue.com/)
 - [Game Insight](http://www.game-insight.com/)
+- [Altralogica](http://www.altralogica.it)
 - Flutterby Labs
 - JD Media's [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
 
