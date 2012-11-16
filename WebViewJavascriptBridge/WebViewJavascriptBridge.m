@@ -37,12 +37,10 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
 + (id)bridgeForWebView:(UIWebView *)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler {
     WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
     bridge.messageHandler = messageHandler;
-    bridge.startupMessageQueue = [NSMutableArray array];
-    bridge.responseCallbacks = [NSMutableDictionary dictionary];
-    bridge.messageHandlers = [NSMutableDictionary dictionary];
-    bridge.uniqueId = 0;
     bridge.webView = webView;
     bridge.webViewDelegate = webViewDelegate;
+    bridge.messageHandlers = [NSMutableDictionary dictionary];
+    [bridge reset];
     webView.delegate = bridge;
     return bridge;
 }
@@ -72,6 +70,12 @@ static bool logging = false;
 
 - (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
     [self.messageHandlers setObject:handler forKey:handlerName];
+}
+
+- (void)reset {
+    self.startupMessageQueue = [NSMutableArray array];
+    self.responseCallbacks = [NSMutableDictionary dictionary];
+    self.uniqueId = 0;
 }
 
 - (void)_sendData:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
