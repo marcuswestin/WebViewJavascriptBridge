@@ -198,14 +198,14 @@ static bool logging = false;
         self.startupMessageQueue = nil;
     }
     
-    if (self.webViewDelegate) {
+    if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
         [self.webViewDelegate webViewDidFinishLoad:webView];
     }
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     if (webView != _webView) { return; }
-    if (self.webViewDelegate) {
+    if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
         [self.webViewDelegate webView:_webView didFailLoadWithError:error];
     }
 }
@@ -220,7 +220,7 @@ static bool logging = false;
             NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@://%@", CUSTOM_PROTOCOL_SCHEME, [url path]);
         }
         return NO;
-    } else if (self.webViewDelegate) {
+    } else if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
         return [self.webViewDelegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
     } else {
         return YES;
@@ -229,7 +229,7 @@ static bool logging = false;
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     if (webView != _webView) { return; }
-    if (self.webViewDelegate) {
+    if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
         [self.webViewDelegate webViewDidStartLoad:webView];
     }
 }
