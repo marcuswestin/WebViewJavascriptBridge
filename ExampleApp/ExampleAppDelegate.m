@@ -12,20 +12,18 @@
     
     [WebViewJavascriptBridge enableLogging];
     
-    _bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponse *response) {
+    _bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"ObjC received message from JS: %@", data);
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"ObjC got message from Javascript:" message:data delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
+        responseCallback(@"Response for message from ObjC");
     }];
     
-    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponse *response) {
+    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
-        [response respondWith:@"Response from testObjcCallback"];
+        responseCallback(@"Response from testObjcCallback");
     }];
     
-    [_bridge send:@"A string sent from ObjC before Webview has loaded." responseCallback:^(id error, id responseData) {
-        if (error) { return NSLog(@"Uh oh - I got an error: %@", error); }
-        NSLog(@"objc got response! %@ %@", error, responseData);
+    [_bridge send:@"A string sent from ObjC before Webview has loaded." responseCallback:^(id responseData) {
+        NSLog(@"objc got response! %@", responseData);
     }];
     
     [_bridge callHandler:@"testJavascriptHandler" data:[NSDictionary dictionaryWithObject:@"before ready" forKey:@"foo"]];
@@ -54,12 +52,15 @@
 }
 
 - (void)sendMessage:(id)sender {
-    [_bridge send:@"A string sent from ObjC to JS"];
+    [_bridge send:@"A string sent from ObjC to JS" responseCallback:^(id response) {
+        NSLog(@"sendMessage got response: %@", response);
+    }];
 }
 
 - (void)callHandler:(id)sender {
-    [_bridge callHandler:@"testJavascriptHandler" data:[NSDictionary dictionaryWithObject:@"Hi there, JS!" forKey:@"greetingFromObjC"] responseCallback:^(id error, id response) {
-        NSLog(@"testJavascriptHandler responded: %@ %@", error, response);
+    NSDictionary* data = [NSDictionary dictionaryWithObject:@"Hi there, JS!" forKey:@"greetingFromObjC"];
+    [_bridge callHandler:@"testJavascriptHandler" data:data responseCallback:^(id response) {
+        NSLog(@"testJavascriptHandler responded: %@", response);
     }];
 }
 

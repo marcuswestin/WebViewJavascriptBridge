@@ -1,8 +1,7 @@
 #import <UIKit/UIKit.h>
 
-@class WVJBResponse;
-typedef void (^WVJBResponseCallback)(id error, id responseData);
-typedef void (^WVJBHandler)(id data, WVJBResponse* response);
+typedef void (^WVJBResponseCallback)(id responseData);
+typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 
 @interface WebViewJavascriptBridge : NSObject <UIWebViewDelegate>
 + (id)bridgeForWebView:(UIWebView*)webView handler:(WVJBHandler)handler;
@@ -15,10 +14,4 @@ typedef void (^WVJBHandler)(id data, WVJBResponse* response);
 - (void)callHandler:(NSString*)handlerName data:(id)data;
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
 - (void)reset;
-@end
-
-@interface WVJBResponse : NSObject
-- (WVJBResponse*) initWithCallbackId:(NSString*)callbackId bridge:(WebViewJavascriptBridge*)bridge;
-- (void) respondWith:(id)responseData;
-- (void) respondWithError:(id)error;
 @end

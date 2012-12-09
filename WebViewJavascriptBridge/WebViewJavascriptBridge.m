@@ -103,7 +103,7 @@ static bool logging = false;
 
 - (void)_dispatchMessage:(NSDictionary *)message {
     NSString *messageJSON = [self _serializeMessage:message];
-    [self _log:@"send" json:messageJSON];
+    [self _log:@"sending" json:messageJSON];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
@@ -123,19 +123,23 @@ static bool logging = false;
     NSString *messageQueueString = [_webView stringByEvaluatingJavaScriptFromString:@"WebViewJavascriptBridge._fetchQueue();"];
     NSArray* messages = [messageQueueString componentsSeparatedByString:MESSAGE_SEPARATOR];
     for (NSString *messageJSON in messages) {
+        [self _log:@"received" json:messageJSON];
+        
         NSDictionary* message = [self _deserializeMessageJSON:messageJSON];
         
         NSString* responseId = [message objectForKey:@"responseId"];
         if (responseId) {
-            [self _log:@"response" json:messageJSON];
             WVJBResponseCallback responseCallback = [_responseCallbacks objectForKey:responseId];
-            responseCallback([message objectForKey:@"error"], [message objectForKey:@"responseData"]);
+            responseCallback([message objectForKey:@"responseData"]);
             [_responseCallbacks removeObjectForKey:responseId];
         } else {
-            [self _log:@"messages" json:messageJSON];
-            WVJBResponse* response = nil;
-            if ([message objectForKey:@"callbackId"]) {
-                response = [[WVJBResponse alloc] initWithCallbackId:[message objectForKey:@"callbackId"] bridge:self];
+            WVJBResponseCallback responseCallback = NULL;
+            __block NSString* callbackId = [message objectForKey:@"callbackId"];
+            if (callbackId) {
+                responseCallback = ^(id responseData) {
+                    NSDictionary* message = [NSDictionary dictionaryWithObjectsAndKeys: callbackId, @"responseId", responseData, @"responseData", nil];
+                    [self _queueMessage:message];
+                };
             }
             
             WVJBHandler handler = self.messageHandler;
@@ -146,7 +150,7 @@ static bool logging = false;
             }
             
             @try {
-                handler([message objectForKey:@"data"], response);
+                handler([message objectForKey:@"data"], responseCallback);
             }
             @catch (NSException *exception) {
                 NSLog(@"WebViewJavascriptBridge: WARNING: objc handler threw. %@ %@", message, exception);
@@ -171,12 +175,12 @@ static bool logging = false;
     #endif
 }
 
-- (void)_log:(NSString *)type json:(NSString *)json {
+- (void)_log:(NSString *)action json:(NSString *)json {
     if (!logging) { return; }
     if (json.length > 500) {
-        NSLog(@"WVJB: %@ %@", type, [[json substringToIndex:500] stringByAppendingString:@" [...]"]);
+        NSLog(@"WVJB %@: %@", action, [[json substringToIndex:500] stringByAppendingString:@" [...]"]);
     } else {
-        NSLog(@"WVJB: %@ %@", type, json);
+        NSLog(@"WVJB %@: %@", action, json);
     }
 }
 
@@ -234,25 +238,4 @@ static bool logging = false;
     }
 }
 
-@end
-
-@implementation WVJBResponse {
-    NSString* _responseId;
-    WebViewJavascriptBridge* _bridge;
-}
-- (WVJBResponse*) initWithCallbackId:(NSString*)callbackId bridge:(WebViewJavascriptBridge*)bridge {
-    if (self = [super init]) {
-        _responseId = callbackId;
-        _bridge = bridge;
-    }
-    return self;
-}
-- (void) respondWith:(id)responseData {
-    NSDictionary* message = [NSDictionary dictionaryWithObjectsAndKeys: _responseId, @"responseId", responseData, @"responseData", nil];
-    [_bridge _queueMessage:message];
-}
-- (void) respondWithError:(id)error {
-    NSDictionary* message = [NSDictionary dictionaryWithObjectsAndKeys: _responseId, @"responseId", error, @"error", nil];
-    [_bridge _queueMessage:message];
-}
 @end

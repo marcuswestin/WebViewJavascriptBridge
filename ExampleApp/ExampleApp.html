@@ -10,7 +10,7 @@
 	<h1>WebViewJavascriptBridge Demo</h1>
 	<script>
 	window.onerror = function(err) {
-		alert('window.onerror: ' + err)
+		log('window.onerror: ' + err)
 	}
 	document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false)
 	function onBridgeReady(event) {
@@ -20,24 +20,33 @@
 			var log = document.getElementById('log')
 			var el = document.createElement('div')
 			el.className = 'logLine'
-			el.innerHTML = uniqueId++ + '. ' + message + (data ? ': ' + JSON.stringify(data) : '')
+			el.innerHTML = uniqueId++ + '. ' + message + (data ? ':<br/>' + JSON.stringify(data) : '')
 			if (log.children.length) { log.insertBefore(el, log.children[0]) }
 			else { log.appendChild(el) }
 		}
-		bridge.init(function(message) {
+		bridge.init(function(message, responseCallback) {
 			log('JS got a message', message)
+			var data = { 'Javascript Responds':'Wee!' }
+			log('JS responding with', data)
+			responseCallback(data)
 		})
 
-		bridge.registerHandler('testJavascriptHandler', function(data, response) {
-			log('JS handler testJavascriptHandler was called', data)
-			response.respondWith({ 'Javascript Says':'Right back atcha!' })
+		bridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
+			log('ObjC called testJavascriptHandler with', data)
+			var responseData = { 'Javascript Says':'Right back atcha!' }
+			log('JS responding with', responseData)
+			responseCallback(responseData)
 		})
 
 		var button = document.getElementById('buttons').appendChild(document.createElement('button'))
 		button.innerHTML = 'Send message to ObjC'
 		button.ontouchstart = function(e) {
 			e.preventDefault()
-			bridge.send('Hello from JS button')
+			var data = 'Hello from JS button'
+			log('JS sending message', data)
+			bridge.send(data, function(responseData) {
+				log('JS got response', responseData)
+			})
 		}
 
 		document.body.appendChild(document.createElement('br'))
@@ -46,9 +55,9 @@
 		callbackButton.innerHTML = 'Fire testObjcCallback'
 		callbackButton.ontouchstart = function(e) {
 			e.preventDefault()
-			log("Calling handler testObjcCallback")
+			log('JS calling handler "testObjcCallback"')
 			bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
-				log('Got response from testObjcCallback', response)
+				log('JS got response', response)
 			})
 		}
 	}

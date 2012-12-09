@@ -63,19 +63,14 @@
 			
 			if (message.responseId) {
 				var responseCallback = responseCallbacks[message.responseId]
-				responseCallback(message.error, message.responseData)
+				responseCallback(message.responseData)
 				delete responseCallbacks[message.responseId]
 			} else {
-				var response
+				var responseCallback
 				if (message.callbackId) {
 					var callbackResponseId = message.callbackId
-					response = {
-						respondWith: function(responseData) {
-							_doSend({ responseId:callbackResponseId, responseData:responseData })
-						},
-						respondWithError: function(error) {
-							_doSend({ responseId:callbackResponseId, error:error })
-						}
+					responseCallback = function(responseData) {
+						_doSend({ responseId:callbackResponseId, responseData:responseData })
 					}
 				}
 				
@@ -85,9 +80,11 @@
 				}
 				
 				try {
-					handler(message.data, response)
+					handler(message.data, responseCallback)
 				} catch(exception) {
-					console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception)
+					if (typeof console != 'undefined') {
+						console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception)
+					}
 				}
 			}
 		})
