@@ -1,4 +1,7 @@
-intended v2.0.0
+v2.1.0
++ Remove WVJBResponse object and the notion of responding with an error. See 4ab41bb4d7.
+
+v2.0.0
 + Messages are objects instead of strings. Supports NSDictionary*/Objects, NSArray*/Arrays, NSNumber*/Number & NSString*/String.
 + Messages are encoded with NSJSONSerialization. Optional fallback to JSONKit for iOS 4 support.
 + Messages can expect responses. A message received with an expected response is accompanied by a WVJBResponse* object.
