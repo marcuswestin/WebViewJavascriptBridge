@@ -140,6 +140,10 @@ static bool logging = false;
                     NSDictionary* message = [NSDictionary dictionaryWithObjectsAndKeys: callbackId, @"responseId", responseData, @"responseData", nil];
                     [self _queueMessage:message];
                 };
+            } else {
+                responseCallback = ^(id ignoreResponseData) {
+                    // Do nothing
+                };
             }
             
             WVJBHandler handler = self.messageHandler;
