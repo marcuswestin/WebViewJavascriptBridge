@@ -136,7 +136,10 @@ static bool logging = false;
             WVJBResponseCallback responseCallback = NULL;
             __block NSString* callbackId = [message objectForKey:@"callbackId"];
             if (callbackId) {
+                __block bool wasCalled = false;
                 responseCallback = ^(id responseData) {
+                    if (wasCalled) { return; }
+                    wasCalled = true;
                     NSDictionary* message = [NSDictionary dictionaryWithObjectsAndKeys: callbackId, @"responseId", responseData, @"responseData", nil];
                     [self _queueMessage:message];
                 };
