@@ -156,6 +156,11 @@ static bool logging = false;
                 handler = [_messageHandlers objectForKey:handlerName];
             }
             
+            if (!handler) {
+                NSLog(@"WVJB Warning: No handler for %@", handlerName);
+                return;
+            }
+            
             @try {
                 handler([message objectForKey:@"data"], responseCallback);
             }
