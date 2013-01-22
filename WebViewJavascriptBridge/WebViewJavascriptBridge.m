@@ -162,7 +162,9 @@ static bool logging = false;
             }
             
             @try {
-                handler([message objectForKey:@"data"], responseCallback);
+                NSDictionary* data = [message objectForKey:@"data"];
+                if (!data || ((id)data) == [NSNull null]) { data = [NSDictionary dictionary]; }
+                handler(data, responseCallback);
             }
             @catch (NSException *exception) {
                 NSLog(@"WebViewJavascriptBridge: WARNING: objc handler threw. %@ %@", message, exception);
