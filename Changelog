@@ -1,3 +1,6 @@
+v2.1.1
++ Handle edge cases gracefully (e.g. don't crash on unknown command or unexpected response)
+
 v2.1.0
 + Remove WVJBResponse object and the notion of responding with an error. See 4ab41bb4d7.
 
