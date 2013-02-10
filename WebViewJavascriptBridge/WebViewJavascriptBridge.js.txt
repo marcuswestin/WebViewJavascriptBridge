@@ -42,7 +42,7 @@
 	
 	function _doSend(message, responseCallback) {
 		if (responseCallback) {
-			var callbackId = 'js_cb_'+(uniqueId++)
+			var callbackId = 'cb_'+(uniqueId++)+'_'+new Date().getTime()
 			responseCallbacks[callbackId] = responseCallback
 			message['callbackId'] = callbackId
 		}
@@ -63,6 +63,7 @@
 			
 			if (message.responseId) {
 				var responseCallback = responseCallbacks[message.responseId]
+				if (!responseCallback) { return; }
 				responseCallback(message.responseData)
 				delete responseCallbacks[message.responseId]
 			} else {

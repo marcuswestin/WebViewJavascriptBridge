@@ -123,7 +123,7 @@ static bool logging = false;
     NSString *messageQueueString = [_webView stringByEvaluatingJavaScriptFromString:@"WebViewJavascriptBridge._fetchQueue();"];
     NSArray* messages = [messageQueueString componentsSeparatedByString:MESSAGE_SEPARATOR];
     for (NSString *messageJSON in messages) {
-        [self _log:@"received" json:messageJSON];
+        [self _log:@"receivd" json:messageJSON];
         
         NSDictionary* message = [self _deserializeMessageJSON:messageJSON];
         
