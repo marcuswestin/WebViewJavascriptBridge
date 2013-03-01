@@ -37,7 +37,7 @@
 	}
 	
 	function callHandler(handlerName, data, responseCallback) {
-		_doSend({ data:data, handlerName:handlerName }, responseCallback)
+		_doSend({ handlerName:handlerName, data:data }, responseCallback)
 	}
 	
 	function _doSend(message, responseCallback) {
