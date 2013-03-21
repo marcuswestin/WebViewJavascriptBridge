@@ -69,7 +69,7 @@ static bool logging = false;
 }
 
 - (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
-    [self.messageHandlers setObject:handler forKey:handlerName];
+    self.messageHandlers[handlerName] = handler;
 }
 
 - (void)reset {
@@ -83,12 +83,12 @@ static bool logging = false;
     
     if (responseCallback) {
         NSString* callbackId = [NSString stringWithFormat:@"objc_cb_%d", ++_uniqueId];
-        [self.responseCallbacks setObject:responseCallback forKey:callbackId];
-        [message setObject:callbackId forKey:@"callbackId"];
+        self.responseCallbacks[callbackId] = responseCallback;
+        message[@"callbackId"] = callbackId;
     }
 
     if (handlerName) {
-        [message setObject:handlerName forKey:@"handlerName"];
+        message[@"handlerName"] = handlerName;
     }
     [self _queueMessage:message];
 }
@@ -127,20 +127,17 @@ static bool logging = false;
         
         NSDictionary* message = [self _deserializeMessageJSON:messageJSON];
         
-        NSString* responseId = [message objectForKey:@"responseId"];
+        NSString* responseId = message[@"responseId"];
         if (responseId) {
-            WVJBResponseCallback responseCallback = [_responseCallbacks objectForKey:responseId];
-            responseCallback([message objectForKey:@"responseData"]);
+            WVJBResponseCallback responseCallback = _responseCallbacks[responseId];
+            responseCallback(message[@"responseData"]);
             [_responseCallbacks removeObjectForKey:responseId];
         } else {
             WVJBResponseCallback responseCallback = NULL;
-            __block NSString* callbackId = [message objectForKey:@"callbackId"];
+            __block NSString* callbackId = message[@"callbackId"];
             if (callbackId) {
-                __block bool wasCalled = false;
                 responseCallback = ^(id responseData) {
-                    if (wasCalled) { return; }
-                    wasCalled = true;
-                    NSDictionary* message = [NSDictionary dictionaryWithObjectsAndKeys: callbackId, @"responseId", responseData, @"responseData", nil];
+                    NSDictionary* message = @{ @"responseId":callbackId, @"responseData":responseData };
                     [self _queueMessage:message];
                 };
             } else {
@@ -149,20 +146,16 @@ static bool logging = false;
                 };
             }
             
-            WVJBHandler handler = self.messageHandler;
-
-            NSString* handlerName = [message objectForKey:@"handlerName"];
-            if (handlerName) {
-                handler = [_messageHandlers objectForKey:handlerName];
-            }
-            
-            if (!handler) {
-                NSLog(@"WVJB Warning: No handler for %@", handlerName);
-                return;
+            WVJBHandler handler;
+            if (message[@"handlerName"]) {
+                handler = _messageHandlers[message[@"handlerName"]];
+                if (!handler) { return NSLog(@"WVJB Warning: No handler for %@", message[@"handlerName"]); }
+            } else {
+                handler = self.messageHandler;
             }
             
             @try {
-                NSDictionary* data = [message objectForKey:@"data"];
+                NSDictionary* data = message[@"data"];
                 if (!data || ((id)data) == [NSNull null]) { data = [NSDictionary dictionary]; }
                 handler(data, responseCallback);
             }
