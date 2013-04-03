@@ -69,7 +69,7 @@ static bool logging = false;
 }
 
 - (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
-    [self.messageHandlers setObject:handler forKey:handlerName];
+    [self.messageHandlers setObject:[handler copy] forKey:handlerName];
 }
 
 - (void)reset {
@@ -83,7 +83,7 @@ static bool logging = false;
     
     if (responseCallback) {
         NSString* callbackId = [NSString stringWithFormat:@"objc_cb_%d", ++_uniqueId];
-        [self.responseCallbacks setObject:responseCallback forKey:callbackId];
+        [self.responseCallbacks setObject:[responseCallback copy] forKey:callbackId];
         [message setObject:callbackId forKey:@"callbackId"];
     }
 
