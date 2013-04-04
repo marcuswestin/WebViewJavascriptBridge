@@ -16,6 +16,7 @@
 		2CEB3F5216025A4E00548120 /* WebViewJavascriptBridge.js.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2CEB3F5016025A4E00548120 /* WebViewJavascriptBridge.js.txt */; };
 		2CEB3F5316025A4E00548120 /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CEB3F5116025A4E00548120 /* WebViewJavascriptBridge.m */; };
 		2CEB3F5516025A9000548120 /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = 2CEB3F5416025A9000548120 /* ExampleApp.html */; };
+		2CF988CE170E0BA500CA0CC7 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CF988CD170E0BA500CA0CC7 /* Default-568h@2x.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -33,6 +34,7 @@
 		2CEB3F5016025A4E00548120 /* WebViewJavascriptBridge.js.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; lineEnding = 0; path = WebViewJavascriptBridge.js.txt; sourceTree = "<group>"; };
 		2CEB3F5116025A4E00548120 /* WebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = WebViewJavascriptBridge.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		2CEB3F5416025A9000548120 /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
+		2CF988CD170E0BA500CA0CC7 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,6 +54,7 @@
 		2CEB3EB01602563600548120 = {
 			isa = PBXGroup;
 			children = (
+				2CF988CD170E0BA500CA0CC7 /* Default-568h@2x.png */,
 				2CEB3EC51602563600548120 /* ExampleApp */,
 				2CEB3EBE1602563600548120 /* Frameworks */,
 				2CEB3EBC1602563600548120 /* Products */,
@@ -163,6 +166,7 @@
 				2CEB3ECA1602563600548120 /* InfoPlist.strings in Resources */,
 				2CEB3F5216025A4E00548120 /* WebViewJavascriptBridge.js.txt in Resources */,
 				2CEB3F5516025A9000548120 /* ExampleApp.html in Resources */,
+				2CF988CE170E0BA500CA0CC7 /* Default-568h@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

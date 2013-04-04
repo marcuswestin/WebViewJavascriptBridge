@@ -198,3 +198,5 @@ Contributors
 - [@tanis2000](https://github.com/tanis2000) Valerio Santinelli
 - [@drewburch](https://github.com/drewburch) Andrew Burch
 - [@pj4533](https://github.com/pj4533) PJ Gray
+- [@xzeror](https://github.com/xzeror)
+- [@kelp404](https://github.com/kelp404)
