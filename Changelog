@@ -1,3 +1,6 @@
+v2.1.2
++ Copy handler and response blocks
+
 v2.1.1
 + Handle edge cases gracefully (e.g. don't crash on unknown command or unexpected response)
 
