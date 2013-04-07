@@ -10,14 +10,13 @@
 		2CA045DA171178E5006DEE8B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA045D9171178E5006DEE8B /* Cocoa.framework */; };
 		2CA045E4171178E6006DEE8B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CA045E2171178E6006DEE8B /* InfoPlist.strings */; };
 		2CA045E6171178E6006DEE8B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA045E5171178E6006DEE8B /* main.m */; };
-		2CA045EA171178E6006DEE8B /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2CA045E8171178E6006DEE8B /* Credits.rtf */; };
 		2CA045ED171178E6006DEE8B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA045EC171178E6006DEE8B /* AppDelegate.m */; };
 		2CA045F0171178E6006DEE8B /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2CA045EE171178E6006DEE8B /* MainMenu.xib */; };
-		2CA045FE17117A69006DEE8B /* WebViewJavascriptBridge.js.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2CA045FC17117A69006DEE8B /* WebViewJavascriptBridge.js.txt */; };
-		2CA0460317117A84006DEE8B /* WebViewJavascriptBridge_OSX.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA0460217117A84006DEE8B /* WebViewJavascriptBridge_OSX.m */; };
 		2CA0460517117B56006DEE8B /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CA0460417117B56006DEE8B /* WebKit.framework */; };
-		2CA0460A17118B08006DEE8B /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0460917118B08006DEE8B /* ExampleApp.html */; };
-		2CA046161711A1CC006DEE8B /* WebViewJavascriptBridgeAbstract.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA046151711A1CC006DEE8B /* WebViewJavascriptBridgeAbstract.m */; };
+		2CA046531711AC29006DEE8B /* WebViewJavascriptBridge.js.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0464C1711AC29006DEE8B /* WebViewJavascriptBridge.js.txt */; };
+		2CA046551711AC29006DEE8B /* WebViewJavascriptBridge_OSX.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA046501711AC29006DEE8B /* WebViewJavascriptBridge_OSX.m */; };
+		2CA046561711AC29006DEE8B /* WebViewJavascriptBridgeAbstract.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA046521711AC29006DEE8B /* WebViewJavascriptBridgeAbstract.m */; };
+		2CA0465E1711AC96006DEE8B /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0465D1711AC96006DEE8B /* ExampleApp.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,17 +29,16 @@
 		2CA045E3171178E6006DEE8B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2CA045E5171178E6006DEE8B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		2CA045E7171178E6006DEE8B /* ExampleApp-OSX-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ExampleApp-OSX-Prefix.pch"; sourceTree = "<group>"; };
-		2CA045E9171178E6006DEE8B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; name = en; path = en.lproj/Credits.rtf; sourceTree = "<group>"; };
 		2CA045EB171178E6006DEE8B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		2CA045EC171178E6006DEE8B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		2CA045EF171178E6006DEE8B /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		2CA045FC17117A69006DEE8B /* WebViewJavascriptBridge.js.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = WebViewJavascriptBridge.js.txt; sourceTree = "<group>"; };
-		2CA0460117117A84006DEE8B /* WebViewJavascriptBridge_OSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge_OSX.h; sourceTree = "<group>"; };
-		2CA0460217117A84006DEE8B /* WebViewJavascriptBridge_OSX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge_OSX.m; sourceTree = "<group>"; };
 		2CA0460417117B56006DEE8B /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
-		2CA0460917118B08006DEE8B /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
-		2CA046141711A1CC006DEE8B /* WebViewJavascriptBridgeAbstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridgeAbstract.h; sourceTree = "<group>"; };
-		2CA046151711A1CC006DEE8B /* WebViewJavascriptBridgeAbstract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridgeAbstract.m; sourceTree = "<group>"; };
+		2CA0464C1711AC29006DEE8B /* WebViewJavascriptBridge.js.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = WebViewJavascriptBridge.js.txt; sourceTree = "<group>"; };
+		2CA0464F1711AC29006DEE8B /* WebViewJavascriptBridge_OSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge_OSX.h; sourceTree = "<group>"; };
+		2CA046501711AC29006DEE8B /* WebViewJavascriptBridge_OSX.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge_OSX.m; sourceTree = "<group>"; };
+		2CA046511711AC29006DEE8B /* WebViewJavascriptBridgeAbstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridgeAbstract.h; sourceTree = "<group>"; };
+		2CA046521711AC29006DEE8B /* WebViewJavascriptBridgeAbstract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridgeAbstract.m; sourceTree = "<group>"; };
+		2CA0465D1711AC96006DEE8B /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file; name = ExampleApp.html; path = ../ExampleApp.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,11 +94,11 @@
 		2CA045DF171178E5006DEE8B /* ExampleApp-OSX */ = {
 			isa = PBXGroup;
 			children = (
+				2CA0465D1711AC96006DEE8B /* ExampleApp.html */,
+				2CA0464B1711AC29006DEE8B /* WebViewJavascriptBridge */,
 				2CA045EB171178E6006DEE8B /* AppDelegate.h */,
 				2CA045EC171178E6006DEE8B /* AppDelegate.m */,
 				2CA045EE171178E6006DEE8B /* MainMenu.xib */,
-				2CA0460917118B08006DEE8B /* ExampleApp.html */,
-				2CA045FA17117A69006DEE8B /* WebViewJavascriptBridge */,
 				2CA045E0171178E6006DEE8B /* Supporting Files */,
 			);
 			path = "ExampleApp-OSX";
@@ -113,19 +111,18 @@
 				2CA045E2171178E6006DEE8B /* InfoPlist.strings */,
 				2CA045E5171178E6006DEE8B /* main.m */,
 				2CA045E7171178E6006DEE8B /* ExampleApp-OSX-Prefix.pch */,
-				2CA045E8171178E6006DEE8B /* Credits.rtf */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		2CA045FA17117A69006DEE8B /* WebViewJavascriptBridge */ = {
+		2CA0464B1711AC29006DEE8B /* WebViewJavascriptBridge */ = {
 			isa = PBXGroup;
 			children = (
-				2CA046141711A1CC006DEE8B /* WebViewJavascriptBridgeAbstract.h */,
-				2CA046151711A1CC006DEE8B /* WebViewJavascriptBridgeAbstract.m */,
-				2CA045FC17117A69006DEE8B /* WebViewJavascriptBridge.js.txt */,
-				2CA0460117117A84006DEE8B /* WebViewJavascriptBridge_OSX.h */,
-				2CA0460217117A84006DEE8B /* WebViewJavascriptBridge_OSX.m */,
+				2CA0464C1711AC29006DEE8B /* WebViewJavascriptBridge.js.txt */,
+				2CA0464F1711AC29006DEE8B /* WebViewJavascriptBridge_OSX.h */,
+				2CA046501711AC29006DEE8B /* WebViewJavascriptBridge_OSX.m */,
+				2CA046511711AC29006DEE8B /* WebViewJavascriptBridgeAbstract.h */,
+				2CA046521711AC29006DEE8B /* WebViewJavascriptBridgeAbstract.m */,
 			);
 			path = WebViewJavascriptBridge;
 			sourceTree = SOURCE_ROOT;
@@ -182,10 +179,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				2CA045E4171178E6006DEE8B /* InfoPlist.strings in Resources */,
-				2CA045EA171178E6006DEE8B /* Credits.rtf in Resources */,
 				2CA045F0171178E6006DEE8B /* MainMenu.xib in Resources */,
-				2CA045FE17117A69006DEE8B /* WebViewJavascriptBridge.js.txt in Resources */,
-				2CA0460A17118B08006DEE8B /* ExampleApp.html in Resources */,
+				2CA046531711AC29006DEE8B /* WebViewJavascriptBridge.js.txt in Resources */,
+				2CA0465E1711AC96006DEE8B /* ExampleApp.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -198,8 +194,8 @@
 			files = (
 				2CA045E6171178E6006DEE8B /* main.m in Sources */,
 				2CA045ED171178E6006DEE8B /* AppDelegate.m in Sources */,
-				2CA0460317117A84006DEE8B /* WebViewJavascriptBridge_OSX.m in Sources */,
-				2CA046161711A1CC006DEE8B /* WebViewJavascriptBridgeAbstract.m in Sources */,
+				2CA046551711AC29006DEE8B /* WebViewJavascriptBridge_OSX.m in Sources */,
+				2CA046561711AC29006DEE8B /* WebViewJavascriptBridgeAbstract.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -212,14 +208,6 @@
 				2CA045E3171178E6006DEE8B /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		2CA045E8171178E6006DEE8B /* Credits.rtf */ = {
-			isa = PBXVariantGroup;
-			children = (
-				2CA045E9171178E6006DEE8B /* en */,
-			);
-			name = Credits.rtf;
 			sourceTree = "<group>";
 		};
 		2CA045EE171178E6006DEE8B /* MainMenu.xib */ = {
