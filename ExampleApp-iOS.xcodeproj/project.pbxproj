@@ -8,12 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		2CA045BF17117439006DEE8B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CA045B717117439006DEE8B /* InfoPlist.strings */; };
-		2CA045C017117439006DEE8B /* ExampleApp-iOS-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2CA045B917117439006DEE8B /* ExampleApp-iOS-Info.plist */; };
 		2CA045C117117439006DEE8B /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = 2CA045BB17117439006DEE8B /* ExampleApp.html */; };
 		2CA045C217117439006DEE8B /* ExampleAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA045BD17117439006DEE8B /* ExampleAppDelegate.m */; };
 		2CA045C317117439006DEE8B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA045BE17117439006DEE8B /* main.m */; };
 		2CA045C81711745D006DEE8B /* WebViewJavascriptBridge.js.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2CA045C61711745D006DEE8B /* WebViewJavascriptBridge.js.txt */; };
-		2CA045C91711745D006DEE8B /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA045C71711745D006DEE8B /* WebViewJavascriptBridge.m */; };
+		2CA045C91711745D006DEE8B /* WebViewJavascriptBridgeAbstract.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA045C71711745D006DEE8B /* WebViewJavascriptBridgeAbstract.m */; };
+		2CA0460817117BF9006DEE8B /* WebViewJavascriptBridge_iOS.m in Sources */ = {isa = PBXBuildFile; fileRef = 2CA0460717117BF9006DEE8B /* WebViewJavascriptBridge_iOS.m */; };
 		2CEB3EC01602563600548120 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CEB3EBF1602563600548120 /* UIKit.framework */; };
 		2CEB3EC21602563600548120 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CEB3EC11602563600548120 /* Foundation.framework */; };
 		2CEB3EC41602563600548120 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CEB3EC31602563600548120 /* CoreGraphics.framework */; };
@@ -28,9 +28,11 @@
 		2CA045BC17117439006DEE8B /* ExampleAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleAppDelegate.h; sourceTree = "<group>"; };
 		2CA045BD17117439006DEE8B /* ExampleAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleAppDelegate.m; sourceTree = "<group>"; };
 		2CA045BE17117439006DEE8B /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		2CA045C51711745D006DEE8B /* WebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge.h; sourceTree = "<group>"; };
+		2CA045C51711745D006DEE8B /* WebViewJavascriptBridgeAbstract.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridgeAbstract.h; sourceTree = "<group>"; };
 		2CA045C61711745D006DEE8B /* WebViewJavascriptBridge.js.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = WebViewJavascriptBridge.js.txt; sourceTree = "<group>"; };
-		2CA045C71711745D006DEE8B /* WebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge.m; sourceTree = "<group>"; };
+		2CA045C71711745D006DEE8B /* WebViewJavascriptBridgeAbstract.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridgeAbstract.m; sourceTree = "<group>"; };
+		2CA0460617117BF9006DEE8B /* WebViewJavascriptBridge_iOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge_iOS.h; sourceTree = "<group>"; };
+		2CA0460717117BF9006DEE8B /* WebViewJavascriptBridge_iOS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge_iOS.m; sourceTree = "<group>"; };
 		2CEB3EBB1602563600548120 /* ExampleApp-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ExampleApp-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2CEB3EBF1602563600548120 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CEB3EC11602563600548120 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -70,9 +72,11 @@
 		2CA045C41711745D006DEE8B /* WebViewJavascriptBridge */ = {
 			isa = PBXGroup;
 			children = (
-				2CA045C51711745D006DEE8B /* WebViewJavascriptBridge.h */,
+				2CA045C51711745D006DEE8B /* WebViewJavascriptBridgeAbstract.h */,
 				2CA045C61711745D006DEE8B /* WebViewJavascriptBridge.js.txt */,
-				2CA045C71711745D006DEE8B /* WebViewJavascriptBridge.m */,
+				2CA045C71711745D006DEE8B /* WebViewJavascriptBridgeAbstract.m */,
+				2CA0460617117BF9006DEE8B /* WebViewJavascriptBridge_iOS.h */,
+				2CA0460717117BF9006DEE8B /* WebViewJavascriptBridge_iOS.m */,
 			);
 			path = WebViewJavascriptBridge;
 			sourceTree = SOURCE_ROOT;
@@ -158,7 +162,6 @@
 			files = (
 				2CF988CE170E0BA500CA0CC7 /* Default-568h@2x.png in Resources */,
 				2CA045BF17117439006DEE8B /* InfoPlist.strings in Resources */,
-				2CA045C017117439006DEE8B /* ExampleApp-iOS-Info.plist in Resources */,
 				2CA045C117117439006DEE8B /* ExampleApp.html in Resources */,
 				2CA045C81711745D006DEE8B /* WebViewJavascriptBridge.js.txt in Resources */,
 			);
@@ -173,7 +176,8 @@
 			files = (
 				2CA045C217117439006DEE8B /* ExampleAppDelegate.m in Sources */,
 				2CA045C317117439006DEE8B /* main.m in Sources */,
-				2CA045C91711745D006DEE8B /* WebViewJavascriptBridge.m in Sources */,
+				2CA045C91711745D006DEE8B /* WebViewJavascriptBridgeAbstract.m in Sources */,
+				2CA0460817117BF9006DEE8B /* WebViewJavascriptBridge_iOS.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
