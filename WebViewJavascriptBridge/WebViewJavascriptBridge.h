@@ -7,6 +7,7 @@ typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 + (id)bridgeForWebView:(UIWebView*)webView handler:(WVJBHandler)handler;
 + (id)bridgeForWebView:(UIWebView*)webView webViewDelegate:(id <UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)handler;
 + (void)enableLogging;
++ (void)disableLogging;
 - (void)send:(id)message;
 - (void)send:(id)message responseCallback:(WVJBResponseCallback)responseCallback;
 - (void)registerHandler:(NSString*)handlerName handler:(WVJBHandler)handler;

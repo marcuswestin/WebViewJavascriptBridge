@@ -45,8 +45,9 @@ static NSString *QUEUE_HAS_MESSAGE = @"__WVJB_QUEUE_MESSAGE__";
     return bridge;
 }
 
-static bool logging = false;
-+ (void)enableLogging { logging = true; }
+static bool logging = NO;
++ (void)enableLogging { logging = YES; }
++ (void)disableLogging { logging = NO; }
 
 - (void)send:(NSDictionary *)data {
     [self send:data responseCallback:nil];
