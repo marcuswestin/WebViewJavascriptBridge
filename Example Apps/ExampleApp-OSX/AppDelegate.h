@@ -1,11 +1,3 @@
-//
-//  AppDelegate.h
-//  ExampleApp-OSX
-//
-//  Created by Antoine Lagadec on 07/04/13.
-//  Copyright (c) 2013 Antoine Lagadec. All rights reserved.
-//
-
 #import <Cocoa/Cocoa.h>
 #import "WebViewJavascriptBridge_OSX.h"
 

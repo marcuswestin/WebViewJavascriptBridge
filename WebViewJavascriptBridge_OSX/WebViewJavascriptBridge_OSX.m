@@ -1,11 +1,3 @@
-//
-//  WebViewJavascriptBridge+OSX.m
-//  ExampleApp-OSX
-//
-//  Created by Antoine Lagadec on 07/04/13.
-//  Copyright (c) 2013 Antoine Lagadec. All rights reserved.
-//
-
 #import "WebViewJavascriptBridge_OSX.h"
 
 @implementation WebViewJavascriptBridge

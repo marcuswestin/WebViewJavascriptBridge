@@ -191,8 +191,8 @@ WebViewJavascriptBridge uses `NSJSONSerialization` by default. If you need iOS 4
 
 Contributors
 ------------
-
-- [@marcuswestin](https://github.com/marcuswestin) Marcus Westin
+- [@marcuswestin](https://github.com/marcuswestin) Marcus Westin (Author)
+- [@oakho](https://github.com/oakho) Antoine Lagadec (OS X version)
 - [@psineur](https://github.com/psineur) Stepan Generalov
 - [@sergiocampama](https://github.com/sergiocampama) Sergio Campamá
 - [@stringbean](https://github.com/stringbean) Michael Stringer

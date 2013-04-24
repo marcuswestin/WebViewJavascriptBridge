@@ -1,11 +1,3 @@
-//
-//  WebViewJavascriptBridge+iOS.m
-//  ExampleApp-iOS
-//
-//  Created by Antoine Lagadec on 07/04/13.
-//  Copyright (c) 2013 Marcus Westin. All rights reserved.
-//
-
 #import "WebViewJavascriptBridge_iOS.h"
 
 @implementation WebViewJavascriptBridge
