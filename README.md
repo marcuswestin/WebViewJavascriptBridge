@@ -13,12 +13,13 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 - [EverTrue](http://www.evertrue.com/)
 - [Game Insight](http://www.game-insight.com/)
 - [Altralogica](http://www.altralogica.it)
+- [Sush.io](http://www.sush.io)
 - Flutterby Labs
 - JD Media's [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
 
 Are you using WebViewJavascript at your company? Add it and send us a pull request!
 
-Setup & Examples
+Setup & Examples (iOS)
 ----------------
 
 Just open the Xcode project and hit run to see ExampleApp run.
@@ -28,10 +29,11 @@ To use a WebViewJavascriptBridge in your own project:
 1) Drag the `WebViewJavascriptBridge` folder into your project.
 
   - In the dialog that appears, uncheck "Copy items into destination group's folder" and select "Create groups for any folders"
+  - Delete OSX files.
 
 2) Import the header file:
 
-	#import "WebViewJavascriptBridge.h"
+	#import "WebViewJavascriptBridge_iOS.h"
 
 3) Instantiate a UIWebView and a WebViewJavascriptBridge:
 

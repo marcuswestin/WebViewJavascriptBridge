@@ -40,7 +40,7 @@
 
 		var button = document.getElementById('buttons').appendChild(document.createElement('button'))
 		button.innerHTML = 'Send message to ObjC'
-		button.ontouchstart = function(e) {
+		button.onclick = function(e) {
 			e.preventDefault()
 			var data = 'Hello from JS button'
 			log('JS sending message', data)
@@ -53,7 +53,7 @@
 
 		var callbackButton = document.getElementById('buttons').appendChild(document.createElement('button'))
 		callbackButton.innerHTML = 'Fire testObjcCallback'
-		callbackButton.ontouchstart = function(e) {
+		callbackButton.onclick = function(e) {
 			e.preventDefault()
 			log('JS calling handler "testObjcCallback"')
 			bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
