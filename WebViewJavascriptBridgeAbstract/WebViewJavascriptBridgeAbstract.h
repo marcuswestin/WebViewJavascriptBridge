@@ -12,7 +12,7 @@ typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 @property (nonatomic, strong) NSMutableArray *startupMessageQueue;
 @property (nonatomic, strong) NSMutableDictionary *responseCallbacks;
 @property (nonatomic, strong) NSMutableDictionary *messageHandlers;
-@property (atomic, assign) NSInteger uniqueId;
+@property (atomic, assign) long uniqueId;
 @property (nonatomic, copy) WVJBHandler messageHandler;
 
 + (void)enableLogging;

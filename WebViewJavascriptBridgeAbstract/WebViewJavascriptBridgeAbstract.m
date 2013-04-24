@@ -51,7 +51,7 @@ static bool logging = false;
     NSMutableDictionary* message = [NSMutableDictionary dictionaryWithObject:data forKey:@"data"];
     
     if (responseCallback) {
-        NSString* callbackId = [NSString stringWithFormat:@"objc_cb_%d", ++self.uniqueId];
+        NSString* callbackId = [NSString stringWithFormat:@"objc_cb_%ld", ++self.uniqueId];
         self.responseCallbacks[callbackId] = [responseCallback copy];
         message[@"callbackId"] = callbackId;
     }
