@@ -1,13 +1,13 @@
 WebViewJavascriptBridge
 =======================
 
-An iOS bridge for sending messages to and from javascript in a UIWebView.
+An iOS/OSX bridge for sending messages between Obj-C and JavaScript in UIWebViews/WebViews.
 
-If you like WebViewJavascriptBridge you should also check out [WebViewProxy](https://github.com/marcuswestin/WebViewProxy).
+If you like WebViewJavascriptBridge you may also want to check out [WebViewProxy](https://github.com/marcuswestin/WebViewProxy).
 
 In the Wild
 -----------
-WebViewJavascriptBridge is used by a range of companies and projects. This list was just started and is still very incomplete.
+WebViewJavascriptBridge is used by a range of companies and projects. This list is incomplete, but feel free to add your's and send a PR.
 
 - [Yardsale](https://www.getyardsale.com/)
 - [EverTrue](http://www.evertrue.com/)
@@ -17,27 +17,26 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 - Flutterby Labs
 - JD Media's [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
 
-Are you using WebViewJavascript at your company? Add it and send us a pull request!
+Setup & Examples (iOS & OSX)
+----------------------------
 
-Setup & Examples (iOS)
-----------------
-
-Just open the Xcode project and hit run to see ExampleApp run.
+Start with the Example Apps/ folder. Open either the iOS or OSX project and hit run to see it in action.
 
 To use a WebViewJavascriptBridge in your own project:
 
-1) Drag the `WebViewJavascriptBridge` folder into your project.
+1) Drag the `WebViewJavascriptBridge_iOS` or `WebViewJavascriptBridge_OSX` folder into your project.
 
   - In the dialog that appears, uncheck "Copy items into destination group's folder" and select "Create groups for any folders"
-  - Delete OSX files.
-
+  
 2) Import the header file:
 
+	// for iOS:
 	#import "WebViewJavascriptBridge_iOS.h"
+	// for OSX:
+	#import "WebViewJavascriptBridge_OSX.h"
 
-3) Instantiate a UIWebView and a WebViewJavascriptBridge:
+3) Instantiate WebViewJavascriptBridge with a UIWebView (iOS) or WebView (OSX):
 
-	UIWebView* webView = [[UIWebView alloc] initWithFrame:self.window.bounds];
 	WebViewJavascriptBridge* bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
 		NSLog(@"Received message from javascript: %@", data);
 		responseCallback(@"Right back atcha");
@@ -72,14 +71,14 @@ API Reference
 
 ### ObjC API
 
-##### `[WebViewJavascriptBridge bridgeForWebView:(UIWebView*)webview handler:(WVJBHandler)handler]`
-##### `[WebViewJavascriptBridge bridgeForWebView:(UIWebView*)webview webViewDelegate:(UIWebViewDelegate*)webViewDelegate handler:(WVJBHandler)handler]`
+##### `[WebViewJavascriptBridge bridgeForWebView:(UIWebView/WebView*)webview handler:(WVJBHandler)handler]`
+##### `[WebViewJavascriptBridge bridgeForWebView:(UIWebView/WebView*)webview webViewDelegate:(UIWebViewDelegate*)webViewDelegate handler:(WVJBHandler)handler]`
 
-Create a javascript bridge for the given UIWebView.
+Create a javascript bridge for the given web view.
 
 The `WVJBResponseCallback` will not be `nil` if the javascript expects a response.
 
-Optionally, pass in `webViewDelegate:(UIWebViewDelegate*)webViewDelegate` if you need to respond to the [UIWebView's lifecycle events](http://developer.apple.com/library/ios/documentation/uikit/reference/UIWebViewDelegate_Protocol/Reference/Reference.html).
+Optionally, pass in `webViewDelegate:(UIWebViewDelegate*)webViewDelegate` if you need to respond to the [web view's lifecycle events](http://developer.apple.com/library/ios/documentation/uikit/reference/UIWebViewDelegate_Protocol/Reference/Reference.html).
 
 Example:
 	
@@ -186,7 +185,7 @@ Example:
 iOS4 support (with JSONKit)
 ---------------------------
 
-*Note*: iOS4 support has not yet been tested in v2.
+*Note*: iOS4 support has not yet been tested in v2+.
 
 WebViewJavascriptBridge uses `NSJSONSerialization` by default. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/), and add `USE_JSONKIT` to the preprocessor macros for your project.
 
