@@ -21,6 +21,13 @@
     return bridge;
 }
 
+- (void)dealloc;
+{
+    self.webView.frameLoadDelegate = nil;
+    self.webView.resourceLoadDelegate = nil;
+    self.webView.policyDelegate = nil;
+}
+
 - (void)webView:(WebView *)webView didFinishLoadForFrame:(WebFrame *)frame
 {
     if (webView != self.webView) { return; }

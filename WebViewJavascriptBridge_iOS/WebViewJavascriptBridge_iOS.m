@@ -21,6 +21,11 @@
     return bridge;
 }
 
+- (void)dealloc;
+{
+    self.webView.delegate = nil;
+}
+
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     if (webView != self.webView) { return; }
     
