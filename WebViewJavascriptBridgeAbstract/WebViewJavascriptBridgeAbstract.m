@@ -79,13 +79,14 @@ static bool logging = false;
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\r" withString:@"\\r"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\f" withString:@"\\f"];
+    __strong typeof(self.webView) strongWebView = self.webView;
     if ([[NSThread currentThread] isMainThread]) {
-        [self.webView performSelector:@selector(stringByEvaluatingJavaScriptFromString:)
+        [strongWebView performSelector:@selector(stringByEvaluatingJavaScriptFromString:)
                            withObject:[NSString stringWithFormat:
                                        @"WebViewJavascriptBridge._handleMessageFromObjC('%@');", messageJSON]];
     } else {
         dispatch_sync(dispatch_get_main_queue(), ^{
-            [self.webView performSelector:@selector(stringByEvaluatingJavaScriptFromString:)
+            [strongWebView performSelector:@selector(stringByEvaluatingJavaScriptFromString:)
                                withObject:[NSString stringWithFormat:
                                            @"WebViewJavascriptBridge._handleMessageFromObjC('%@');", messageJSON]];
         });
@@ -93,7 +94,8 @@ static bool logging = false;
 }
 
 - (void)_flushMessageQueue {
-    NSString *messageQueueString = [self.webView performSelector:
+    __strong typeof(self.webView) strongWebView = self.webView;
+    NSString *messageQueueString = [strongWebView performSelector:
                                     @selector(stringByEvaluatingJavaScriptFromString:) withObject:@"WebViewJavascriptBridge._fetchQueue();"];
     
     NSArray* messages = [messageQueueString componentsSeparatedByString:kMessageSeparator];
@@ -112,8 +114,8 @@ static bool logging = false;
             __block NSString* callbackId = message[@"callbackId"];
             if (callbackId) {
                 responseCallback = ^(id responseData) {
-                    NSDictionary* message = @{ @"responseId":callbackId, @"responseData":responseData };
-                    [self _queueMessage:message];
+                    NSDictionary* msg = @{ @"responseId":callbackId, @"responseData":responseData };
+                    [self _queueMessage:msg];
                 };
             } else {
                 responseCallback = ^(id ignoreResponseData) {
