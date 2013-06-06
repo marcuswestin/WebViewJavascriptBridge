@@ -61,6 +61,7 @@
 
 - (void)webView:(WebView *)webView didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
     if (webView != self.webView) { return; }
+
     self.numRequestsLoading--;
 
     __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
