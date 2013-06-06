@@ -201,3 +201,4 @@ Contributors
 - [@pj4533](https://github.com/pj4533) PJ Gray
 - [@xzeror](https://github.com/xzeror)
 - [@kelp404](https://github.com/kelp404)
+- [@peyton](https://github.com/peyton) Peyton Randolph
