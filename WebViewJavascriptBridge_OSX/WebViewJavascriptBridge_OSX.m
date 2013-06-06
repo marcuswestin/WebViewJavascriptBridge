@@ -2,11 +2,11 @@
 
 @implementation WebViewJavascriptBridge
 
-+ (id)bridgeForWebView:(WebView *)webView handler:(WVJBHandler)handler {
++ (instancetype)bridgeForWebView:(WebView *)webView handler:(WVJBHandler)handler {
     return [self bridgeForWebView:webView webViewDelegate:nil handler:handler];
 }
 
-+ (id)bridgeForWebView:(WebView *)webView webViewDelegate:(id)webViewDelegate handler:(WVJBHandler)messageHandler {
++ (instancetype)bridgeForWebView:(WebView *)webView webViewDelegate:(id)webViewDelegate handler:(WVJBHandler)messageHandler {
     WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
     bridge.messageHandler = messageHandler;
     bridge.webView = webView;
