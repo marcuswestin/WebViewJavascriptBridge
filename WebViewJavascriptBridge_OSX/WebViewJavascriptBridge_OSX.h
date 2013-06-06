@@ -3,8 +3,8 @@
 
 @interface WebViewJavascriptBridge : WebViewJavascriptBridgeAbstract
 
-@property (nonatomic, strong) WebView *webView;
-@property (nonatomic, strong) id webViewDelegate;
+@property (nonatomic, weak) WebView *webView;
+@property (nonatomic, weak) id webViewDelegate;
 
 + (id)bridgeForWebView:(WebView*)webView handler:(WVJBHandler)handler;
 + (id)bridgeForWebView:(WebView*)webView webViewDelegate:(id)webViewDelegate handler:(WVJBHandler)handler;
