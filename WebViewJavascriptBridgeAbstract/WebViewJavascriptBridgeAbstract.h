@@ -2,13 +2,21 @@
 #define kCustomProtocolScheme @"wvjbscheme"
 #define kQueueHasMessage      @"__WVJB_QUEUE_MESSAGE__"
 
+#if TARGET_OS_IPHONE && defined(__IPHONE_5_0) && (__IPHONE_OS_VERSION_MAX_ALLOWED >= __IPHONE_5_0)
+    #define WEAK_FALLBACK weak
+#elif TARGET_OS_MAC && defined(__MAC_10_7) && (__MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_7)
+    #define WEAK_FALLBACK weak
+#else
+    #define WEAK_FALLBACK unsafe_unretained
+#endif
+
 typedef void (^WVJBResponseCallback)(id responseData);
 typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 
 @interface WebViewJavascriptBridgeAbstract : NSObject
 
-@property (nonatomic, strong) id webView;
-@property (nonatomic, strong) id webViewDelegate;
+@property (nonatomic, WEAK_FALLBACK) id webView;
+@property (nonatomic, WEAK_FALLBACK) id webViewDelegate;
 @property (nonatomic, strong) NSMutableArray *startupMessageQueue;
 @property (nonatomic, strong) NSMutableDictionary *responseCallbacks;
 @property (nonatomic, strong) NSMutableDictionary *messageHandlers;
