@@ -23,14 +23,13 @@
     [bridge reset];
     
     [webView setDelegate:bridge];
-    
-    bridge.numRequestsLoading = 0;
-    
+        
     return bridge;
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     if (webView != self.webView) { return; }
+    
     self.numRequestsLoading--;
     
     if (self.numRequestsLoading == 0 && ![[self.webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
