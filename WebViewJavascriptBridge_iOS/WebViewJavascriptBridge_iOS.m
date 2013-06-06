@@ -4,11 +4,11 @@
 
 #pragma mark UIWebViewDelegate
 
-+ (id)bridgeForWebView:(UIWebView *)webView handler:(WVJBHandler)handler {
++ (instancetype)bridgeForWebView:(UIWebView *)webView handler:(WVJBHandler)handler {
     return [self bridgeForWebView:webView webViewDelegate:nil handler:handler];
 }
 
-+ (id)bridgeForWebView:(UIWebView *)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler {
++ (instancetype)bridgeForWebView:(UIWebView *)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler {
     WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
     bridge.messageHandler = messageHandler;
     bridge.webView = webView;
