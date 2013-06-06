@@ -1,5 +1,11 @@
 #import "WebViewJavascriptBridge_iOS.h"
 
+@interface WebViewJavascriptBridge ()
+
+@property (nonatomic, assign) NSUInteger numRequestsLoading;
+
+@end
+
 @implementation WebViewJavascriptBridge
 
 #pragma mark UIWebViewDelegate
@@ -9,7 +15,7 @@
 }
 
 + (instancetype)bridgeForWebView:(UIWebView *)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler {
-    WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
+    WebViewJavascriptBridge* bridge = [[[self class] alloc] init];
     bridge.messageHandler = messageHandler;
     bridge.webView = webView;
     bridge.webViewDelegate = webViewDelegate;
@@ -17,7 +23,7 @@
     [bridge reset];
     
     [webView setDelegate:bridge];
-    
+        
     return bridge;
 }
 
@@ -29,7 +35,9 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     if (webView != self.webView) { return; }
     
-    if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
+    self.numRequestsLoading--;
+    
+    if (self.numRequestsLoading == 0 && ![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
         NSString *filePath = [[NSBundle mainBundle] pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
         NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         [webView stringByEvaluatingJavaScriptFromString:js];
@@ -50,6 +58,9 @@
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     if (webView != self.webView) { return; }
+
+    self.numRequestsLoading--;
+
     __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
         [strongDelegate webView:webView didFailLoadWithError:error];
@@ -76,6 +87,9 @@
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
     if (webView != self.webView) { return; }
+
+    self.numRequestsLoading++;
+
     __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
         [strongDelegate webViewDidStartLoad:webView];

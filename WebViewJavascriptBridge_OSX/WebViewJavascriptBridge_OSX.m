@@ -1,5 +1,11 @@
 #import "WebViewJavascriptBridge_OSX.h"
 
+@interface WebViewJavascriptBridge ()
+
+@property (nonatomic, assign) NSUInteger numRequestsLoading;
+
+@end
+
 @implementation WebViewJavascriptBridge
 
 + (instancetype)bridgeForWebView:(WebView *)webView handler:(WVJBHandler)handler {
@@ -17,7 +23,7 @@
     bridge.webView.frameLoadDelegate = bridge;
     bridge.webView.resourceLoadDelegate = bridge;
     bridge.webView.policyDelegate = bridge;
-    
+        
     return bridge;
 }
 
@@ -32,7 +38,9 @@
 {
     if (webView != self.webView) { return; }
     
-    if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
+    self.numRequestsLoading--;
+
+    if (self.numRequestsLoading == 0 && ![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
         NSString *filePath = [[NSBundle mainBundle] pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
         NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         [webView stringByEvaluatingJavaScriptFromString:js];
@@ -53,6 +61,8 @@
 
 - (void)webView:(WebView *)webView didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
     if (webView != self.webView) { return; }
+    self.numRequestsLoading--;
+
     __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailLoadWithError:forFrame:)]) {
         [strongDelegate webView:strongDelegate didFailLoadWithError:error forFrame:frame];
@@ -89,6 +99,9 @@
 
 - (NSURLRequest *)webView:(WebView *)webView resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
     if (webView != self.webView) { return request; }
+
+    self.numRequestsLoading++;
+
     __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:resource:willSendRequest:redirectResponse:fromDataSource:)]) {
         return [strongDelegate webView:webView resource:identifier willSendRequest:request redirectResponse:redirectResponse fromDataSource:dataSource];
