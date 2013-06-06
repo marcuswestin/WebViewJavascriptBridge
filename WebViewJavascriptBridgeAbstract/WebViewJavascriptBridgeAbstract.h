@@ -7,8 +7,8 @@ typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 
 @interface WebViewJavascriptBridgeAbstract : NSObject
 
-@property (nonatomic, strong) id webView;
-@property (nonatomic, strong) id webViewDelegate;
+@property (nonatomic, weak) id webView;
+@property (nonatomic, weak) id webViewDelegate;
 @property (nonatomic, strong) NSMutableArray *startupMessageQueue;
 @property (nonatomic, strong) NSMutableDictionary *responseCallbacks;
 @property (nonatomic, strong) NSMutableDictionary *messageHandlers;
