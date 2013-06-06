@@ -7,7 +7,7 @@
 }
 
 + (id)bridgeForWebView:(WebView *)webView webViewDelegate:(id)webViewDelegate handler:(WVJBHandler)messageHandler {
-    WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
+    WebViewJavascriptBridge* bridge = [[[self class] alloc] init];
     bridge.messageHandler = messageHandler;
     bridge.webView = webView;
     bridge.webViewDelegate = webViewDelegate;
@@ -25,10 +25,10 @@
 {
     if (webView != self.webView) { return; }
     
-    if (![[self.webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
+    if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
         NSString *filePath = [[NSBundle mainBundle] pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
         NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        [self.webView stringByEvaluatingJavaScriptFromString:js];
+        [webView stringByEvaluatingJavaScriptFromString:js];
     }
     
     if (self.startupMessageQueue) {
@@ -38,15 +38,17 @@
         self.startupMessageQueue = nil;
     }
     
-    if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webView:didFinishLoadForFrame:)]) {
-        [self.webViewDelegate webView:webView didFinishLoadForFrame:frame];
+    __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
+    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFinishLoadForFrame:)]) {
+        [strongDelegate webView:webView didFinishLoadForFrame:frame];
     }
 }
 
 - (void)webView:(WebView *)webView didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
     if (webView != self.webView) { return; }
-    if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webView:didFailLoadWithError:forFrame:)]) {
-        [self.webViewDelegate webView:self.webView didFailLoadWithError:error forFrame:frame];
+    __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
+    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailLoadWithError:forFrame:)]) {
+        [strongDelegate webView:strongDelegate didFailLoadWithError:error forFrame:frame];
     }
 }
 
@@ -54,6 +56,7 @@
 {
     if (webView != self.webView) { [listener use]; }
     NSURL *url = [request URL];
+    __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
     if ([[url scheme] isEqualToString:kCustomProtocolScheme]) {
         if ([[url host] isEqualToString:kQueueHasMessage]) {
             [self _flushMessageQueue];
@@ -61,9 +64,9 @@
             NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@://%@", kCustomProtocolScheme, [url path]);
         }
         [listener ignore];
-    } else if ([self.webView resourceLoadDelegate]
-               && [self.webViewDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:request:frame:decisionListener:)]) {
-        [self.webViewDelegate webView:webView decidePolicyForNavigationAction:actionInformation request:request frame:frame decisionListener:listener];
+    } else if ([webView resourceLoadDelegate]
+               && [strongDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:request:frame:decisionListener:)]) {
+        [strongDelegate webView:webView decidePolicyForNavigationAction:actionInformation request:request frame:frame decisionListener:listener];
     } else {
         [listener use];
     }
@@ -71,15 +74,17 @@
 
 - (void)webView:(WebView *)webView didCommitLoadForFrame:(WebFrame *)frame {
     if (webView != self.webView) { return; }
-    if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webView:didCommitLoadForFrame:)]) {
-        [self.webViewDelegate webView:webView didCommitLoadForFrame:frame];
+    __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
+    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didCommitLoadForFrame:)]) {
+        [strongDelegate webView:webView didCommitLoadForFrame:frame];
     }
 }
 
 - (NSURLRequest *)webView:(WebView *)webView resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
     if (webView != self.webView) { return request; }
-    if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webView:resource:willSendRequest:redirectResponse:fromDataSource:)]) {
-        return [self.webViewDelegate webView:webView resource:identifier willSendRequest:request redirectResponse:redirectResponse fromDataSource:dataSource];
+    __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
+    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:resource:willSendRequest:redirectResponse:fromDataSource:)]) {
+        return [strongDelegate webView:webView resource:identifier willSendRequest:request redirectResponse:redirectResponse fromDataSource:dataSource];
     }
     
     return request;
