@@ -1,5 +1,12 @@
+v3.1.0
++ Dont inject the WVJB bridge until all requests have finished loading (61b853)
++ Add podspec file (818d49cfc)
++ Memory leaks fixed (b06988f1, 20ce1b0b)
++ New major contributor @peyton!
+
 v3.0.0
 + OSX Support
++ New major contributor @oakho!
 
 v2.1.2
 + Copy handler and response blocks
