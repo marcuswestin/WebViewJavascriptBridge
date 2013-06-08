@@ -111,7 +111,7 @@ static bool logging = false;
             [self.responseCallbacks removeObjectForKey:responseId];
         } else {
             WVJBResponseCallback responseCallback = NULL;
-            __block NSString* callbackId = message[@"callbackId"];
+            NSString* callbackId = message[@"callbackId"];
             if (callbackId) {
                 responseCallback = ^(id responseData) {
                     NSDictionary* msg = @{ @"responseId":callbackId, @"responseData":responseData };
