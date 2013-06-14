@@ -6,6 +6,7 @@
     #define WEAK_FALLBACK weak
 #elif TARGET_OS_MAC && defined(__MAC_10_7) && (__MAC_OS_X_VERSION_MAX_ALLOWED >= __MAC_10_7)
     #define WEAK_FALLBACK weak
+    #import <WebKit/WebKit.h>
 #else
     #define WEAK_FALLBACK unsafe_unretained
 #endif

@@ -1,4 +1,3 @@
-#import <WebKit/WebKit.h>
 #import "WebViewJavascriptBridgeAbstract.h"
 
 @interface WebViewJavascriptBridge : WebViewJavascriptBridgeAbstract
