@@ -1,11 +1,5 @@
 #import "WebViewJavascriptBridge_OSX.h"
 
-@interface WebViewJavascriptBridge ()
-
-@property (nonatomic, assign) NSUInteger numRequestsLoading;
-
-@end
-
 @implementation WebViewJavascriptBridge
 
 + (instancetype)bridgeForWebView:(WebView *)webView handler:(WVJBHandler)handler {
@@ -38,9 +32,7 @@
 {
     if (webView != self.webView) { return; }
     
-    self.numRequestsLoading--;
-
-    if (self.numRequestsLoading == 0 && ![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
+    if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
         NSString *filePath = [[NSBundle mainBundle] pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
         NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         [webView stringByEvaluatingJavaScriptFromString:js];
@@ -61,8 +53,6 @@
 
 - (void)webView:(WebView *)webView didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
     if (webView != self.webView) { return; }
-
-    self.numRequestsLoading--;
 
     __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailLoadWithError:forFrame:)]) {
@@ -100,8 +90,6 @@
 
 - (NSURLRequest *)webView:(WebView *)webView resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
     if (webView != self.webView) { return request; }
-
-    self.numRequestsLoading++;
 
     __strong typeof(self.webViewDelegate) strongDelegate = self.webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:resource:willSendRequest:redirectResponse:fromDataSource:)]) {
