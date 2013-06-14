@@ -9,8 +9,8 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/marcuswestin/WebViewJavascriptBridge.git' }
   s.ios.platform     = :ios, '5.0'
   s.osx.platform     = :osx
-  s.ios.source_files = 'WebViewJavascriptBridge_iOS/*.{h,m}', 'WebViewJavascriptBridgeAbstract/*.{h,m}'
-  s.osx.source_files = 'WebViewJavascriptBridge_OSX/*.{h,m}', 'WebViewJavascriptBridgeAbstract/*.{h,m}'
+  s.ios.source_files = 'WebViewJavascriptBridge/*.{h,m}'
+  s.osx.source_files = 'WebViewJavascriptBridge/*.{h,m}'
   s.resource     = 'WebViewJavascriptBridgeAbstract/WebViewJavascriptBridge.js.txt'
   s.ios.framework    = 'UIKit'
   s.osx.framework    = 'WebKit'

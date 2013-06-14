@@ -1,5 +1,5 @@
 #import <UIKit/UIKit.h>
-#import "WebViewJavascriptBridge_iOS.h"
+#import "WebViewJavascriptBridge.h"
 
 @interface ExampleAppDelegate : UIResponder <UIApplicationDelegate>
 

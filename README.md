@@ -24,16 +24,13 @@ Start with the Example Apps/ folder. Open either the iOS or OSX project and hit 
 
 To use a WebViewJavascriptBridge in your own project:
 
-1) Drag the `WebViewJavascriptBridge_iOS` or `WebViewJavascriptBridge_OSX` folder into your project.
+1) Drag the `WebViewJavascriptBridge` folder into your project.
 
   - In the dialog that appears, uncheck "Copy items into destination group's folder" and select "Create groups for any folders"
   
 2) Import the header file:
 
-	// for iOS:
-	#import "WebViewJavascriptBridge_iOS.h"
-	// for OSX:
-	#import "WebViewJavascriptBridge_OSX.h"
+	#import "WebViewJavascriptBridge.h"
 
 3) Instantiate WebViewJavascriptBridge with a UIWebView (iOS) or WebView (OSX):
 
