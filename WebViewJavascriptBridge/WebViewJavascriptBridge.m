@@ -256,7 +256,7 @@ static bool logging = false;
 
 - (void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener
 {
-    if (webView != _webView) { [listener use]; }
+    if (webView != _webView) { return; }
     
     NSURL *url = [request URL];
     if ([[url scheme] isEqualToString:kCustomProtocolScheme]) {
