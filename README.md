@@ -199,3 +199,4 @@ Contributors
 - [@xzeror](https://github.com/xzeror)
 - [@kelp404](https://github.com/kelp404)
 - [@peyton](https://github.com/peyton) Peyton Randolph
+- [@wangjinhua](https://github.com/wangjinhua)
