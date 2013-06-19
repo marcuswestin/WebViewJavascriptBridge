@@ -8,9 +8,16 @@
 
 #import "WebViewJavascriptBridge.h"
 
+#if __has_feature(objc_arc_weak)
+    #define WVJB_WEAK __weak
+#else
+    #define WVJB_WEAK __unsafe_unretained
+#endif
+
+
 @implementation WebViewJavascriptBridge {
-    __weak WVJB_WEBVIEW_TYPE* _webView;
-    __weak id _webViewDelegate;
+    WVJB_WEAK WVJB_WEBVIEW_TYPE* _webView;
+    WVJB_WEAK id _webViewDelegate;
     NSMutableArray* _startupMessageQueue;
     NSMutableDictionary* _responseCallbacks;
     NSMutableDictionary* _messageHandlers;
