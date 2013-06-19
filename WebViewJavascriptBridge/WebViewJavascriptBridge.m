@@ -166,7 +166,10 @@ static bool logging = false;
             WVJBHandler handler;
             if (message[@"handlerName"]) {
                 handler = _messageHandlers[message[@"handlerName"]];
-                if (!handler) { return NSLog(@"WVJB Warning: No handler for %@", message[@"handlerName"]); }
+                if (!handler) {
+                    NSLog(@"WVJB Warning: No handler for %@", message[@"handlerName"]);
+                    return responseCallback(@{});
+                }
             } else {
                 handler = _messageHandler;
             }
