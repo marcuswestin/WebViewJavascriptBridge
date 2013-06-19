@@ -1,3 +1,6 @@
+v4.0.1
++ Fix detection of arc_weak support
+
 v4.0.0
 + Consolidate platform-specific code into a single WebViewJavascriptBridge.m/h using macros (57ee322a4c5310eadd28b28f4d8522cd54123301)
 + Bugfix: Don't make navigation decisions for webviews we don't control (254ea00267f8c1e03727885f4e1e0fd5f5c78be8)
