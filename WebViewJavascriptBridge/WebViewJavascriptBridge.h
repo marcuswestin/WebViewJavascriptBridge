@@ -8,7 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#define kMessageSeparator     @"__WVJB_MESSAGE_SEPERATOR__"
 #define kCustomProtocolScheme @"wvjbscheme"
 #define kQueueHasMessage      @"__WVJB_QUEUE_MESSAGE__"
 
