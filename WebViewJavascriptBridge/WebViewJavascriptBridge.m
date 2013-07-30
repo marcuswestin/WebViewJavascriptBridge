@@ -56,7 +56,7 @@ static bool logging = false;
 }
 
 - (void)callHandler:(NSString *)handlerName {
-    [self callHandler:handlerName data:nil responseCallback:nil];
+    [self callHandler:handlerName data:[NSNull null] responseCallback:nil];
 }
 
 - (void)callHandler:(NSString *)handlerName data:(id)data {
