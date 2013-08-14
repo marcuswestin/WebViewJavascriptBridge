@@ -1,0 +1,20 @@
+{
+  "name": "wanjuan",
+  "version": "0.1",
+  "description": "Wanjuan Reader",
+  "permissions": ["tabs","storage"],
+  "content_scripts": [
+    {
+      "matches": ["*://*/*"],
+      "js": ["user_client.js","bridgeClientChrome.js"]
+    }
+  ],
+    "background": {
+    "scripts": ["bridgeServerChrome.js","user_server.js"]
+  },
+  "browser_action": {
+    "default_title": "Wanjuan Reader",
+    "default_icon": "clock.png"
+  },
+  "manifest_version": 2
+}
