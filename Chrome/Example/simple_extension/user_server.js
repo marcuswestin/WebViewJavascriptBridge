@@ -1,12 +1,10 @@
 console.log("user_server.js called!");
-function onMessage(message,sendResponse){
-	console.log("client said:"+message);
-	sendResponse("go back");
-	//bridge.send("Hello from server:"+message);
-	bridge.send("Hello from server:"+message,callback);
-}
-bridge.init(onMessage)
+bridge.init(function(data,responseCallback){
+	console.log("Received message from javascript: "+data);
+    responseCallback("Right back atcha");
+})
 
-function callback(hello){
-	console.log(hello);
-}
+bridge.send("Well hello there");
+bridge.send("Give me a response, will you?", function(responseData) {
+    console.log("Background got its response! "+responseData);
+})
