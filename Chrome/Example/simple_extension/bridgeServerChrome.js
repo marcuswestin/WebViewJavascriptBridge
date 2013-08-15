@@ -10,30 +10,14 @@
 	//bridge
 	var bridge = {};
 	bridge.tabIds={};
-	bridge.send=function(msg,responseCallback){
+	bridge.ssend=function(msg,responseCallback){
 		assert(!responseCallback || responseCallback instanceof Function,"responseCallback should be function");
 		//broadcast msg
-		/*
-			chrome.windows.getAll({"populate":true}, function (windows){
-			for (var i = 0; i < windows.length; i++) {
-				tabs=windows[i].tabs;
-				for (var j = 0; j < tabs.length; j++) {
-					
-					if(!tabs[j].url.match(/^http.+/)){
-						continue;
-					}
-					
-					var tabId=tabs[j].id;
-						chrome.tabs.sendMessage(tabId, msg, responseCallback);
-					};
-				};
-			});
-		*/
 			for(var tabId in bridge.tabIds){
 				chrome.tabs.sendMessage(bridge.tabIds[tabId], msg, responseCallback);
 			}
 		}
-	bridge.init=function(onMessageCallback){
+	bridge.sinit=function(onMessageCallback){
 		var adapter=onMessageCallbackAdapter(onMessageCallback);
 		chrome.extension.onMessage.addListener(adapter);
 	}
