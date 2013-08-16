@@ -2,7 +2,7 @@ Java init:
 WebViewJavascriptBridge bridge = new WebViewJavascriptBridge(Webview webview,WVJBHandler handler);
 
 Interface WVJBHandler {
- public void handle(String data,long jsCallbackId);
+ public void handle(String data,WVJBResponseCallback jsCallback);
 }
 
 Interface WVJBResponseCallback{
@@ -57,7 +57,7 @@ function getJavaResponseCallback( javaCallbackId){
 
 
  java：
-1） 打包为json发送
+1） 打包为json发送    WebViewJavascriptBridge._handleMessageFromJava(messageJSON);[js]
 2） 解析分发：
 				var responseCallback = responseCallbacks[message.responseId]
 				responseCallback(message.responseData)
