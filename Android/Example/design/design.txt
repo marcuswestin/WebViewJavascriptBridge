@@ -1,0 +1,77 @@
+Java init:
+WebViewJavascriptBridge bridge = new WebViewJavascriptBridge(Webview webview,WVJBHandler handler);
+
+Interface WVJBHandler {
+ public void handle(String data,long jsCallbackId);
+}
+
+Interface WVJBResponseCallback{
+    public void callback(String data);
+}
+
+class  WVJBResponseCallbackImpl{
+    WVJBResponseCallbackImpl(long callbackId){};
+     public void callback(String data){
+     _jscall(callbackId,data);   //call js function with callback id
+     }
+}
+
+Js =>Java
+send(data,jsCallback)->_csend(data,jsCallbackId){
+                   		_doSend({  data:data }, responseCallback)
+} ->responseCallback=new WVJBResponseCallbackImpl(jsCallbackId)
+-> handler.handle(data,WVJBResponseCallback responseCallback) {
+    System.out.println(data);
+    responseCallback.callback("something");
+}
+
+[JAVA]registerHandler(String handleName, WVJBHandler handler)
+[JS]function callHandler(handlerName, data, responseCallback) {
+		_doSend({ handlerName:handlerName, data:data }, responseCallback) //call java handle with js callbackid
+	}->handler=getHandler(handlerName);
+
+-----------------------------------
+JS INIT;
+bridge.init(messageHandler)
+messageHandler=function(message, responseCallback) {}
+Java=>js
+send(data,javaCallback)->_ssend(data,javaCallbackId) {
+    responseCallback=getJavaResponseCallback(javaCallbackId);
+    handle(data,responseCallback)
+}
+
+function getJavaResponseCallback( javaCallbackId){
+      var javaCallback=function( data){
+           _javacall( javaCallbackId,data);
+      }
+      return javaCallback;
+}
+
+========
+ js:
+ 发送都封装为json message       		_doSend({ handlerName:handlerName, data:data }, responseCallback)
+
+ 发送：
+1）直接发送
+
+
+
+ java：
+1） 打包为json发送
+2） 解析分发：
+				var responseCallback = responseCallbacks[message.responseId]
+				responseCallback(message.responseData)
+                 f (message.callbackId) {
+                 					var callbackResponseId = message.callbackId
+                 					responseCallback = function(responseData) {
+                 						_doSend({ responseId:callbackResponseId, responseData:responseData })
+                 					}
+                 				}
+				var handler = WebViewJavascriptBridge._messageHandler
+				if (message.handlerName) {
+					handler = messageHandlers[message.handlerName]
+				}
+
+				try {
+					handler(message.data, responseCallback)
+
