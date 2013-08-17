@@ -56,14 +56,9 @@
 				if (message.handlerName) {
 					handler = messageHandlers[message.handlerName]
 				}
-				console.log(message.data)
-				console.log(responseCallback)
 				try {
-				console.log("try handler")  ;
-								console.log(handler)  ;
 					handler(message.data, responseCallback)
 				} catch(exception) {
-								console.log("catch exception")  ;
 					if (typeof console != 'undefined') {
 						console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception)
 					}
@@ -75,16 +70,7 @@
 	function _handleMessageFromJava(messageJSON) {
 		_dispatchMessageFromJava(messageJSON)
 	}
-  /*
-	function _getNewMessageFromJava(){
-	    var messageJSON=null;
-	    while(messageJSON=_WebViewJavascriptBridge._getQueuedMessage()){
-	        console.log("_getNewMessageFromJava:"+messageJSON);
-	        _handleMessageFromJava(messageJSON);
-	        console.log("finish");
-	    }
-	}
-   */
+
 	//export
 	window.WebViewJavascriptBridge = {
 		init: init,
@@ -92,7 +78,6 @@
 		registerHandler: registerHandler,
 		callHandler: callHandler,
 		_handleMessageFromJava: _handleMessageFromJava
-	//	_getNewMessageFromJava:_getNewMessageFromJava
 	}
 
 	//dispatch event
