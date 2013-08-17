@@ -15,8 +15,8 @@
              }
         }) ;
         bridge.send('Hello from the javascript');
-        bridge.send('Please respond to this', function responseCallback(responseData) {
-            console.log("Javascript got its response", responseData);
+        bridge.send('Please respond to this', function(responseData) {
+            console.log("Javascript got its response "+ responseData);
         });
     }, false)
 </script>

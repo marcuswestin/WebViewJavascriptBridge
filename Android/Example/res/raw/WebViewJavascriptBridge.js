@@ -23,12 +23,13 @@
 	}
 	
 	function _doSend(message, responseCallback) {
-	console.log("sending:"+JSON.stringify(message));
+	console.log("responseCallback:"+responseCallback);
 		if (responseCallback) {
 			var callbackId = 'cb_'+(uniqueId++)+'_'+new Date().getTime()
 			responseCallbacks[callbackId] = responseCallback
 			message['callbackId'] = callbackId
 			}
+				console.log("sending:"+JSON.stringify(message));
 		_WebViewJavascriptBridge._handleMessageFromJs(message.data||null,message.responseId||null,
 		    message.responseData||null,message.callbackId||null,message.handlerName||null);
 

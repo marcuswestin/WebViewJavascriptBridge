@@ -11,8 +11,6 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,7 +26,6 @@ public class WebViewJavascriptBridge {
     Map<String,WVJBHandler> _messageHandlers;
     Map<String,WVJBResponseCallback> _responseCallbacks;
     long _uniqueId;
-//    BlockingQueue<String> _messageQueue;
 
     public WebViewJavascriptBridge(Context context,WebView webview,WVJBHandler handler) {
         this.mContext=context;
@@ -37,7 +34,6 @@ public class WebViewJavascriptBridge {
         _messageHandlers=new HashMap<String,WVJBHandler>();
         _responseCallbacks=new HashMap<String, WVJBResponseCallback>();
         _uniqueId=0;
- //       _messageQueue=new LinkedBlockingQueue<String>();
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(this, "_WebViewJavascriptBridge");
@@ -68,7 +64,7 @@ public class WebViewJavascriptBridge {
     private class MyWebViewClient extends WebViewClient {
         @Override
         public void onPageFinished(WebView webView, String url) {
-            Log.d("test","onPageFinished");
+            Log.d("test", "onPageFinished");
             loadWebViewJavascriptBridgeJs(webView);
         }
     }
@@ -102,19 +98,24 @@ public class WebViewJavascriptBridge {
     }
 
     private class CallbackJs implements WVJBResponseCallback{
-        private final String callbackIJs;
+        private final String callbackIdJs;
 
-        public  CallbackJs(String callbackIJs){
-            this.callbackIJs=callbackIJs;
+        public  CallbackJs(String callbackIdJs){
+            this.callbackIdJs=callbackIdJs;
         }
         @Override
         public void callback(String data) {
-               _callbackJs(callbackIJs,data);
+               _callbackJs(callbackIdJs,data);
         }
     }
 
 
-    private void _callbackJs(String callbackIJs,String data) {
+    private void _callbackJs(String callbackIdJs,String data) {
+        //TODO: CALL js to call back;
+        Map<String,String> message=new HashMap<String, String>();
+        message.put("responseId",callbackIdJs);
+        message.put("responseData",data);
+        _dispatchMessage(message);
     }
 
     @JavascriptInterface
@@ -168,29 +169,7 @@ public class WebViewJavascriptBridge {
         }
         _dispatchMessage(message);
     }
- /*
-    private void _queueMessage(Map<String, String> message) {
-        String messageJSON = new JSONObject(message).toString();
-        try {
-            _messageQueue.put(messageJSON);
-            _notifyNewMessage();
-        } catch (InterruptedException e) {
-            Log.e("test",e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
-    @JavascriptInterface
-    public String _getQueuedMessage(){
-        return _messageQueue.poll();
-    }
-
-    private void _notifyNewMessage() {
-        String javascriptCommand =
-                "javascript:WebViewJavascriptBridge._getNewMessageFromJava();";
-        mWebView.loadUrl(javascriptCommand);
-    }
-  */
     private void _dispatchMessage(Map <String, String> message){
         String messageJSON = new JSONObject(message).toString();
         Log.d("test","sending:"+messageJSON);

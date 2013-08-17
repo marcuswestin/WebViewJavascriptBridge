@@ -36,10 +36,10 @@ public class MyActivity extends Activity {
         public void handle(String data, WebViewJavascriptBridge.WVJBResponseCallback jsCallback) {
             Log.d("test","Received message from javascript: "+ data);
             if (null !=jsCallback) {
-                jsCallback.callback("Right back atcha");
+                jsCallback.callback("Java said:Right back atcha");
             }
 
-
+            /*
             bridge.send("I expect a response!",new WebViewJavascriptBridge.WVJBResponseCallback() {
                 @Override
                 public void callback(String responseData) {
@@ -47,6 +47,7 @@ public class MyActivity extends Activity {
                 }
             });
             bridge.send("Hi");
+            */
         }
     }
 
