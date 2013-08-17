@@ -18,6 +18,10 @@
         bridge.send('Please respond to this', function(responseData) {
             console.log("Javascript got its response "+ responseData);
         });
+        bridge.registerHandler("showAlert", function(data) { console.log("alert:"+data); });
+        bridge.callHandler("handler1","gift for handler1",function(responseData){
+            console.log("got handler1 response:"+responseData);
+        });
     }, false)
 </script>
 </html>

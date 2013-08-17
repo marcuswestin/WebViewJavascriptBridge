@@ -23,6 +23,7 @@ public class MyActivity extends Activity {
         bridge=
                 new WebViewJavascriptBridge(this.getApplicationContext(),webView,new UserServerHandler()) ;
         loadUserClient();
+        registerHandle();
     }
 
     private void loadUserClient(){
@@ -38,8 +39,6 @@ public class MyActivity extends Activity {
             if (null !=jsCallback) {
                 jsCallback.callback("Java said:Right back atcha");
             }
-
-            /*
             bridge.send("I expect a response!",new WebViewJavascriptBridge.WVJBResponseCallback() {
                 @Override
                 public void callback(String responseData) {
@@ -47,8 +46,22 @@ public class MyActivity extends Activity {
                 }
             });
             bridge.send("Hi");
-            */
         }
     }
+
+    private void registerHandle(){
+        bridge.registerHandler("handler1",new WebViewJavascriptBridge.WVJBHandler() {
+            @Override
+            public void handle(String data, WebViewJavascriptBridge.WVJBResponseCallback jsCallback) {
+                 Log.d("test","handler1 got:"+data);
+                if(null!=jsCallback){
+                    jsCallback.callback("handler1 answer");
+                }
+                bridge.callHandler("showAlert","42");
+            }
+        });
+    }
+
+
 
 }
