@@ -2,6 +2,66 @@ WebViewJavascriptBridge
 =======================
 Cross-platform WebViewJavascriptBridge for HTML/Android/Chrome Extension, the javascript interface compatible with [WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) 
 
+Android
+----------
+To use a WebViewJavascriptBridge in your Android project:
+
+1) Add "res/raw/webviewjavascriptbridge.js" and "com/fangjian/WebViewJavascriptBridge.java" to your project
+
+2) Set up the Android side
+	
+	bridge=new WebViewJavascriptBridge(this.getApplicationContext(),webView,new UserServerHandler()) ;
+	
+	class UserServerHandler implements WebViewJavascriptBridge.WVJBHandler{
+	        @Override
+	        public void handle(String data, WebViewJavascriptBridge.WVJBResponseCallback jsCallback) {
+	            Log.d("test","Received message from javascript: "+ data);
+	            if (null !=jsCallback) {
+	                jsCallback.callback("Java said:Right back atcha");
+	            }
+	            bridge.send("I expect a response!",new WebViewJavascriptBridge.WVJBResponseCallback() {
+	                @Override
+	                public void callback(String responseData) {
+	                    Log.d("test","Got response! "+responseData);
+	                }
+	            });
+	            bridge.send("Hi");
+	        }
+	    }
+
+	bridge.registerHandler("handler1",new WebViewJavascriptBridge.WVJBHandler() {
+	    @Override
+	    public void handle(String data, WebViewJavascriptBridge.WVJBResponseCallback jsCallback) {
+	         Log.d("test","handler1 got:"+data);
+	        if(null!=jsCallback){
+	            jsCallback.callback("handler1 answer");
+	        }
+	        bridge.callHandler("showAlert","42");
+	    }
+	});
+	
+3) Set up the Javascript side
+
+	console.log("user_client.js called!");
+	document.addEventListener('WebViewJavascriptBridgeReady'
+	, function(event) {
+	var bridge=event.bridge;
+	bridge.init(function(message, responseCallback) {
+	     if (responseCallback) {
+	     responseCallback("Right back atcha") ;
+	     }
+	}) ;
+	bridge.send('Hello from the javascript');
+	bridge.send('Please respond to this', function(responseData) {
+	    console.log("Javascript got its response "+ responseData);
+	});
+	bridge.registerHandler("showAlert", function(data) { console.log("alert:"+data); });
+	bridge.callHandler("handler1","gift for handler1",function(responseData){
+	    console.log("got handler1 response:"+responseData);
+	});
+	}, false)
+
+
 Chrome
 ----------
 To use a WebViewJavascriptBridge in your chrome extension:
@@ -95,5 +155,5 @@ IOS
 ----------
 An iOS/OSX bridge for sending messages between Obj-C and JavaScript in UIWebViews/WebViews.
 
-Coming from [WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge).
+forked from  [marcuswestin/WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge).
 
