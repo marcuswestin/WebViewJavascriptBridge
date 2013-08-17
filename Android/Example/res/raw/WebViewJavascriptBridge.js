@@ -29,8 +29,8 @@
 			responseCallbacks[callbackId] = responseCallback
 			message['callbackId'] = callbackId
 			}
-		_WebViewJavascriptBridge._handleMessageFromJs(message.data,message.responseId,
-                                             message.responseData,message.callbackId,message.handlerName);
+		_WebViewJavascriptBridge._handleMessageFromJs(message.data||null,message.responseId||null,
+		    message.responseData||null,message.callbackId||null,message.handlerName||null);
 
 	}
 
@@ -72,13 +72,22 @@
 		_dispatchMessageFromJava(messageJSON)
 	}
 
+	function _getNewMessageFromJava(){
+	    var messageJSON=null;
+	    while(messageJSON=_WebViewJavascriptBridge._getQueuedMessage()){
+	        console.log("_getNewMessageFromJava:"+messageJSON);
+	        _handleMessageFromJava(messageJSON);
+	    }
+	}
+
 	//export
 	window.WebViewJavascriptBridge = {
 		init: init,
 		send: send,
 		registerHandler: registerHandler,
 		callHandler: callHandler,
-		_handleMessageFromJava: _handleMessageFromJava
+		_handleMessageFromJava: _handleMessageFromJava,
+		_getNewMessageFromJava:_getNewMessageFromJava
 	}
 
 	//dispatch event
