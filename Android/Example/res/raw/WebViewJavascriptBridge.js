@@ -23,16 +23,18 @@
 	}
 	
 	function _doSend(message, responseCallback) {
+	console.log("sending:"+JSON.stringify(message));
 		if (responseCallback) {
 			var callbackId = 'cb_'+(uniqueId++)+'_'+new Date().getTime()
 			responseCallbacks[callbackId] = responseCallback
 			message['callbackId'] = callbackId
-			_WebViewJavascriptBridge._handleMessageFromJs(message.data,message.responseId,
-                                     message.responseData,message.callbackId,message.handlerName);
-		}
+			}
+		_WebViewJavascriptBridge._handleMessageFromJs(message.data,message.responseId,
+                                             message.responseData,message.callbackId,message.handlerName);
+
 	}
 
-	function _dispatchMessageFromJAVA(messageJSON) {
+	function _dispatchMessageFromJava(messageJSON) {
 			var message = JSON.parse(messageJSON)
 			var messageHandler
 			
@@ -80,7 +82,9 @@
 	}
 
 	//dispatch event
-	var readyEvent=new CustomEvent('WebViewJavascriptBridgeReady')
-	readyEvent.bridge=WebViewJavascriptBridge;
-	document.dispatchEvent(readyEvent);
+	var doc = document;
+    var readyEvent = doc.createEvent('Events');
+    readyEvent.initEvent('WebViewJavascriptBridgeReady');
+    readyEvent.bridge = WebViewJavascriptBridge;
+    doc.dispatchEvent(readyEvent);
 })();

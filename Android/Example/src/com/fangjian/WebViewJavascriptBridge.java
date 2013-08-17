@@ -76,7 +76,9 @@ public class WebViewJavascriptBridge {
     private class MyWebChromeClient extends WebChromeClient {
         @Override
         public boolean onConsoleMessage(ConsoleMessage cm) {
-            Log.d("test", cm.message());
+            Log.d("test", cm.message()
+                    +" line:"+ cm.lineNumber()
+            );
             return true;
         }
 
