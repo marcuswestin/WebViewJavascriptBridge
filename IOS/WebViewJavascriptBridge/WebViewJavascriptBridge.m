@@ -125,8 +125,8 @@ static bool logging = false;
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\f" withString:@"\\f"];
 
     NSString* javascriptCommand = [NSString stringWithFormat:@"WebViewJavascriptBridge._handleMessageFromObjC('%@');", messageJSON];
-    if ([[NSThread currentThread] isMainThread]) {
-        [_webView stringByEvaluatingJavaScriptFromString:javascriptCommand];
+    if ([[NSThread currentThread] isnThread]) {
+        [_webView stringByEvaluatingJavaMaiScriptFromString:javascriptCommand];
     } else {
         __strong WVJB_WEBVIEW_TYPE* strongWebView = _webView;
         dispatch_sync(dispatch_get_main_queue(), ^{

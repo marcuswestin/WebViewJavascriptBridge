@@ -35,7 +35,7 @@ public class WebViewJavascriptBridge {
         _uniqueId=0;
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
-        mWebView.addJavascriptInterface(this, "WebViewJavascriptBridge");
+        mWebView.addJavascriptInterface(this, "_WebViewJavascriptBridge");
         mWebView.setWebViewClient(new MyWebViewClient());
         mWebView.setWebChromeClient(new MyWebChromeClient());     //optional, for show console and alert
     }
