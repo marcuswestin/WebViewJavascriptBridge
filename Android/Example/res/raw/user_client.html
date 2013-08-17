@@ -1,0 +1,24 @@
+<html>
+<input type="button" value="Test" onClick="test()"/>
+
+<script type="text/javascript">
+    function test(){
+        alert("test");
+    }
+    console.log("user_client.js called!");
+    document.addEventListener('WebViewJavascriptBridgeReady'
+    , function(event) {
+        var bridge=event.bridge;
+        bridge.init(function(message, responseCallback) {
+             alert('Received message: ' + message);
+                console.log("responseCallback:"+responseCallback);
+             if (responseCallback) {
+
+             responseCallback("Right back atcha") ;
+             }
+        }) ;
+        bridge.send('Hello from the javascript');
+
+    }, false)
+</script>
+</html>

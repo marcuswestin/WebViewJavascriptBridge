@@ -10,6 +10,7 @@ import java.io.InputStream;
 
 public class MyActivity extends Activity {
     private WebView webView;
+    private WebViewJavascriptBridge bridge;
 
     /**
      * Called when the activity is first created.
@@ -19,22 +20,34 @@ public class MyActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         webView=(WebView) this.findViewById(R.id.webView);
-        WebViewJavascriptBridge bridge=
-                new WebViewJavascriptBridge(this.getApplicationContext(),webView,new UserHandler()) ;
-        loadSample();
+        bridge=
+                new WebViewJavascriptBridge(this.getApplicationContext(),webView,new UserServerHandler()) ;
+        loadUserClient();
     }
 
-    private void loadSample(){
-        InputStream is=getResources().openRawResource(R.raw.sample);
-        String sample=WebViewJavascriptBridge.convertStreamToString(is);
-        webView.loadData(sample,"text/html","UTF-8");
+    private void loadUserClient(){
+        InputStream is=getResources().openRawResource(R.raw.user_client);
+        String user_client_html=WebViewJavascriptBridge.convertStreamToString(is);
+        webView.loadData(user_client_html,"text/html","UTF-8");
     }
 
-    class UserHandler implements WebViewJavascriptBridge.WVJBHandler{
+    class UserServerHandler implements WebViewJavascriptBridge.WVJBHandler{
         @Override
         public void handle(String data, WebViewJavascriptBridge.WVJBResponseCallback jsCallback) {
-              Log.d("test", data);
-              jsCallback.callback("java said received:"+data);
+            Log.d("test","Received message from javascript: "+ data);
+            if (null !=jsCallback) {
+                jsCallback.callback("Right back atcha");
+            }
+
+
+            bridge.send("I expect a response!",new WebViewJavascriptBridge.WVJBResponseCallback() {
+                @Override
+                public void callback(String responseData) {
+                    Log.d("test","Got response! "+responseData);
+                }
+            });
+            bridge.send("Hi");
         }
     }
+
 }

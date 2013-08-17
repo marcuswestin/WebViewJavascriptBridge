@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,6 +28,8 @@ public class WebViewJavascriptBridge {
     Map<String,WVJBHandler> _messageHandlers;
     Map<String,WVJBResponseCallback> _responseCallbacks;
     long _uniqueId;
+    BlockingQueue<String> _messageQueue;
+
     public WebViewJavascriptBridge(Context context,WebView webview,WVJBHandler handler) {
         this.mContext=context;
         this.mWebView=webview;
@@ -33,6 +37,7 @@ public class WebViewJavascriptBridge {
         _messageHandlers=new HashMap<String,WVJBHandler>();
         _responseCallbacks=new HashMap<String, WVJBResponseCallback>();
         _uniqueId=0;
+        _messageQueue=new LinkedBlockingQueue<String>();
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(this, "_WebViewJavascriptBridge");
@@ -71,9 +76,7 @@ public class WebViewJavascriptBridge {
     private class MyWebChromeClient extends WebChromeClient {
         @Override
         public boolean onConsoleMessage(ConsoleMessage cm) {
-            Log.d("test", cm.message() + " -- From line "
-                    + cm.lineNumber() + " of "
-                    + cm.sourceId() );
+            Log.d("test", cm.message());
             return true;
         }
 
@@ -161,14 +164,36 @@ public class WebViewJavascriptBridge {
         if (null!=handlerName) {
             message.put("handlerName", handlerName);
         }
-        _dispatchMessage(message);
+        _queueMessage(message);
+    }
+
+    private void _queueMessage(Map<String, String> message) {
+        String messageJSON = new JSONObject(message).toString();
+        try {
+            _messageQueue.put(messageJSON);
+            _notifyNewMessage();
+        } catch (InterruptedException e) {
+            Log.e("test",e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    @JavascriptInterface
+    public String _getQueuedMessage(){
+        return _messageQueue.poll();
+    }
+
+    private void _notifyNewMessage() {
+        String javascriptCommand =
+                "javascript:WebViewJavascriptBridge._getNewMessageFromJava();";
+        mWebView.loadUrl(javascriptCommand);
     }
 
     private void _dispatchMessage(Map <String, String> message){
         String messageJSON = new JSONObject(message).toString();
         Log.d("test","sending:"+messageJSON);
         String javascriptCommand =
-                String.format("javascript:WebViewJavascriptBridge._handleMessageFromOJava('%s');",messageJSON);
+                String.format("javascript:WebViewJavascriptBridge._handleMessageFromJava('%s');",messageJSON);
         mWebView.loadUrl(javascriptCommand);
     }
 
