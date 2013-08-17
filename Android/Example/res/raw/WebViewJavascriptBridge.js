@@ -75,7 +75,7 @@
 	function _handleMessageFromJava(messageJSON) {
 		_dispatchMessageFromJava(messageJSON)
 	}
-
+  /*
 	function _getNewMessageFromJava(){
 	    var messageJSON=null;
 	    while(messageJSON=_WebViewJavascriptBridge._getQueuedMessage()){
@@ -84,15 +84,15 @@
 	        console.log("finish");
 	    }
 	}
-
+   */
 	//export
 	window.WebViewJavascriptBridge = {
 		init: init,
 		send: send,
 		registerHandler: registerHandler,
 		callHandler: callHandler,
-		_handleMessageFromJava: _handleMessageFromJava,
-		_getNewMessageFromJava:_getNewMessageFromJava
+		_handleMessageFromJava: _handleMessageFromJava
+	//	_getNewMessageFromJava:_getNewMessageFromJava
 	}
 
 	//dispatch event

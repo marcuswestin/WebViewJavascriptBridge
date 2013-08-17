@@ -28,7 +28,7 @@ public class WebViewJavascriptBridge {
     Map<String,WVJBHandler> _messageHandlers;
     Map<String,WVJBResponseCallback> _responseCallbacks;
     long _uniqueId;
-    BlockingQueue<String> _messageQueue;
+//    BlockingQueue<String> _messageQueue;
 
     public WebViewJavascriptBridge(Context context,WebView webview,WVJBHandler handler) {
         this.mContext=context;
@@ -37,7 +37,7 @@ public class WebViewJavascriptBridge {
         _messageHandlers=new HashMap<String,WVJBHandler>();
         _responseCallbacks=new HashMap<String, WVJBResponseCallback>();
         _uniqueId=0;
-        _messageQueue=new LinkedBlockingQueue<String>();
+ //       _messageQueue=new LinkedBlockingQueue<String>();
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setJavaScriptEnabled(true);
         mWebView.addJavascriptInterface(this, "_WebViewJavascriptBridge");
@@ -166,9 +166,9 @@ public class WebViewJavascriptBridge {
         if (null!=handlerName) {
             message.put("handlerName", handlerName);
         }
-        _queueMessage(message);
+        _dispatchMessage(message);
     }
-
+ /*
     private void _queueMessage(Map<String, String> message) {
         String messageJSON = new JSONObject(message).toString();
         try {
@@ -190,7 +190,7 @@ public class WebViewJavascriptBridge {
                 "javascript:WebViewJavascriptBridge._getNewMessageFromJava();";
         mWebView.loadUrl(javascriptCommand);
     }
-
+  */
     private void _dispatchMessage(Map <String, String> message){
         String messageJSON = new JSONObject(message).toString();
         Log.d("test","sending:"+messageJSON);
