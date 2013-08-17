@@ -10,3 +10,9 @@
 	bridge.ssend=function(message,responseCallback){
 		bridge.publish("MESSAGE2C",[message,responseCallback]);
 	}  
+	bridge.scallHandler=function(handlerName, data, responseCallback) {
+		bridge.publish("[c]"+handlerName,[data, responseCallback]);
+	}
+	bridge.sregisterHandler=function(handlerName, handler) {
+		bridge.subscribe("[s]"+handlerName,handler);
+	}

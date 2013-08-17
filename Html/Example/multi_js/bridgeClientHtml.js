@@ -17,6 +17,12 @@
 	bridge.send=function(message,responseCallback){
 		bridge.publish("MESSAGE2S",[message,responseCallback]);
 	}
+	bridge.callHandler=function(handlerName, data, responseCallback) {
+		bridge.publish("[s]"+handlerName,[data, responseCallback]);
+	}
+	bridge.registerHandler=function(handlerName, handler) {
+		bridge.subscribe("[c]"+handlerName,handler);
+	}
 	//dispatch event
 	var event=new CustomEvent('WebViewJavascriptBridgeReady')
 	event.bridge=bridge;

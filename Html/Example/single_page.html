@@ -15,7 +15,13 @@
 	}  
 	bridge.ssend=function(message,responseCallback){
 		bridge.publish("MESSAGE2C",[message,responseCallback]);
-	}  
+	} 
+	bridge.scallHandler=function(handlerName, data, responseCallback) {
+		bridge.publish("[c]"+handlerName,[data, responseCallback]);
+	}
+	bridge.sregisterHandler=function(handlerName, handler) {
+		bridge.subscribe("[s]"+handlerName,handler);
+	} 
 	</script>
 
 <script>
@@ -56,6 +62,14 @@ document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady
 	bridge.send=function(message,responseCallback){
 		bridge.publish("MESSAGE2S",[message,responseCallback]);
 	}
+	bridge.callHandler=function(handlerName, data, responseCallback) {
+		bridge.publish("[s]"+handlerName,[data, responseCallback]);
+	}
+	bridge.registerHandler=function(handlerName, handler) {
+		bridge.subscribe("[c]"+handlerName,handler);
+	}
+
+
 	//dispatch event
 	var event=new CustomEvent('WebViewJavascriptBridgeReady')
 	event.bridge=bridge;
@@ -68,6 +82,7 @@ document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady
     bridge.send('Please respond to this', function responseCallback(responseData) {
         console.log("Javascript got its response", responseData)
     })
+    bridge.registerHandler("showAlert", function(data) { alert(data) });
 </script>
 
 <script type="text/javascript">
@@ -81,6 +96,10 @@ document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady
 	bridge.ssend("Give me a response, will you?", function(responseData) {
 	    console.log("Background got its response! "+responseData);
 	})
+	bridge.scallHandler("showAlert","alert from server");
+	bridge.sregisterHandler("getCurrentPageUrl", function(data, responseCallback) {responseCallback(document.location.toString())
+	})
+	bridge.callHandler("getCurrentPageUrl","",function(data){alert(data)})
 </script>
 </head>
 <body>
