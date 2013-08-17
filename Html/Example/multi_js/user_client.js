@@ -2,7 +2,7 @@ console.log("user_client.js called!");
 document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady(event) {
     var bridge = event.bridge
     bridge.init(function(message, responseCallback) {
-        alert('Received message: ' + message)   
+        alert('Received message: ' + message)
         if (responseCallback) {
             responseCallback("Right back atcha")
         }

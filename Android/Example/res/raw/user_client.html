@@ -10,7 +10,7 @@
     , function(event) {
         var bridge=event.bridge;
         bridge.init(function(message, responseCallback) {
-             alert('Received message: ' + message);
+                console.log('Received message: ' + message);
                 console.log("responseCallback:"+responseCallback);
              if (responseCallback) {
 
