@@ -10,7 +10,10 @@
 	//bridge
 	var bridge = {};
 	bridge.tabIds={};
-	bridge.ssend=function(msg,responseCallback){
+	var messageHandlers = {};
+	var _messageHandler;
+	bridge.ssend=function(data,responseCallback){
+		var msg={"data":data};
 		assert(!responseCallback || responseCallback instanceof Function,"responseCallback should be function");
 		//broadcast msg
 			for(var tabId in bridge.tabIds){
@@ -18,14 +21,36 @@
 			}
 		}
 	bridge.sinit=function(onMessageCallback){
-		var adapter=onMessageCallbackAdapter(onMessageCallback);
+		_messageHandler=onMessageCallback;
+		var adapter=onMessageCallbackAdapter();
 		chrome.extension.onMessage.addListener(adapter);
 	}
-	function onMessageCallbackAdapter(onMessageCallback){
+	function onMessageCallbackAdapter(){
 		var adapter= function(message, sender, sendResponse){
-			onMessageCallback(message,sendResponse);
+			_dispatchMessage(message,sendResponse);
 		};
 		return adapter;
+	}
+	bridge.registerHandler=function(handlerName, handler) {
+		messageHandlers[handlerName] = handler
+	}
+	
+	bridge.callHandler=function(handlerName, data, responseCallback) {
+		bridge.send({ handlerName:handlerName, data:data }, responseCallback)
+	}
+
+	function _dispatchMessage(message, responseCallback) {
+		var handler = _messageHandler;
+		if (message.handlerName) {
+			handler = messageHandlers[message.handlerName]
+		}
+		try {
+			handler(message.data, responseCallback)
+		} catch(exception) {
+			if (typeof console != 'undefined') {
+				console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception)
+			}
+		}
 	}
 	//register
 	var register=function (message, sender, sendResponse){
