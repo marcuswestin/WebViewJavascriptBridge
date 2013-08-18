@@ -12,7 +12,7 @@
 	//bridge
 	var bridge = {};
 
-	chrome.extension.onMessage.addListener(
+	chrome.runtime.onMessage.addListener(
 		function(message, sender, sendResponse){
 			_dispatchMessage(message,sendResponse);	
 		});
@@ -23,15 +23,15 @@
 	function _send(msg,responseCallback){
 		assert(!responseCallback || responseCallback instanceof Function,"responseCallback should be function");
 		if(responseCallback){
-			chrome.extension.sendMessage(msg,responseCallback)
+			chrome.runtime.sendMessage(msg,responseCallback)
 		}else{
-			chrome.extension.sendMessage(msg)
+			chrome.runtime.sendMessage(msg)
 		}
 	}
 	bridge.init=function(onMessageCallback){
 		_messageHandler=onMessageCallback;
 		//register for accept message
-		chrome.extension.sendMessage(MSG_REGISTER_WANJUAN_INTERFACE);
+		chrome.runtime.sendMessage(MSG_REGISTER_WANJUAN_INTERFACE);
 	}
 
 	bridge.registerHandler=function(handlerName, handler) {

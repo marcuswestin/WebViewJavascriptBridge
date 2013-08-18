@@ -13,8 +13,9 @@
 	var messageHandlers = {};
 	var _messageHandler;
 
-	chrome.extension.onMessage.addListener(
+	chrome.runtime.onMessage.addListener(
 		function(message, sender, sendResponse){
+			if(register(message,sender,sendResponse))return;
 			_dispatchMessage(message,sendResponse);	
 	});
 
@@ -58,7 +59,8 @@
 		if(MSG_REGISTER_WANJUAN_INTERFACE==message && !bridge.tabIds[sender.tab]){
 			bridge.tabIds[sender.tab.id]=sender.tab.id;
 			console.log("regiseter:"+sender.tab.id);
+			return true;
 		}
 	}
-	chrome.extension.onMessage.addListener(register);
+	//chrome.extension.onMessage.addListener(register);
 
