@@ -11,4 +11,9 @@ document.addEventListener('WebViewJavascriptBridgeReady', function onBridgeReady
     bridge.send('Please respond to this', function responseCallback(responseData) {
         console.log("Javascript got its response", responseData)
     })
+    bridge.registerHandler("showAlert", function(data,responseCallback) 
+        { console.log("alert:"+data);responseCallback("response from alert") });
+    bridge.callHandler("handler1","gift for handler1",function(responseData){
+        console.log("got handler1 response:"+responseData);
+    });
 }, false)

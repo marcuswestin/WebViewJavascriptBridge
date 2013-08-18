@@ -11,34 +11,35 @@
 	var MSG_REGISTER_WANJUAN_INTERFACE="MSG_REGISTER_WANJUAN_INTERFACE";
 	//bridge
 	var bridge = {};
+
+	chrome.extension.onMessage.addListener(
+		function(message, sender, sendResponse){
+			_dispatchMessage(message,sendResponse);	
+		});
+
 	bridge.send=function(data,responseCallback){
-		var msg={"data":data};
+		_send({"data":data},responseCallback);
+	}
+	function _send(msg,responseCallback){
 		assert(!responseCallback || responseCallback instanceof Function,"responseCallback should be function");
 		if(responseCallback){
 			chrome.extension.sendMessage(msg,responseCallback)
 		}else{
 			chrome.extension.sendMessage(msg)
 		}
-	};
+	}
 	bridge.init=function(onMessageCallback){
 		_messageHandler=onMessageCallback;
-		var adapter=onMessageCallbackAdapter();
-		chrome.extension.onMessage.addListener(adapter);
 		//register for accept message
 		chrome.extension.sendMessage(MSG_REGISTER_WANJUAN_INTERFACE);
 	}
-	function onMessageCallbackAdapter(){
-		var adapter=function(message, sender, sendResponse){
-			_dispatchMessage(message,sendResponse);	
-		}
-		return adapter;
-	}
+
 	bridge.registerHandler=function(handlerName, handler) {
 		messageHandlers[handlerName] = handler
 	}
 	
 	bridge.callHandler=function(handlerName, data, responseCallback) {
-		bridge.send({ handlerName:handlerName, data:data }, responseCallback)
+		_send({ handlerName:handlerName, data:data }, responseCallback)
 	}
 
 	function _dispatchMessage(message, responseCallback) {
