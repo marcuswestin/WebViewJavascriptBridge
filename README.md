@@ -2,6 +2,11 @@ WebViewJavascriptBridge
 =======================
 Cross-platform WebViewJavascriptBridge for HTML/Android/Chrome Extension, the javascript interface compatible with [WebViewJavascriptBridge](https://github.com/marcuswestin/WebViewJavascriptBridge) 
 
+TODO:
+
+ - Use the queue ,cache the message before the client and server both inited.
+ - Use the Long-lived connections instead of the Simple one-time requests, [Message Passing](https://developer.chrome.com/extensions/messaging.html#connect)
+
 Android
 ----------
 To use a WebViewJavascriptBridge in your Android project:
