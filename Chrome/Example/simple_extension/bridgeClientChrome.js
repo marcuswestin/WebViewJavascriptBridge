@@ -50,7 +50,7 @@
 		try {
 			handler(message.data, responseCallback)
 		} catch(exception) {
-			if (typeof console != 'undefined') {
+			if (typeof console != 'undefined' && JSON.stringify(exception)!="{}") {
 				console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception)
 			}
 		}
