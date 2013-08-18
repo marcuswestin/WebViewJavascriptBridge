@@ -1,0 +1,2 @@
+handler(message.data, responseCallback) 
+responseCallback always exist , but if the other end do not have a callback, call responseCallback cause exception.
