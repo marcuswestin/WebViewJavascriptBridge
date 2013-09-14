@@ -140,7 +140,7 @@ static bool logging = false;
     
     NSArray* messages = [messageQueueString componentsSeparatedByString:kMessageSeparator];
     for (NSString *messageJSON in messages) {
-        [self _log:@"receivd" json:messageJSON];
+        [self _log:@"received" json:messageJSON];
         
         NSDictionary* message = [self _deserializeMessageJSON:messageJSON];
         
