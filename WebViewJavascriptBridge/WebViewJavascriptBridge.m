@@ -56,7 +56,7 @@ static bool logging = false;
 }
 
 - (void)callHandler:(NSString *)handlerName {
-    [self callHandler:handlerName data:[NSNull null] responseCallback:nil];
+    [self callHandler:handlerName data:nil responseCallback:nil];
 }
 
 - (void)callHandler:(NSString *)handlerName data:(id)data {
@@ -92,6 +92,9 @@ static bool logging = false;
 }
 
 - (void)_sendData:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
+    if (!data) {
+        data = (NSDictionary *)[NSNull null];
+    }
     NSMutableDictionary* message = [NSMutableDictionary dictionaryWithObject:data forKey:@"data"];
     
     if (responseCallback) {
