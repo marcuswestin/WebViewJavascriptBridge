@@ -5,7 +5,6 @@
 	var receiveMessageQueue = []
 	var messageHandlers = {}
 	
-	var MESSAGE_SEPARATOR = '__WVJB_MESSAGE_SEPERATOR__'
 	var CUSTOM_PROTOCOL_SCHEME = 'wvjbscheme'
 	var QUEUE_HAS_MESSAGE = '__WVJB_QUEUE_MESSAGE__'
 	
@@ -46,12 +45,12 @@
 			responseCallbacks[callbackId] = responseCallback
 			message['callbackId'] = callbackId
 		}
-		sendMessageQueue.push(JSON.stringify(message))
+		sendMessageQueue.push(message)
 		messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE
 	}
 
 	function _fetchQueue() {
-		var messageQueueString = sendMessageQueue.join(MESSAGE_SEPARATOR)
+		var messageQueueString = JSON.stringify(sendMessageQueue)
 		sendMessageQueue = []
 		return messageQueueString
 	}
