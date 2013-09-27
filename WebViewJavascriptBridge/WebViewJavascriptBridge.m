@@ -92,6 +92,9 @@ static bool logging = false;
 }
 
 - (void)_sendData:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
+    if (!data) {
+        data = (NSDictionary *)[NSNull null];
+    }
     NSMutableDictionary* message = [NSMutableDictionary dictionaryWithObject:data forKey:@"data"];
     
     if (responseCallback) {
@@ -138,12 +141,18 @@ static bool logging = false;
 - (void)_flushMessageQueue {
     NSString *messageQueueString = [_webView stringByEvaluatingJavaScriptFromString:@"WebViewJavascriptBridge._fetchQueue();"];
     
-    NSArray* messages = [messageQueueString componentsSeparatedByString:kMessageSeparator];
-    for (NSString *messageJSON in messages) {
-        [self _log:@"receivd" json:messageJSON];
-        
-        NSDictionary* message = [self _deserializeMessageJSON:messageJSON];
-        
+    id messages = [self _deserializeMessageJSON:messageQueueString];
+    if (![messages isKindOfClass:[NSArray class]]) {
+        NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [messages class], messages);
+        return;
+    }
+    for (NSDictionary *message in messages) {
+        if (![message isKindOfClass:[NSDictionary class]]) {
+            NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [message class], message);
+            continue;
+        }
+        [self _log:@"receivd" json:message];
+
         NSString* responseId = message[@"responseId"];
         if (responseId) {
             WVJBResponseCallback responseCallback = _responseCallbacks[responseId];
@@ -202,10 +211,13 @@ static bool logging = false;
 #endif
 }
 
-- (void)_log:(NSString *)action json:(NSString *)json {
+- (void)_log:(NSString *)action json:(id)json {
     if (!logging) { return; }
-    if (json.length > 500) {
-        NSLog(@"WVJB %@: %@", action, [[json substringToIndex:500] stringByAppendingString:@" [...]"]);
+    if (![json isKindOfClass:[NSString class]]) {
+        json = [self _serializeMessage:json];
+    }
+    if ([json length] > 500) {
+        NSLog(@"WVJB %@: %@ [...]", action, [json substringToIndex:500]);
     } else {
         NSLog(@"WVJB %@: %@", action, json);
     }
