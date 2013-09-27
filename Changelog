@@ -1,3 +1,7 @@
+v4.0.2
++ Fix NSInvalidArgumentException: "attempt to insert nil object" when using shorthand -callHandler:
++ Fix sending messages including __WVJB_MESSAGE_SEPERATOR__ string
+
 v4.0.1
 + Fix detection of arc_weak support
 
