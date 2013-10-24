@@ -63,6 +63,12 @@ To use a WebViewJavascriptBridge in your own project:
 		})
 	}, false)
 
+Contributors & Forks
+--------------------
+Contributors: https://github.com/marcuswestin/WebViewJavascriptBridge/graphs/contributors
+
+Forks: https://github.com/marcuswestin/WebViewJavascriptBridge/network/members
+
 API Reference
 -------------
 
@@ -185,18 +191,3 @@ iOS4 support (with JSONKit)
 *Note*: iOS4 support has not yet been tested in v2+.
 
 WebViewJavascriptBridge uses `NSJSONSerialization` by default. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/), and add `USE_JSONKIT` to the preprocessor macros for your project.
-
-Contributors
-------------
-- [@marcuswestin](https://github.com/marcuswestin) Marcus Westin (Author)
-- [@oakho](https://github.com/oakho) Antoine Lagadec (OS X version)
-- [@psineur](https://github.com/psineur) Stepan Generalov
-- [@sergiocampama](https://github.com/sergiocampama) Sergio Campamá
-- [@stringbean](https://github.com/stringbean) Michael Stringer
-- [@tanis2000](https://github.com/tanis2000) Valerio Santinelli
-- [@drewburch](https://github.com/drewburch) Andrew Burch
-- [@pj4533](https://github.com/pj4533) PJ Gray
-- [@xzeror](https://github.com/xzeror)
-- [@kelp404](https://github.com/kelp404)
-- [@peyton](https://github.com/peyton) Peyton Randolph
-- [@wangjinhua](https://github.com/wangjinhua)
