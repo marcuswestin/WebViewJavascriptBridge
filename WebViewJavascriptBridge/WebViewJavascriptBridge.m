@@ -119,7 +119,7 @@ static bool logging = false;
 
 - (void)_dispatchMessage:(NSDictionary *)message {
     NSString *messageJSON = [self _serializeMessage:message];
-    [self _log:@"sending" json:messageJSON];
+    [self _log:@"SEND" json:messageJSON];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
@@ -151,7 +151,7 @@ static bool logging = false;
             NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [message class], message);
             continue;
         }
-        [self _log:@"receivd" json:message];
+        [self _log:@"RCVD" json:message];
 
         NSString* responseId = message[@"responseId"];
         if (responseId) {
