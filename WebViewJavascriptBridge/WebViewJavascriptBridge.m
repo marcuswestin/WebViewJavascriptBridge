@@ -47,11 +47,11 @@ static bool logging = false;
     return bridge;
 }
 
-- (void)send:(NSDictionary *)data {
+- (void)send:(id)data {
     [self send:data responseCallback:nil];
 }
 
-- (void)send:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback {
+- (void)send:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
     [self _sendData:data responseCallback:responseCallback handlerName:nil];
 }
 
@@ -91,10 +91,7 @@ static bool logging = false;
     _messageHandler = nil;
 }
 
-- (void)_sendData:(NSDictionary *)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
-    if (!data) {
-        data = (NSDictionary *)[NSNull null];
-    }
+- (void)_sendData:(id)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
     NSMutableDictionary* message = [NSMutableDictionary dictionary];
     
     if (data) {
@@ -188,8 +185,7 @@ static bool logging = false;
             }
             
             @try {
-                NSDictionary* data = message[@"data"];
-                if (!data || ((id)data) == [NSNull null]) { data = [NSDictionary dictionary]; }
+                id data = message[@"data"];
                 handler(data, responseCallback);
             }
             @catch (NSException *exception) {
@@ -199,20 +195,12 @@ static bool logging = false;
     }
 }
 
-- (NSString *)_serializeMessage:(NSDictionary *)message {
-#if defined _JSONKIT_H_
-    return [message JSONString];
-#else
+- (NSString *)_serializeMessage:(id)message {
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:0 error:nil] encoding:NSUTF8StringEncoding];
-#endif
 }
 
 - (NSDictionary *)_deserializeMessageJSON:(NSString *)messageJSON {
-#if defined _JSONKIT_H_
-    return [messageJSON objectFromJSONString];
-#else
-    return [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:0 error:nil];
-#endif
+    return [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
 }
 
 - (void)_log:(NSString *)action json:(id)json {
