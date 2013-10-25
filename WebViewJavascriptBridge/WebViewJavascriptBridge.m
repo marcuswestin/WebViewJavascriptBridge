@@ -95,7 +95,11 @@ static bool logging = false;
     if (!data) {
         data = (NSDictionary *)[NSNull null];
     }
-    NSMutableDictionary* message = [NSMutableDictionary dictionaryWithObject:data forKey:@"data"];
+    NSMutableDictionary* message = [NSMutableDictionary dictionary];
+    
+    if (data) {
+        message[@"data"] = data;
+    }
     
     if (responseCallback) {
         NSString* callbackId = [NSString stringWithFormat:@"objc_cb_%ld", ++_uniqueId];
