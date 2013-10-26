@@ -12,9 +12,18 @@
 	window.onerror = function(err) {
 		log('window.onerror: ' + err)
 	}
-	document.addEventListener('WebViewJavascriptBridgeReady', onBridgeReady, false)
-	function onBridgeReady(event) {
-		var bridge = event.bridge
+	
+	function connectWebViewJavascriptBridge(callback) {
+		if (window.WebViewJavascriptBridge) {
+			callback(WebViewJavascriptBridge)
+		} else {
+			document.addEventListener('WebViewJavascriptBridgeReady', function() {
+				callback(WebViewJavascriptBridge)
+			}, false)
+		}
+	}
+	
+	connectWebViewJavascriptBridge(function(bridge) {
 		var uniqueId = 1
 		function log(message, data) {
 			var log = document.getElementById('log')
@@ -60,7 +69,7 @@
 				log('JS got response', response)
 			})
 		}
-	}
+	})
 	</script>
 	<div id='buttons'></div> <div id='log'></div>
 </body></html>

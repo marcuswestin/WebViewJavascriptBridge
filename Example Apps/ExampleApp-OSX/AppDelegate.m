@@ -64,7 +64,7 @@
 }
 
 - (void)_callHandler {
-    is data = @{ @"greetingFromObjC": @"Hi there, JS!" };
+    id data = @{ @"greetingFromObjC": @"Hi there, JS!" };
     [_bridge callHandler:@"testJavascriptHandler" data:data responseCallback:^(id response) {
         NSLog(@"testJavascriptHandler responded: %@", response);
     }];    
