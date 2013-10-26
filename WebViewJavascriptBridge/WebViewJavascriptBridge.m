@@ -14,6 +14,7 @@
     #define WVJB_WEAK __unsafe_unretained
 #endif
 
+typedef NSDictionary WVJBMessage;
 
 @implementation WebViewJavascriptBridge {
     WVJB_WEAK WVJB_WEBVIEW_TYPE* _webView;
@@ -110,7 +111,7 @@ static bool logging = false;
     [self _queueMessage:message];
 }
 
-- (void)_queueMessage:(NSDictionary *)message {
+- (void)_queueMessage:(WVJBMessage*)message {
     if (_startupMessageQueue) {
         [_startupMessageQueue addObject:message];
     } else {
@@ -118,7 +119,7 @@ static bool logging = false;
     }
 }
 
-- (void)_dispatchMessage:(NSDictionary *)message {
+- (void)_dispatchMessage:(WVJBMessage*)message {
     NSString *messageJSON = [self _serializeMessage:message];
     [self _log:@"SEND" json:messageJSON];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
@@ -147,8 +148,8 @@ static bool logging = false;
         NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [messages class], messages);
         return;
     }
-    for (NSDictionary *message in messages) {
-        if (![message isKindOfClass:[NSDictionary class]]) {
+    for (WVJBMessage* message in messages) {
+        if (![message isKindOfClass:[WVJBMessage class]]) {
             NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [message class], message);
             continue;
         }
@@ -164,7 +165,7 @@ static bool logging = false;
             NSString* callbackId = message[@"callbackId"];
             if (callbackId) {
                 responseCallback = ^(id responseData) {
-                    NSDictionary* msg = @{ @"responseId":callbackId, @"responseData":responseData };
+                    WVJBMessage* msg = @{ @"responseId":callbackId, @"responseData":responseData };
                     [self _queueMessage:msg];
                 };
             } else {
@@ -199,7 +200,7 @@ static bool logging = false;
     return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:0 error:nil] encoding:NSUTF8StringEncoding];
 }
 
-- (NSDictionary *)_deserializeMessageJSON:(NSString *)messageJSON {
+- (NSArray*)_deserializeMessageJSON:(NSString *)messageJSON {
     return [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
 }
 
