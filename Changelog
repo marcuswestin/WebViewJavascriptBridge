@@ -1,3 +1,6 @@
+intended v4.1.1
++ Better JS initialization script (thank @refractalize!)
+
 v4.1.0
 + Allow for sending null/nil data packets
 + Drop support for JSONKit
