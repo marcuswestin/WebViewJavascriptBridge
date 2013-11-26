@@ -139,7 +139,7 @@
 		2CEB3EB21602563600548120 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Marcus Westin";
 			};
 			buildConfigurationList = 2CEB3EB51602563600548120 /* Build configuration list for PBXProject "ExampleApp-iOS" */;
@@ -220,6 +220,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
