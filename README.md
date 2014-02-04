@@ -9,6 +9,7 @@ In the Wild
 -----------
 WebViewJavascriptBridge is used by a range of companies and projects. This list is incomplete, but feel free to add your's and send a PR.
 
+- [Facebook Paper](https://facebook.com/paper)
 - [Yardsale](https://www.getyardsale.com/)
 - [EverTrue](http://www.evertrue.com/)
 - [Game Insight](http://www.game-insight.com/)
