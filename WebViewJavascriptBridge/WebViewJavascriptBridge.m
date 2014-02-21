@@ -52,6 +52,15 @@ static bool logging = false;
     WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
     [bridge _platformSpecificSetup:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:bundle];
     [bridge reset];
+    bridge.delegate = nil;
+    return bridge;
+}
+
++ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView WVJBDelegate:(id)delegate handler:(WVJBHandler)handler {
+    WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
+    [bridge _platformSpecificSetup:webView webViewDelegate:nil handler:handler];
+    [bridge reset];
+    bridge.delegate = delegate;
     return bridge;
 }
 
@@ -385,7 +394,17 @@ static bool logging = false;
     } else if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
         return [strongDelegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
     } else {
-        return YES;
+        if(self.delegate){
+            if([self.delegate respondsToSelector:@selector(WVJB_webView:shouldStartLoadWithRequest:navigationType:)]){
+                return [self.delegate WVJB_webView:webView
+                 shouldStartLoadWithRequest:request
+                             navigationType:navigationType];
+            }else{
+                return YES;
+            }
+        }else{
+            return YES;
+        }
     }
 }
 
