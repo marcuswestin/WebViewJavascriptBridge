@@ -172,6 +172,10 @@ static bool logging = false;
             NSString* callbackId = message[@"callbackId"];
             if (callbackId) {
                 responseCallback = ^(id responseData) {
+                    if (responseData == nil) {
+                        responseData = @{};
+                    }
+                    
                     WVJBMessage* msg = @{ @"responseId":callbackId, @"responseData":responseData };
                     [self _queueMessage:msg];
                 };
