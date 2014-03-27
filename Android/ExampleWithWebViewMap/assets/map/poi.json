@@ -1,0 +1,47 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          0.200909516011011,
+          0.037327561069884
+        ]
+      },
+      "properties": {
+        "id": "2",
+        "title": "磁悬浮列车"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.026763873271805,
+          0.230131436760048
+        ]
+      },
+      "properties": {
+        "id": "1",
+        "title": "机器人世界"
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -0.189827246677065,
+          -0.080610295914104
+        ]
+      },
+      "properties": {
+        "id": "3",
+        "title": "火山"
+      }
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+function _dispatchMessageFromObjC(messageJSON) {
+		setTimeout(function _timeoutDispatchMessageFromObjC() {
+			var message = JSON.parse(messageJSON)
+			var messageHandler
+
+			if (message.responseId) {
+				var responseCallback = responseCallbacks[message.responseId]
+				if (!responseCallback) { return; }
+				responseCallback(message.responseData)
+				delete responseCallbacks[message.responseId]
+			} else {
+				var responseCallback
+				if (message.callbackId) {
+					var callbackResponseId = message.callbackId
+					responseCallback = function(responseData) {
+						_doSend({ responseId:callbackResponseId, responseData:responseData })
+					}
+				}
+
+				var handler = WebViewJavascriptBridge._messageHandler
+				if (message.handlerName) {
+					handler = messageHandlers[message.handlerName]
+				}
+
+				try {
+					handler(message.data, responseCallback)
+				} catch(exception) {
+					if (typeof console != 'undefined') {
+						console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception)
+					}
+				}
+			}
+		})
+	}
+
+	receiveMessageQueue  在调用init之前保存消息。从而init之前的message也可以处理
+	objc call js
+	    NSString* javascriptCommand = [NSString stringWithFormat:@"WebViewJavascriptBridge._handleMessageFromObjC('%@');", messageJSON];
+    js call objc,让objc去取一个消息队列，分割后为多个message,再分别处理每个消息队列
+    NSString *messageQueueString = [_webView stringByEvaluatingJavaScriptFromString:@"WebViewJavascriptBridge._fetchQueue();"];
+
+   NSArray* messages = [messageQueueString componentsSeparatedByString:kMessageSeparator];
+    for (NSString *messageJSON in messages) {
+ =======
+ js:
+ 发送或接受都封装为json message ， 双方的callback打包为message发送
+ 发送：
+ 1）放在队列里
+ 2）请求IOS来取队列
+
+ 接收：
+ 1）初始化之前，放在队列里
+ 2）初始化之中，分发队列里的 message
+ 3）初始化之后，直接分发
+
+ java：
+ 发送：
+ sendMessage
+ 接受：
+ 收到刷新请求后取队列，解析分发
+
+
+，

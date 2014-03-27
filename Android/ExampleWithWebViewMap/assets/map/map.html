@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>江苏科技馆</title>
+	<script src='mapbox/mapbox.js'></script>
+	<link href='mapbox/mapbox.css' rel='stylesheet' />
+	<style>
+		body {
+		    padding: 0;
+		    margin: 0;
+		}
+		html, body, #map {
+		    height: 100%;
+		}
+	</style>
+</head>
+<body>
+	<div id="map"></div>
+	<script type="text/javascript">
+	var map = L.mapbox.map('map',{center:[0, 0],zoom:10});
+	var bridge;//expose bridge for send message
+	var poiLayer;//expose poilayer for search
+	</script>
+	<script src="zepto.min.js"></script>
+	<script src="lodash.min.js"></script>
+	<script type="text/javascript">
+	$.getJSON("map.json",function(basemap){
+		var jsonLayer=L.geoJson(basemap,{
+			style: function (feature) {
+	        	return {
+		            weight: 1,
+		            color: "#555",
+		            opacity: 1
+	        	};
+	    	},
+	    	maxZoom: 14,
+	    	minZoom: 10
+		});
+		jsonLayer.addTo(map);
+		map.fitBounds(jsonLayer.getBounds());
+		map.setMaxBounds(jsonLayer.getBounds());
+	});
+
+
+	$.getJSON("poi.json",function(data){
+		poiLayer=L.mapbox.featureLayer(data) 
+		.addTo(map)
+		.on('click', function(e) {
+	    	//console.log(e.layer.feature.properties);
+	    	//console.log(e.layer.getLatLng());
+	    	console.log(e.layer.feature.properties.id);
+	    	map.panTo(e.layer.getLatLng());
+	    	if(bridge){ //如果桥已经接通
+	    		bridge.send(e.layer.feature.properties.id);
+	    	}
+		});
+	});
+
+	function gotoMarker(id){
+		var layer=_.find(poiLayer._layers,function(l){return l.feature.properties.id.toString()==id.toString();});
+		console.log(layer);
+		if(layer){
+			map.panTo(layer.getLatLng());
+			layer.openPopup();
+		}
+	}
+
+	document.addEventListener('WebViewJavascriptBridgeReady', function(event) {
+		bridge = event.bridge;
+		bridge.registerHandler("gotoMarker", function(id) {
+			gotoMarker(id);
+		});
+	}, false)
+
+	</script>
+	
+</body>
+</html>

@@ -1,0 +1,27 @@
+<html>
+<input type="button" value="Test" onClick="test()"/>
+
+<script type="text/javascript">
+    function test(){
+        alert("test");
+    }
+    console.log("user_client.js called!");
+    document.addEventListener('WebViewJavascriptBridgeReady'
+    , function(event) {
+        var bridge=event.bridge;
+        bridge.init(function(message, responseCallback) {
+             if (responseCallback) {
+             responseCallback("Right back atcha") ;
+             }
+        }) ;
+        bridge.send('Hello from the javascript');
+        bridge.send('Please respond to this', function(responseData) {
+            console.log("Javascript got its response "+ responseData);
+        });
+        bridge.registerHandler("showAlert", function(data) { console.log("alert:"+data); });
+        bridge.callHandler("handler1","gift for handler1",function(responseData){
+            console.log("got handler1 response:"+responseData);
+        });
+    }, false)
+</script>
+</html>
