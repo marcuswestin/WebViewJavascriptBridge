@@ -1,10 +1,12 @@
 package com.fangjian;
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.webkit.*;
 import android.widget.Toast;
-import com.example.WebViewJavascriptBridgeExample.R;
 import org.json.JSONObject;
+
+import com.example.WebViewJavascriptBridgeExample.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,13 +23,13 @@ import java.util.Scanner;
 public class WebViewJavascriptBridge {
 
     WebView mWebView;
-    Context mContext;
+    Activity mContext;
     WVJBHandler _messageHandler;
     Map<String,WVJBHandler> _messageHandlers;
     Map<String,WVJBResponseCallback> _responseCallbacks;
     long _uniqueId;
 
-    public WebViewJavascriptBridge(Context context,WebView webview,WVJBHandler handler) {
+    public WebViewJavascriptBridge(Activity context,WebView webview,WVJBHandler handler) {
         this.mContext=context;
         this.mWebView=webview;
         this._messageHandler=handler;
@@ -173,10 +175,16 @@ public class WebViewJavascriptBridge {
     private void _dispatchMessage(Map <String, String> message){
         String messageJSON = new JSONObject(message).toString();
         Log.d("test","sending:"+messageJSON);
-        String javascriptCommand =
-                String.format("javascript:WebViewJavascriptBridge._handleMessageFromJava('%s');",messageJSON);
-        mWebView.loadUrl(javascriptCommand);
+       final  String javascriptCommand =
+                String.format("javascript:WebViewJavascriptBridge._handleMessageFromJava('%s');",messageJSON);   
+        mContext.runOnUiThread(new Runnable(){
+			@Override
+			public void run() {
+				mWebView.loadUrl(javascriptCommand);	
+			}
+        });
     }
+
 
     public  void callHandler(String handlerName) {
         callHandler(handlerName, null, null);

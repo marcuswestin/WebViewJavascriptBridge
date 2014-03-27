@@ -21,7 +21,7 @@ public class MyActivity extends Activity {
         setContentView(R.layout.main);
         webView=(WebView) this.findViewById(R.id.webView);
         bridge=
-                new WebViewJavascriptBridge(this.getApplicationContext(),webView,new UserServerHandler()) ;
+                new WebViewJavascriptBridge(this,webView,new UserServerHandler()) ;
         loadUserClient();
         registerHandle();
     }
