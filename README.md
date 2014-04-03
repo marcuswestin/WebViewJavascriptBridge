@@ -144,6 +144,23 @@ Example:
 		NSLog(@"Current UIWebView page URL is: %@", responseData);
 	}];
 
+#### Custom bundle
+`WebViewJavascriptBridge` requires `WebViewJavascriptBridge.js.txt` file that is injected into web view to create a bridge on JS side. Standard implementation uses `mainBundle` to search for this file. If you e.g. build a static library and you have that file placed somewhere else you can use this method to specify which bundle should be searched for `WebViewJavascriptBridge.js.txt` file:
+
+##### `[WebViewJavascriptBridge bridgeForWebView:(UIWebView/WebView*)webView webViewDelegate:(UIWebViewDelegate*)webViewDelegate handler:(WVJBHandler)handler resourceBundle:(NSBundle*)bundle`
+
+Example:
+
+
+```
+[WebViewJavascriptBridge bridgeForWebView:_webView
+                          webViewDelegate:self
+                                  handler:^(id data, WVJBResponseCallback responseCallback) {
+                                      NSLog(@"Received message from javascript: %@", data);
+                                  }
+                           resourceBundle:[NSBundle bundleWithURL:[[NSBundle mainBundle] URLForResource:@"ResourcesBundle" withExtension:@"bundle"]]
+];
+```
 
 ### Javascript API
 
