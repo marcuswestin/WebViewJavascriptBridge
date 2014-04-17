@@ -318,7 +318,7 @@ static bool logging = false;
 
 
 
-/* Platform specific internals: OSX
+/* Platform specific internals: iOS
  **********************************/
 #elif defined WVJB_PLATFORM_IOS
 
