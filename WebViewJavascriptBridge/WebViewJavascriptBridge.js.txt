@@ -56,7 +56,7 @@
 	}
 
 	function _dispatchMessageFromObjC(messageJSON) {
-		setTimeout(function _timeoutDispatchMessageFromObjC() {
+		function _timeoutDispatchMessageFromObjC() {
 			var message = JSON.parse(messageJSON)
 			var messageHandler
 			
@@ -87,7 +87,12 @@
 					}
 				}
 			}
-		})
+		}
+		if(window.WebViewJavascriptBridge.synchronous) {
+			_timeoutDispatchMessageFromObjC()
+		} else {
+			setTimeout(_timeoutDispatchMessageFromObjC)
+		}
 	}
 	
 	function _handleMessageFromObjC(messageJSON) {
@@ -101,6 +106,7 @@
 	window.WebViewJavascriptBridge = {
 		init: init,
 		send: send,
+		synchronous: false,
 		registerHandler: registerHandler,
 		callHandler: callHandler,
 		_fetchQueue: _fetchQueue,
