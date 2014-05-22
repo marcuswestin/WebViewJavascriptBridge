@@ -22,28 +22,13 @@
     #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<UIWebViewDelegate>
 #endif
 
-@protocol WebViewJavascriptBridgeDelegate<NSObject>
-
-@optional
-
-// define a method，make the user decide every request from webview should be load except the WVJB request
--(BOOL) WVJB_webView:(UIWebView *)webView
-shouldStartLoadWithRequest:(NSURLRequest *)request
-      navigationType:(UIWebViewNavigationType)navigationType;
-
-
-@end
-
 typedef void (^WVJBResponseCallback)(id responseData);
 typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 
 @interface WebViewJavascriptBridge : WVJB_WEBVIEW_DELEGATE_TYPE
 
-@property (nonatomic,weak) id <WebViewJavascriptBridgeDelegate> delegate;
-
 + (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView handler:(WVJBHandler)handler;
 + (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)handler;
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView WVJBDelegate:(id)delegate handler:(WVJBHandler)handler;
 + (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)handler resourceBundle:(NSBundle*)bundle;
 + (void)enableLogging;
 
