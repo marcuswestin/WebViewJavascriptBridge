@@ -175,7 +175,7 @@ static bool logging = false;
             if (callbackId) {
                 responseCallback = ^(id responseData) {
                     if (responseData == nil) {
-                        responseData = @{};
+                        responseData = [NSNull null];
                     }
                     
                     WVJBMessage* msg = @{ @"responseId":callbackId, @"responseData":responseData };
