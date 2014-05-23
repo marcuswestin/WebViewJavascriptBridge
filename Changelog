@@ -1,4 +1,4 @@
-intended v4.1.1
+v4.1.1
 + Better JS initialization script (thank @refractalize!)
 + When passing nil to an objc response callback, replace it with [NSNull null] (becomes null in js)
 
