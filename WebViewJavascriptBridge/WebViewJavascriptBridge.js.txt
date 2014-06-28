@@ -14,6 +14,7 @@
 	function _createQueueReadyIframe(doc) {
 		messagingIframe = doc.createElement('iframe')
 		messagingIframe.style.display = 'none'
+		messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE
 		doc.documentElement.appendChild(messagingIframe)
 	}
 
