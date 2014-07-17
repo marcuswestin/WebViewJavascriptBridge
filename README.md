@@ -19,6 +19,7 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 - Flutterby Labs
 - JD Media's [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
 - Dojo4's [Imbed](http://dojo4.github.io/imbed/)
+- [CareZone](https://carezone.com)
 
 Setup & Examples (iOS & OSX)
 ----------------------------
