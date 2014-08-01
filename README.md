@@ -48,7 +48,7 @@ To use a WebViewJavascriptBridge in your own project:
 	[bridge send:@"Well hello there"];
 	[bridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
 	[bridge send:@"Give me a response, will you?" responseCallback:^(id responseData) {
-		NSLog(@"ObjC got its response! %@ %@", responseData);
+		NSLog(@"ObjC got its response! %@", responseData);
 	}];
 
 4) Finally, set up the javascript side:
