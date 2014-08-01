@@ -54,17 +54,29 @@
 }
 
 - (void)renderButtons:(UIWebView*)webView {
+    UIFont* font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
+    
     UIButton *messageButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
 	[messageButton setTitle:@"Send message" forState:UIControlStateNormal];
 	[messageButton addTarget:self action:@selector(sendMessage:) forControlEvents:UIControlEventTouchUpInside];
 	[self.view insertSubview:messageButton aboveSubview:webView];
-	messageButton.frame = CGRectMake(20, 414, 130, 45);
-    
+	messageButton.frame = CGRectMake(10, 414, 100, 35);
+    messageButton.titleLabel.font = font;
+    messageButton.backgroundColor = [UIColor colorWithWhite:1 alpha:0.75];
+
     UIButton *callbackButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [callbackButton setTitle:@"Call handler" forState:UIControlStateNormal];
     [callbackButton addTarget:self action:@selector(callHandler:) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:callbackButton aboveSubview:webView];
-	callbackButton.frame = CGRectMake(170, 414, 130, 45);
+	callbackButton.frame = CGRectMake(110, 414, 100, 35);
+    callbackButton.titleLabel.font = font;
+    
+    UIButton* reloadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [reloadButton setTitle:@"Reload webview" forState:UIControlStateNormal];
+    [reloadButton addTarget:webView action:@selector(reload) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:reloadButton aboveSubview:webView];
+	reloadButton.frame = CGRectMake(210, 414, 100, 35);
+    reloadButton.titleLabel.font = font;
 }
 
 - (void)sendMessage:(id)sender {
