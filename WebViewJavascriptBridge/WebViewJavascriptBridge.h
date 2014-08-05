@@ -17,6 +17,7 @@
     #define WVJB_WEBVIEW_TYPE WebView
     #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject
 #elif defined __IPHONE_OS_VERSION_MAX_ALLOWED
+    #import <UIKit/UIWebView.h>
     #define WVJB_PLATFORM_IOS
     #define WVJB_WEBVIEW_TYPE UIWebView
     #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<UIWebViewDelegate>
