@@ -190,25 +190,15 @@ static bool logging = false;
             WVJBHandler handler;
             if (message[@"handlerName"]) {
                 handler = _messageHandlers[message[@"handlerName"]];
-                if (!handler) {
-                    NSLog(@"WVJB Warning: No handler for %@", message[@"handlerName"]);
-                    return responseCallback(@{});
-                }
             } else {
                 handler = _messageHandler;
-                if (!handler) {
-                    NSLog(@"WVJB Warning: No handler for message from JS: %@", message);
-                    return responseCallback(@{});
-                }
+            }
+
+            if (!handler) {
+                [NSException raise:@"WVJBNoHandlerException" format:@"No handler for message from JS: %@", message];
             }
             
-            @try {
-                id data = message[@"data"];
-                handler(data, responseCallback);
-            }
-            @catch (NSException *exception) {
-                NSLog(@"WebViewJavascriptBridge: WARNING: objc handler threw. %@ %@", message, exception);
-            }
+            handler(message[@"data"], responseCallback);
         }
     }
 }
