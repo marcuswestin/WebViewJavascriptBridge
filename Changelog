@@ -13,6 +13,10 @@ Release Checklist
 Version History
 ---------------
 
+v4.1.4
++ Improve how WVJB handles the case when there is no ObjC handler for a message received from js.
++ If an objc handler throws and exception, let it bubble up to the webkit engine instead of catching it in WVJB.
+
 v4.1.3
 + Update podspec file with tag
 
