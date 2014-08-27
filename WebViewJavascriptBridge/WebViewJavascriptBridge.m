@@ -51,7 +51,6 @@ static bool logging = false;
 {
     WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
     [bridge _platformSpecificSetup:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:bundle];
-    [bridge reset];
     return bridge;
 }
 
@@ -79,14 +78,17 @@ static bool logging = false;
     _messageHandlers[handlerName] = [handler copy];
 }
 
-- (void)reset {
-    _startupMessageQueue = [NSMutableArray array];
-    _responseCallbacks = [NSMutableDictionary dictionary];
-    _uniqueId = 0;
-}
-
 /* Platform agnostic internals
  *****************************/
+
+- (id)init {
+    if (self = [super init]) {
+        _startupMessageQueue = [NSMutableArray array];
+        _responseCallbacks = [NSMutableDictionary dictionary];
+        _uniqueId = 0;
+    }
+    return self;
+}
 
 - (void)dealloc {
     [self _platformSpecificDealloc];

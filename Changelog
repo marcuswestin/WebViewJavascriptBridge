@@ -13,6 +13,9 @@ Release Checklist
 Version History
 ---------------
 
+Intended v5.0.0
++ Removed `WebViewJavascriptBridge -reset`. It should never have been exposed as a public API.
+
 v4.1.4
 + Improve how WVJB handles the case when there is no ObjC handler for a message received from js.
 + If an objc handler throws and exception, let it bubble up to the webkit engine instead of catching it in WVJB.
