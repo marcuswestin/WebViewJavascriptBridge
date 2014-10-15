@@ -79,6 +79,22 @@ To use a WebViewJavascriptBridge in your own project:
 		})
 	})
 
+WKWebView Support (iOS 8 & OS 10.10)
+------------------------------------
+
+WebViewJavascriptBridge supports [WKWebView](http://nshipster.com/wkwebkit/) for iOS 8 and OSX Yosemite. In order to use WKWebView you need to instantiate the `WKWebViewJavascriptBridge`. The rest of the `WKWebViewJavascriptBridge` API is the same as `WebViewJavascriptBridge`.
+
+1) Import the header file:
+
+#import "WKWebViewJavascriptBridge.h"
+
+2) Instantiate WKWebViewJavascriptBridge and with a WKWebView object
+
+	WKWebViewJavascriptBridge* bridge = [WKWebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
+		NSLog(@"Received message from javascript: %@", data);
+		responseCallback(@"Right back atcha");
+	}];
+
 Contributors & Forks
 --------------------
 Contributors: https://github.com/marcuswestin/WebViewJavascriptBridge/graphs/contributors

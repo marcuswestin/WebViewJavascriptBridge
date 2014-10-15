@@ -26,7 +26,6 @@
     if (_bridge) { return; }
     
 #if defined(exampleSupportsWKWebKit)
-        NSLog(@"---------------------------------------");
         WKWebView* webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
         webView.navigationDelegate = self;
         [self.view addSubview:webView];
