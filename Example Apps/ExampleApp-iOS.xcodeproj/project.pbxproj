@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0E3214AF19EDF7CF0075E78F /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E8082DC19EDD98700479452 /* WebKit.framework */; };
 		0E8082DB19EDC32300479452 /* WKWebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E8082DA19EDC32300479452 /* WKWebViewJavascriptBridge.m */; };
 		2C1562B5176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C1562B4176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt */; };
 		2C1562C0176BA63500B4AE50 /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1562A9176B9F6200B4AE50 /* WebViewJavascriptBridge.m */; };
@@ -50,7 +49,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0E3214AF19EDF7CF0075E78F /* WebKit.framework in Frameworks */,
 				2CEB3EC01602563600548120 /* UIKit.framework in Frameworks */,
 				2CEB3EC21602563600548120 /* Foundation.framework in Frameworks */,
 				2CEB3EC41602563600548120 /* CoreGraphics.framework in Frameworks */,

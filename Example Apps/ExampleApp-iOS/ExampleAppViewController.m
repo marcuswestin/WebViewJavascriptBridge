@@ -25,8 +25,8 @@
 - (void)viewWillAppear:(BOOL)animated {
     if (_bridge) { return; }
 
-    #if defined(__IPHONE_8_0)
-        WKWebView* webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+#if defined(__IPHONE_8_0)
+        WKWebView* webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
         webView.navigationDelegate = self;
         [self.view addSubview:webView];
         [WKWebViewJavascriptBridge enableLogging];
@@ -34,7 +34,7 @@
             NSLog(@"ObjC received message from JS: %@", data);
             responseCallback(@"Response for message from ObjC");
         }];
-    #else
+#else
         UIWebView* webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
         [self.view addSubview:webView];
         [WebViewJavascriptBridge enableLogging];
@@ -42,7 +42,7 @@
             NSLog(@"ObjC received message from JS: %@", data);
             responseCallback(@"Response for message from ObjC");
         }];
-    #endif
+#endif
     
 
     
