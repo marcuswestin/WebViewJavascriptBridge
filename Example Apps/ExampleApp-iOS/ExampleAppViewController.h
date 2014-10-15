@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+#if (__MAC_OS_X_VERSION_MAX_ALLOWED > __MAC_10_9 || __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1)
+#define exampleSupportsWKWebKit
+#endif
 
-#if defined(__IPHONE_8_0)
+
+#if defined(exampleSupportsWKWebKit)
     #import <WebKit/WebKit.h>
     #define EXAMPLE_WEBVIEW_TYPE WKWebView
     #define EXAMPLE_WEBVIEW_DELEGATE_TYPE NSObject<WKNavigationDelegate>

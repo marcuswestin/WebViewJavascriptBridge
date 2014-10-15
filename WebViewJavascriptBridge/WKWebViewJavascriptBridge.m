@@ -5,9 +5,10 @@
 //  Copyright (c) 2014 Loki Meyburg. All rights reserved.
 //
 
-#if defined(__IPHONE_8_0)
 
 #import "WKWebViewJavascriptBridge.h"
+
+#if defined(supportsWKWebKit)
 
 typedef NSDictionary WVJBMessage;
 

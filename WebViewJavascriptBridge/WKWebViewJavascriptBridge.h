@@ -5,7 +5,11 @@
 //  Copyright (c) 2014 Loki Meyburg. All rights reserved.
 //
 
-#if defined(__IPHONE_8_0)
+#if (__MAC_OS_X_VERSION_MAX_ALLOWED > __MAC_10_9 || __IPHONE_OS_VERSION_MAX_ALLOWED > __IPHONE_7_1)
+#define supportsWKWebKit
+#endif
+
+#if defined(supportsWKWebKit )
 
 #import <Foundation/Foundation.h>
 #define kCustomProtocolScheme @"wvjbscheme"

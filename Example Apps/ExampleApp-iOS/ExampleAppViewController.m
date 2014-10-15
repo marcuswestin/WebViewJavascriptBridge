@@ -8,7 +8,7 @@
 
 #import "ExampleAppViewController.h"
 
-#if defined(__IPHONE_8_0)
+#if defined(exampleSupportsWKWebKit)
 #import "WKWebViewJavascriptBridge.h"
 # else
 #import "WebViewJavascriptBridge.h"
@@ -24,8 +24,9 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     if (_bridge) { return; }
-
-#if defined(__IPHONE_8_0)
+    
+#if defined(exampleSupportsWKWebKit)
+        NSLog(@"---------------------------------------");
         WKWebView* webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
         webView.navigationDelegate = self;
         [self.view addSubview:webView];
