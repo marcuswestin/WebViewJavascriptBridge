@@ -10,14 +10,7 @@
 #define kCustomProtocolScheme @"wvjbscheme"
 #define kQueueHasMessage      @"__WVJB_QUEUE_MESSAGE__"
 
-
-#if defined(__IPHONE_8_0)
-    #import <WebKit/WebKit.h>
-    #define WVJB_PLATFORM_IOS
-//    #define WVJB_WEBVIEW_TYPE WKWebView
-//    #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<WKNavigationDelegate>
-#endif
-
+#import <WebKit/WebKit.h>
 typedef void (^WVJBResponseCallback)(id responseData);
 typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 
