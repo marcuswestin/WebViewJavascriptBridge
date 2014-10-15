@@ -5,8 +5,9 @@
 //  Copyright (c) 2014 Loki Meyburg. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#if defined(__IPHONE_8_0)
 
+#import <Foundation/Foundation.h>
 #define kCustomProtocolScheme @"wvjbscheme"
 #define kQueueHasMessage      @"__WVJB_QUEUE_MESSAGE__"
 
@@ -30,3 +31,5 @@ typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 - (void)reset;
 
 @end
+
+#endif

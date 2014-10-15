@@ -5,6 +5,8 @@
 //  Copyright (c) 2014 Loki Meyburg. All rights reserved.
 //
 
+#if defined(__IPHONE_8_0)
+
 #import "WKWebViewJavascriptBridge.h"
 
 typedef NSDictionary WVJBMessage;
@@ -236,28 +238,29 @@ static bool logging = false;
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
+    NSLog(@"1. Finished navigation");
     if (webView != _webView) { return; }
     
     _numRequestsLoading--;
     
     if (_numRequestsLoading == 0) {
-        
         [webView evaluateJavaScript:@"typeof WebViewJavascriptBridge == \'object\';" completionHandler:^(NSString *result, NSError *error) {
             if(![result boolValue]){
                 NSBundle *bundle = _resourceBundle ? _resourceBundle : [NSBundle mainBundle];
                 NSString *filePath = [bundle pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
                 NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
                 [webView evaluateJavaScript:js completionHandler:nil];
+                
+                if (_startupMessageQueue) {
+                    for (id queuedMessage in _startupMessageQueue) {
+                        [self _dispatchMessage:queuedMessage];
+                    }
+                    _startupMessageQueue = nil;
+                }
             }
         }];
     }
     
-    if (_startupMessageQueue) {
-        for (id queuedMessage in _startupMessageQueue) {
-            [self _dispatchMessage:queuedMessage];
-        }
-        _startupMessageQueue = nil;
-    }
     
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFinishNavigation:)]) {
@@ -317,3 +320,6 @@ didFailNavigation:(WKNavigation *)navigation
 
 
 @end
+
+
+#endif
