@@ -54,12 +54,16 @@ static bool logging = false;
     return bridge;
 }
 
-- (void)send:(id)data {
-    [self send:data responseCallback:nil];
+- (void)send:(id)message {
+    [self send:message responseCallback:nil];
 }
 
-- (void)send:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
-    [self _sendData:data responseCallback:responseCallback handlerName:nil];
+- (void)send:(id)message responseCallback:(WVJBResponseCallback)responseCallback {
+    [self send:message timeoutInMillis:0 responseCallback:responseCallback];
+}
+
+- (void)send:(id)message timeoutInMillis:(NSUInteger)timeout responseCallback:(WVJBResponseCallback)responseCallback {
+    [self _sendData:message responseCallback:responseCallback handlerName:nil timeoutInMillis:timeout];
 }
 
 - (void)callHandler:(NSString *)handlerName {
@@ -71,7 +75,11 @@ static bool logging = false;
 }
 
 - (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
-    [self _sendData:data responseCallback:responseCallback handlerName:handlerName];
+    [self callHandler:handlerName data:data timeoutInMillis:0 responseCallback:responseCallback];
+}
+
+- (void)callHandler:(NSString*)handlerName data:(id)data timeoutInMillis:(NSUInteger)timeout responseCallback:(WVJBResponseCallback)responseCallback {
+    [self _sendData:data responseCallback:responseCallback handlerName:handlerName timeoutInMillis:timeout];
 }
 
 - (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
@@ -101,7 +109,7 @@ static bool logging = false;
     _messageHandler = nil;
 }
 
-- (void)_sendData:(id)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName {
+- (void)_sendData:(id)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName timeoutInMillis:(NSUInteger)timeout {
     NSMutableDictionary* message = [NSMutableDictionary dictionary];
     
     if (data) {
@@ -112,6 +120,7 @@ static bool logging = false;
         NSString* callbackId = [NSString stringWithFormat:@"objc_cb_%ld", ++_uniqueId];
         _responseCallbacks[callbackId] = [responseCallback copy];
         message[@"callbackId"] = callbackId;
+        message[@"timeout"] = [NSNumber numberWithUnsignedInteger:timeout];
     }
     
     if (handlerName) {
@@ -149,6 +158,26 @@ static bool logging = false;
             [strongWebView stringByEvaluatingJavaScriptFromString:javascriptCommand];
         });
     }
+    
+    [self _startTimeoutOnMessage:message];
+}
+
+- (void)_startTimeoutOnMessage:(WVJBMessage*)message {
+    NSString *callbackId = message[@"callbackId"];
+    NSNumber *timeout = message[@"timeout"];
+    if (callbackId && timeout && [timeout intValue] > 0) {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)([timeout unsignedIntegerValue] * NSEC_PER_MSEC)), dispatch_get_main_queue(), ^{
+            NSLog(@"Encountered timeout! The message is: %@", message);
+            
+            WVJBResponseCallback responseCallback = _responseCallbacks[callbackId];
+            
+            if (responseCallback) {
+                NSError *timeoutError = [NSError errorWithDomain:@"WVJBTimeoutError" code:408 userInfo:nil];
+                responseCallback(timeoutError);
+                [_responseCallbacks removeObjectForKey:callbackId];
+            }
+        });
+    }
 }
 
 - (void)_flushMessageQueue {
@@ -169,8 +198,11 @@ static bool logging = false;
         NSString* responseId = message[@"responseId"];
         if (responseId) {
             WVJBResponseCallback responseCallback = _responseCallbacks[responseId];
-            responseCallback(message[@"responseData"]);
-            [_responseCallbacks removeObjectForKey:responseId];
+            
+            if (responseCallback != nil) {
+                responseCallback(message[@"responseData"]);
+                [_responseCallbacks removeObjectForKey:responseId];
+            }
         } else {
             WVJBResponseCallback responseCallback = NULL;
             NSString* callbackId = message[@"callbackId"];
