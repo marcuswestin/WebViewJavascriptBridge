@@ -239,7 +239,6 @@ static bool logging = false;
 
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
-    NSLog(@"1. Finished navigation");
     if (webView != _webView) { return; }
     
     _numRequestsLoading--;
