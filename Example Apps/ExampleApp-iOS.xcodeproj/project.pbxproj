@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E50601C1A01B442000BEEEA /* WebViewJavascriptBridgeBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E50601B1A01B442000BEEEA /* WebViewJavascriptBridgeBase.m */; };
 		0E8082DB19EDC32300479452 /* WKWebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E8082DA19EDC32300479452 /* WKWebViewJavascriptBridge.m */; };
 		2C1562B5176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C1562B4176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt */; };
 		2C1562C0176BA63500B4AE50 /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1562A9176B9F6200B4AE50 /* WebViewJavascriptBridge.m */; };
@@ -22,6 +23,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0E50601B1A01B442000BEEEA /* WebViewJavascriptBridgeBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridgeBase.m; sourceTree = "<group>"; };
+		0E50601D1A01B44C000BEEEA /* WebViewJavascriptBridgeBase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridgeBase.h; sourceTree = "<group>"; };
 		0E8082D919EDC32300479452 /* WKWebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKWebViewJavascriptBridge.h; sourceTree = "<group>"; };
 		0E8082DA19EDC32300479452 /* WKWebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKWebViewJavascriptBridge.m; sourceTree = "<group>"; };
 		0E8082DC19EDD98700479452 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -64,8 +67,10 @@
 				2C1562B4176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt */,
 				2C1562A8176B9F6200B4AE50 /* WebViewJavascriptBridge.h */,
 				2C1562A9176B9F6200B4AE50 /* WebViewJavascriptBridge.m */,
-				0E8082D919EDC32300479452 /* WKWebViewJavascriptBridge.h */,
 				0E8082DA19EDC32300479452 /* WKWebViewJavascriptBridge.m */,
+				0E8082D919EDC32300479452 /* WKWebViewJavascriptBridge.h */,
+				0E50601B1A01B442000BEEEA /* WebViewJavascriptBridgeBase.m */,
+				0E50601D1A01B44C000BEEEA /* WebViewJavascriptBridgeBase.h */,
 			);
 			name = WebViewJavascriptBridge;
 			path = ../../WebViewJavascriptBridge;
@@ -194,6 +199,7 @@
 				0E8082DB19EDC32300479452 /* WKWebViewJavascriptBridge.m in Sources */,
 				2C45CA2C1884AD520002A4E2 /* ExampleAppViewController.m in Sources */,
 				2CA045C217117439006DEE8B /* ExampleAppDelegate.m in Sources */,
+				0E50601C1A01B442000BEEEA /* WebViewJavascriptBridgeBase.m in Sources */,
 				2CA045C317117439006DEE8B /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

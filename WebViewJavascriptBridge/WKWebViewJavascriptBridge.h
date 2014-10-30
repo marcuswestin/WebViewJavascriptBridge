@@ -12,8 +12,6 @@
 #if defined(supportsWKWebKit )
 
 #import <Foundation/Foundation.h>
-#define kCustomProtocolScheme @"wvjbscheme"
-#define kQueueHasMessage      @"__WVJB_QUEUE_MESSAGE__"
 
 #import <WebKit/WebKit.h>
 typedef void (^WVJBResponseCallback)(id responseData);
