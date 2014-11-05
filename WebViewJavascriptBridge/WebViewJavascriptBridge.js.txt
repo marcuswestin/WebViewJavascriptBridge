@@ -60,14 +60,14 @@
 		setTimeout(function _timeoutDispatchMessageFromObjC() {
 			var message = JSON.parse(messageJSON)
 			var messageHandler
-			
+			var responseCallback
+
 			if (message.responseId) {
-				var responseCallback = responseCallbacks[message.responseId]
+				responseCallback = responseCallbacks[message.responseId]
 				if (!responseCallback) { return; }
 				responseCallback(message.responseData)
 				delete responseCallbacks[message.responseId]
 			} else {
-				var responseCallback
 				if (message.callbackId) {
 					var callbackResponseId = message.callbackId
 					responseCallback = function(responseData) {
