@@ -34,7 +34,7 @@
 + (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle
 {
     WKWebViewJavascriptBridge* bridge = [[WKWebViewJavascriptBridge alloc] init];
-    [bridge _platformSpecificSetup:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:bundle];
+    [bridge _setupInstance:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:bundle];
     [bridge reset];
     return bridge;
 }
@@ -81,7 +81,7 @@
 /* WKWebView Specific Internals
  ******************************/
 
-- (void) _platformSpecificSetup:(WKWebView*)webView webViewDelegate:(id<WKNavigationDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle{
+- (void) _setupInstance:(WKWebView*)webView webViewDelegate:(id<WKNavigationDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle{
     _webView = webView;
     _webViewDelegate = webViewDelegate;
     _webView.navigationDelegate = self;
@@ -165,7 +165,6 @@ didFailNavigation:(WKNavigation *)navigation
 
 - (NSString*) _evaluateJavascript:(NSString*)javascriptCommand
 {
-    NSLog(@"----- EVALUATING");
     [_webView evaluateJavaScript:javascriptCommand completionHandler:nil];
     return NULL;
 }

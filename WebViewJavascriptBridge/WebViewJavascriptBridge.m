@@ -186,8 +186,10 @@ typedef NSDictionary WVJBMessage;
 
 - (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle{
     _webView = webView;
+    _webView.delegate = self;
     _webViewDelegate = webViewDelegate;
     _base = [[WebViewJavascriptBridgeBase alloc] initWithWebViewType:@"WebView" handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
+    _base.delegate = self;
 }
 
 - (void) _platformSpecificDealloc {
@@ -200,9 +202,10 @@ typedef NSDictionary WVJBMessage;
     _numRequestsLoading--;
     
     if (_numRequestsLoading == 0 && ![[webView stringByEvaluatingJavaScriptFromString:[_base webViewJavascriptCheckCommand]] isEqualToString:@"true"]) {
-        [_base injectJavascriptFile:YES];
+        [_base injectJavascriptFile:NO];
     }
     [_base dispatchStartUpMessageQueue];
+    
     
     __strong WVJB_WEBVIEW_DELEGATE_TYPE* strongDelegate = _webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
