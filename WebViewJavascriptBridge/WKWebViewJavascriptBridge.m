@@ -18,8 +18,6 @@
     WebViewJavascriptBridgeBase *_base;
 }
 
-//@synthesize delegate;
-
 /* API
  *****/
 
@@ -165,9 +163,11 @@ didFailNavigation:(WKNavigation *)navigation
     }
 }
 
-- (void) _evaluateJavascript:(NSString*)javascriptCommand
+- (NSString*) _evaluateJavascript:(NSString*)javascriptCommand
 {
+    NSLog(@"----- EVALUATING");
     [_webView evaluateJavaScript:javascriptCommand completionHandler:nil];
+    return NULL;
 }
 
 

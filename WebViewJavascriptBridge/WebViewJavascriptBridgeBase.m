@@ -29,6 +29,7 @@ static bool logging = false;
     _resourceBundle = bundle;
     self.messageHandler = messageHandler;
     self.messageHandlers = [NSMutableDictionary dictionary];
+    _uniqueId = 0;
     return(self);
 }
 
@@ -177,15 +178,18 @@ static bool logging = false;
         NSString *filePath = [bundle pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
         NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         [self _evaluateJavascript:js];
-        
-        if (_startupMessageQueue) {
-            for (id queuedMessage in _startupMessageQueue) {
-                [self _dispatchMessage:queuedMessage];
-            }
-            _startupMessageQueue = nil;
-        }
+        [self dispatchStartUpMessageQueue];
     }
 
+}
+
+- (void) dispatchStartUpMessageQueue {
+    if (_startupMessageQueue) {
+        for (id queuedMessage in _startupMessageQueue) {
+            [self _dispatchMessage:queuedMessage];
+        }
+        _startupMessageQueue = nil;
+    }
 }
 
 -(BOOL)correctProcotocolScheme:(NSURL*)url {

@@ -12,8 +12,8 @@
 #if defined(supportsWKWebKit )
 
 #import <Foundation/Foundation.h>
-
 #import <WebKit/WebKit.h>
+
 typedef void (^WVJBResponseCallback)(id responseData);
 typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 
@@ -31,9 +31,6 @@ typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 - (void)callHandler:(NSString*)handlerName data:(id)data;
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
 - (void)reset;
-
-// delegate method
-- (void) _evaluateJavascript:(NSString*)javascriptCommand;
 
 @end
 

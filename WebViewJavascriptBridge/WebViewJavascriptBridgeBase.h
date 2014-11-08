@@ -17,7 +17,7 @@ typedef NSDictionary WVJBMessage;
 
 // setup delegate
 @protocol WebViewJavascriptBridgeBaseDelegate <NSObject>
-- (void) _evaluateJavascript:(NSString*)javascriptCommand;
+- (NSString*) _evaluateJavascript:(NSString*)javascriptCommand;
 @end
 
 
@@ -48,6 +48,7 @@ typedef NSDictionary WVJBMessage;
 -(void) logUnkownMessage:(NSURL*)url;
 -(NSString *) webViewJavascriptCheckCommand;
 -(NSString *) webViewJavascriptFetchQueyCommand;
+- (void) dispatchStartUpMessageQueue;
 
 
 // probably dont need to be public
