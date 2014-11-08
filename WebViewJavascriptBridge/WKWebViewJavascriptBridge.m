@@ -18,6 +18,8 @@
     WebViewJavascriptBridgeBase *_base;
 }
 
+//@synthesize delegate;
+
 /* API
  *****/
 
@@ -86,6 +88,7 @@
     _webViewDelegate = webViewDelegate;
     _webView.navigationDelegate = self;
     _base = [[WebViewJavascriptBridgeBase alloc] initWithWebViewType:@"WKWebView" handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
+    _base.delegate = self;
 }
 
 
@@ -160,6 +163,11 @@ didFailNavigation:(WKNavigation *)navigation
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailNavigation:withError:)]) {
         [strongDelegate webView:webView didFailNavigation:navigation withError:error];
     }
+}
+
+- (void) _evaluateJavascript:(NSString*)javascriptCommand
+{
+    [_webView evaluateJavaScript:javascriptCommand completionHandler:nil];
 }
 
 

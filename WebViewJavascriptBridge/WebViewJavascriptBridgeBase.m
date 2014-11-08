@@ -98,10 +98,6 @@ static bool logging = false;
 }
 
 
-- (void) _evaluateJavascript:(NSString *)javascriptCommand {
-    NSLog(@"----> TODO: Do this method! DEBUG: Evaluating javascript!");
-}
-
 - (void)_flushMessageQueue:(NSString *)messageQueueString{
     id messages = [self _deserializeMessageJSON:messageQueueString];
     if (![messages isKindOfClass:[NSArray class]]) {
@@ -221,6 +217,10 @@ static bool logging = false;
 
 -(NSString *) webViewJavascriptFetchQueyCommand {
     return @"WebViewJavascriptBridge._fetchQueue();";
+}
+
+- (void) _evaluateJavascript:(NSString *)javascriptCommand {
+    [self.delegate _evaluateJavascript:javascriptCommand];
 }
 
 

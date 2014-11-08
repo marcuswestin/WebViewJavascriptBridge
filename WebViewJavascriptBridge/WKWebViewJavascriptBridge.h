@@ -32,6 +32,9 @@ typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
 - (void)reset;
 
+// delegate method
+- (void) _evaluateJavascript:(NSString*)javascriptCommand;
+
 @end
 
 #endif
