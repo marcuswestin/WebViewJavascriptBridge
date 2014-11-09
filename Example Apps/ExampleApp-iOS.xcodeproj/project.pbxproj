@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0E4E9D4C1A101E0B00043087 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0E8082DC19EDD98700479452 /* WebKit.framework */; };
 		0E50601C1A01B442000BEEEA /* WebViewJavascriptBridgeBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E50601B1A01B442000BEEEA /* WebViewJavascriptBridgeBase.m */; };
 		0E8082DB19EDC32300479452 /* WKWebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0E8082DA19EDC32300479452 /* WKWebViewJavascriptBridge.m */; };
 		0ECB01441A0EE1F20037FF4E /* ExampleWKWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ECB01431A0EE1F20037FF4E /* ExampleWKWebViewController.m */; };
@@ -55,6 +56,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0E4E9D4C1A101E0B00043087 /* WebKit.framework in Frameworks */,
 				2CEB3EC01602563600548120 /* UIKit.framework in Frameworks */,
 				2CEB3EC21602563600548120 /* Foundation.framework in Frameworks */,
 				2CEB3EC41602563600548120 /* CoreGraphics.framework in Frameworks */,
@@ -278,6 +280,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ExampleApp-iOS/ExampleApp-iOS-Prefix.pch";
 				INFOPLIST_FILE = "ExampleApp-iOS/ExampleApp-iOS-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "ExampleApp-iOS";
 				WRAPPER_EXTENSION = app;
 			};
@@ -289,6 +292,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ExampleApp-iOS/ExampleApp-iOS-Prefix.pch";
 				INFOPLIST_FILE = "ExampleApp-iOS/ExampleApp-iOS-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
 				PRODUCT_NAME = "ExampleApp-iOS";
 				WRAPPER_EXTENSION = app;
 			};
