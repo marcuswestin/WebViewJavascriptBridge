@@ -92,16 +92,15 @@ typedef NSDictionary WVJBMessage;
 #if defined WVJB_PLATFORM_OSX
 
 - (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle{
-    _messageHandler = messageHandler;
     _webView = webView;
     _webViewDelegate = webViewDelegate;
-    _messageHandlers = [NSMutableDictionary dictionary];
     
     _webView.frameLoadDelegate = self;
     _webView.resourceLoadDelegate = self;
     _webView.policyDelegate = self;
     
-    _resourceBundle = bundle;
+    _base = [[WebViewJavascriptBridgeBase alloc] initWithWebViewType:@"WebView" handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
+    _base.delegate = self;
 }
 
 - (void) _platformSpecificDealloc {
@@ -114,19 +113,11 @@ typedef NSDictionary WVJBMessage;
 {
     if (webView != _webView) { return; }
     
-    if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
-        NSBundle *bundle = _resourceBundle ? _resourceBundle : [NSBundle mainBundle];
-        NSString *filePath = [bundle pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
-        NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        [webView stringByEvaluatingJavaScriptFromString:js];
+    if (![[webView stringByEvaluatingJavaScriptFromString:[_base webViewJavascriptCheckCommand]] isEqualToString:@"true"]) {
+        [_base injectJavascriptFile:NO];
     }
     
-    if (_startupMessageQueue) {
-        for (id queuedMessage in _startupMessageQueue) {
-            [self _dispatchMessage:queuedMessage];
-        }
-        _startupMessageQueue = nil;
-    }
+    [_base dispatchStartUpMessageQueue];
     
     if (_webViewDelegate && [_webViewDelegate respondsToSelector:@selector(webView:didFinishLoadForFrame:)]) {
         [_webViewDelegate webView:webView didFinishLoadForFrame:frame];
@@ -146,11 +137,12 @@ typedef NSDictionary WVJBMessage;
     if (webView != _webView) { return; }
     
     NSURL *url = [request URL];
-    if ([[url scheme] isEqualToString:kCustomProtocolScheme]) {
-        if ([[url host] isEqualToString:kQueueHasMessage]) {
-            [self _flushMessageQueue];
+    if ([_base correctProcotocolScheme:url]) {
+        if ([_base correctHost:url]) {
+            NSString *messageQueueString = [self _evaluateJavascript:[_base webViewJavascriptFetchQueyCommand]];
+            [_base _flushMessageQueue:messageQueueString];
         } else {
-            NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@://%@", kCustomProtocolScheme, [url path]);
+            [_base logUnkownMessage:url];
         }
         [listener ignore];
     } else if (_webViewDelegate && [_webViewDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:request:frame:decisionListener:)]) {
