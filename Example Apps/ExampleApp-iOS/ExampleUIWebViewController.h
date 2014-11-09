@@ -1,5 +1,5 @@
 //
-//  ExampleAppViewController.h
+//  ExampleUIWebViewController.h
 //  ExampleApp-iOS
 //
 //  Created by Marcus Westin on 1/13/14.

@@ -1,5 +1,5 @@
 //
-//  ExampleAppViewController.m
+//  ExampleWKWebViewController.m
 //  ExampleApp-iOS
 //
 //  Created by Marcus Westin on 1/13/14.
