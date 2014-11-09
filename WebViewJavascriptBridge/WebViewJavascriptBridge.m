@@ -7,15 +7,12 @@
 //
 
 #import "WebViewJavascriptBridge.h"
-#import "WebViewJavascriptBridgeBase.h"
 
 #if __has_feature(objc_arc_weak)
     #define WVJB_WEAK __weak
 #else
     #define WVJB_WEAK __unsafe_unretained
 #endif
-
-typedef NSDictionary WVJBMessage;
 
 @implementation WebViewJavascriptBridge {
     WVJB_WEAK WVJB_WEBVIEW_TYPE* _webView;
@@ -53,7 +50,7 @@ typedef NSDictionary WVJBMessage;
 }
 
 - (void)send:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
-    [_base _sendData:data responseCallback:responseCallback handlerName:nil];
+    [_base sendData:data responseCallback:responseCallback handlerName:nil];
 }
 
 - (void)callHandler:(NSString *)handlerName {
@@ -65,7 +62,7 @@ typedef NSDictionary WVJBMessage;
 }
 
 - (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
-    [_base _sendData:data responseCallback:responseCallback handlerName:handlerName];
+    [_base sendData:data responseCallback:responseCallback handlerName:handlerName];
 }
 
 - (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
@@ -99,7 +96,7 @@ typedef NSDictionary WVJBMessage;
     _webView.resourceLoadDelegate = self;
     _webView.policyDelegate = self;
     
-    _base = [[WebViewJavascriptBridgeBase alloc] initWithWebViewType:@"WebView" handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
+    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
     _base.delegate = self;
 }
 
@@ -114,7 +111,7 @@ typedef NSDictionary WVJBMessage;
     if (webView != _webView) { return; }
     
     if (![[webView stringByEvaluatingJavaScriptFromString:[_base webViewJavascriptCheckCommand]] isEqualToString:@"true"]) {
-        [_base injectJavascriptFile:NO];
+        [_base injectJavascriptFile:YES];
     }
     
     [_base dispatchStartUpMessageQueue];
@@ -137,10 +134,10 @@ typedef NSDictionary WVJBMessage;
     if (webView != _webView) { return; }
     
     NSURL *url = [request URL];
-    if ([_base correctProcotocolScheme:url]) {
-        if ([_base correctHost:url]) {
+    if ([_base isCorrectProcotocolScheme:url]) {
+        if ([_base isCorrectHost:url]) {
             NSString *messageQueueString = [self _evaluateJavascript:[_base webViewJavascriptFetchQueyCommand]];
-            [_base _flushMessageQueue:messageQueueString];
+            [_base flushMessageQueue:messageQueueString];
         } else {
             [_base logUnkownMessage:url];
         }
@@ -180,7 +177,7 @@ typedef NSDictionary WVJBMessage;
     _webView = webView;
     _webView.delegate = self;
     _webViewDelegate = webViewDelegate;
-    _base = [[WebViewJavascriptBridgeBase alloc] initWithWebViewType:@"WebView" handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
+    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
     _base.delegate = self;
 }
 
@@ -194,7 +191,7 @@ typedef NSDictionary WVJBMessage;
     _numRequestsLoading--;
     
     if (_numRequestsLoading == 0 && ![[webView stringByEvaluatingJavaScriptFromString:[_base webViewJavascriptCheckCommand]] isEqualToString:@"true"]) {
-        [_base injectJavascriptFile:NO];
+        [_base injectJavascriptFile:YES];
     }
     [_base dispatchStartUpMessageQueue];
     
@@ -220,10 +217,10 @@ typedef NSDictionary WVJBMessage;
     if (webView != _webView) { return YES; }
     NSURL *url = [request URL];
     __strong WVJB_WEBVIEW_DELEGATE_TYPE* strongDelegate = _webViewDelegate;
-    if ([_base correctProcotocolScheme:url]) {
-        if ([_base correctHost:url]) {
+    if ([_base isCorrectProcotocolScheme:url]) {
+        if ([_base isCorrectHost:url]) {
             NSString *messageQueueString = [self _evaluateJavascript:[_base webViewJavascriptFetchQueyCommand]];
-            [_base _flushMessageQueue:messageQueueString];
+            [_base flushMessageQueue:messageQueueString];
         } else {
             [_base logUnkownMessage:url];
         }

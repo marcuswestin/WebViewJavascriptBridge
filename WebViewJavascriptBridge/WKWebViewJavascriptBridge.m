@@ -1,13 +1,12 @@
 //
 //  WKWebViewJavascriptBridge.m
 //
-//  Created by Loki Meyburg on 10/15/14.
-//  Copyright (c) 2014 Loki Meyburg. All rights reserved.
+//  Created by @LokiMeyburg on 10/15/14.
+//  Copyright (c) 2014 @LokiMeyburg. All rights reserved.
 //
 
 
 #import "WKWebViewJavascriptBridge.h"
-#import "WebViewJavascriptBridgeBase.h"
 
 #if defined(supportsWKWebKit)
 
@@ -44,7 +43,7 @@
 }
 
 - (void)send:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
-    [_base _sendData:data responseCallback:responseCallback handlerName:nil];
+    [_base sendData:data responseCallback:responseCallback handlerName:nil];
 }
 
 - (void)callHandler:(NSString *)handlerName {
@@ -56,7 +55,7 @@
 }
 
 - (void)callHandler:(NSString *)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback {
-    [_base _sendData:data responseCallback:responseCallback handlerName:handlerName];
+    [_base sendData:data responseCallback:responseCallback handlerName:handlerName];
 }
 
 - (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
@@ -85,14 +84,14 @@
     _webView = webView;
     _webViewDelegate = webViewDelegate;
     _webView.navigationDelegate = self;
-    _base = [[WebViewJavascriptBridgeBase alloc] initWithWebViewType:@"WKWebView" handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
+    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
     _base.delegate = self;
 }
 
 
 - (void)WKFlushMessageQueue {
     [_webView evaluateJavaScript:[_base webViewJavascriptFetchQueyCommand] completionHandler:^(NSString* result, NSError* error) {
-        [_base _flushMessageQueue:result];
+        [_base flushMessageQueue:result];
     }];
 }
 
@@ -104,7 +103,7 @@
     
     if (_base.numRequestsLoading == 0) {
         [webView evaluateJavaScript:[_base webViewJavascriptCheckCommand] completionHandler:^(NSString *result, NSError *error) {
-            [_base injectJavascriptFile:[result boolValue]];
+            [_base injectJavascriptFile:![result boolValue]];
         }];
     }
     
@@ -122,8 +121,8 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     NSURL *url = navigationAction.request.URL;
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
 
-    if ([_base correctProcotocolScheme:url]) {
-        if ([_base correctHost:url]) {
+    if ([_base isCorrectProcotocolScheme:url]) {
+        if ([_base isCorrectHost:url]) {
             [self WKFlushMessageQueue];
         } else {
             [_base logUnkownMessage:url];

@@ -7,21 +7,19 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "WebViewJavascriptBridgeBase.h"
 
 #if defined __MAC_OS_X_VERSION_MAX_ALLOWED
     #import <WebKit/WebKit.h>
     #define WVJB_PLATFORM_OSX
     #define WVJB_WEBVIEW_TYPE WebView
-    #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject
+    #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<WebViewJavascriptBridgeBaseDelegate>
 #elif defined __IPHONE_OS_VERSION_MAX_ALLOWED
     #import <UIKit/UIWebView.h>
     #define WVJB_PLATFORM_IOS
     #define WVJB_WEBVIEW_TYPE UIWebView
-    #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<UIWebViewDelegate>
+    #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<UIWebViewDelegate, WebViewJavascriptBridgeBaseDelegate>
 #endif
-
-typedef void (^WVJBResponseCallback)(id responseData);
-typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 
 @interface WebViewJavascriptBridge : WVJB_WEBVIEW_DELEGATE_TYPE
 
