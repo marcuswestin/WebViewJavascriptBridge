@@ -29,6 +29,8 @@ static bool logging = false;
     _resourceBundle = bundle;
     self.messageHandler = messageHandler;
     self.messageHandlers = [NSMutableDictionary dictionary];
+    self.startupMessageQueue = [NSMutableArray array];
+    self.responseCallbacks = [NSMutableDictionary dictionary];
     _uniqueId = 0;
     return(self);
 }
@@ -184,11 +186,14 @@ static bool logging = false;
 }
 
 - (void) dispatchStartUpMessageQueue {
-    if (_startupMessageQueue) {
-        for (id queuedMessage in _startupMessageQueue) {
+    NSLog(@"0. Dispathing queue");
+    if (self.startupMessageQueue) {
+        NSLog(@"1. Startup queue found");
+        
+        for (id queuedMessage in self.startupMessageQueue) {
             [self _dispatchMessage:queuedMessage];
         }
-        _startupMessageQueue = nil;
+        self.startupMessageQueue = nil;
     }
 }
 
@@ -211,7 +216,7 @@ static bool logging = false;
 
 
 -(void) logUnkownMessageFor:(NSURL*)url {
-    NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WKWebViewJavascriptBridge command %@://%@", kCustomProtocolScheme, [url path]);
+    NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@://%@", kCustomProtocolScheme, [url path]);
 }
 
 

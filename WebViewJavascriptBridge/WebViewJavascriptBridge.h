@@ -8,9 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-#define kCustomProtocolScheme @"wvjbscheme"
-#define kQueueHasMessage      @"__WVJB_QUEUE_MESSAGE__"
-
 #if defined __MAC_OS_X_VERSION_MAX_ALLOWED
     #import <WebKit/WebKit.h>
     #define WVJB_PLATFORM_OSX
