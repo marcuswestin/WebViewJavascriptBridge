@@ -77,6 +77,15 @@
     [self.view insertSubview:reloadButton aboveSubview:webView];
 	reloadButton.frame = CGRectMake(210, 414, 100, 35);
     reloadButton.titleLabel.font = font;
+    
+    {
+        UIButton *callbackButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+        [callbackButton setTitle:@"Call handler not exists" forState:UIControlStateNormal];
+        [callbackButton addTarget:self action:@selector(callHandlerNotExists:) forControlEvents:UIControlEventTouchUpInside];
+        [self.view insertSubview:callbackButton aboveSubview:webView];
+        callbackButton.frame = CGRectMake(10, 454, 200, 35);
+        callbackButton.titleLabel.font = font;
+    }
 }
 
 - (void)sendMessage:(id)sender {
@@ -89,6 +98,13 @@
     id data = @{ @"greetingFromObjC": @"Hi there, JS!" };
     [_bridge callHandler:@"testJavascriptHandler" data:data responseCallback:^(id response) {
         NSLog(@"testJavascriptHandler responded: %@", response);
+    }];
+}
+
+- (void)callHandlerNotExists:(id)sender {
+    id data = @{ @"greetingFromObjC": @"Hi there, JS!" };
+    [_bridge callHandler:@"testJavascriptHandlerNotExsits" data:data responseCallback:^(id response) {
+        NSLog(@"testJavascriptHandlerNotExsits responded: %@", response);
     }];
 }
 
