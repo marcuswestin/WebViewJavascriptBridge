@@ -16,6 +16,7 @@
     WKWebView *_WKWebView;
     WebViewJavascriptBridge* _bridge;
     WKWebViewJavascriptBridge* _WKBridge;
+    NSView* _WKWebViewWrapper;
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
@@ -58,6 +59,13 @@
     [callbackButton setAction:@selector(_callHandler)];
     [_webView addSubview:callbackButton];
     
+    NSButton *webViewToggleButton = [[NSButton alloc] initWithFrame:NSMakeRect(235, 0, 180, 40)];
+    [webViewToggleButton setTitle:@"Switch to WKWebView"];
+    [webViewToggleButton setBezelStyle:NSRoundedBezelStyle];
+    [webViewToggleButton setTarget:self];
+    [webViewToggleButton setAction:@selector(_toggleExample)];
+    [_webView addSubview:webViewToggleButton];
+    
     
     // Load Page
     NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
@@ -67,12 +75,6 @@
 
 
 - (void)_configureWKWebview {
-    
-    // Load Page
-    NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
-    NSString* html = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
-    [_WKWebView loadHTMLString:html baseURL:nil];
-    
     // Create Bridge
     _WKBridge = [WKWebViewJavascriptBridge bridgeForWebView:_WKWebView handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"ObjC received message from JS: %@", data);
@@ -104,6 +106,23 @@
     [callbackButton setTarget:self];
     [callbackButton setAction:@selector(_WKCallHandler)];
     [_WKWebView addSubview:callbackButton];
+    
+    NSButton *webViewToggleButton = [[NSButton alloc] initWithFrame:NSMakeRect(235, 0, 180, 40)];
+    [webViewToggleButton setTitle:@"Switch to WebView"];
+    [webViewToggleButton setBezelStyle:NSRoundedBezelStyle];
+    [webViewToggleButton setTarget:self];
+    [webViewToggleButton setAction:@selector(_toggleExample)];
+    [_WKWebView addSubview:webViewToggleButton];
+    
+    // Load Page
+    NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
+    NSString* html = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
+    [_WKWebView loadHTMLString:html baseURL:nil];
+}
+
+-(void)_toggleExample {
+    _WKWebView.hidden = !_WKWebView.isHidden;
+    _webView.hidden = !_webView.isHidden;
 }
 
 - (void)_sendMessage {
@@ -137,29 +156,14 @@
     // WebView
     _webView = [[WebView alloc] initWithFrame:contentView.frame];
     [_webView setAutoresizingMask:(NSViewHeightSizable | NSViewWidthSizable)];
+    _webView.hidden = YES;
     
     // WKWebView
     _WKWebView = [[WKWebView alloc] initWithFrame:contentView.frame];
     [_WKWebView setAutoresizingMask:(NSViewHeightSizable | NSViewWidthSizable)];
     
-    // Tabs
-    NSTabView *tabView = [[NSTabView alloc]
-                           initWithFrame:contentView.frame];
-    [contentView addSubview:tabView];
-    
-    NSTabViewItem *tab1 = [[NSTabViewItem alloc]
-                            initWithIdentifier:@"tab1"];
-    [tab1 setLabel:@"WebView"];
-    [tabView addTabViewItem:tab1];
-    
-    NSTabViewItem *tab2 = [[NSTabViewItem alloc]
-                           initWithIdentifier:@"tab2"];
-    [tab2 setLabel:@"WKWebView"];
-    [tabView addTabViewItem:tab2];
-    
-    // Initialize each tab
-    [tab1 setView:_webView];
-    [tab2 setView:_WKWebView];
+    [contentView addSubview:_WKWebView];
+    [contentView addSubview:_webView];
 }
 
 
