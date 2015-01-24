@@ -20,6 +20,7 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 - JD Media's [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
 - Dojo4's [Imbed](http://dojo4.github.io/imbed/)
 - [CareZone](https://carezone.com)
+- [Hemlig](http://www.hemlig.co)
 
 Setup & Examples (iOS & OSX)
 ----------------------------
@@ -31,7 +32,7 @@ To use a WebViewJavascriptBridge in your own project:
 1) Drag the `WebViewJavascriptBridge` folder into your project.
 
   - In the dialog that appears, uncheck "Copy items into destination group's folder" and select "Create groups for any folders"
-  
+
 2) Import the header file:
 
 	#import "WebViewJavascriptBridge.h"
@@ -52,7 +53,7 @@ To use a WebViewJavascriptBridge in your own project:
 	}];
 
 4) Finally, set up the javascript side:
-	
+
 	function connectWebViewJavascriptBridge(callback) {
 		if (window.WebViewJavascriptBridge) {
 			callback(WebViewJavascriptBridge)
@@ -62,13 +63,13 @@ To use a WebViewJavascriptBridge in your own project:
 			}, false)
 		}
 	}
-	
+
 	connectWebViewJavascriptBridge(function(bridge) {
-		
+
 		/* Init your app here */
 
 		bridge.init(function(message, responseCallback) {
-			alert('Received message: ' + message)   
+			alert('Received message: ' + message)
 			if (responseCallback) {
 				responseCallback("Right back atcha")
 			}
@@ -100,14 +101,14 @@ The `WVJBResponseCallback` will not be `nil` if the javascript expects a respons
 Optionally, pass in `webViewDelegate:(UIWebViewDelegate*)webViewDelegate` if you need to respond to the [web view's lifecycle events](http://developer.apple.com/library/ios/documentation/uikit/reference/UIWebViewDelegate_Protocol/Reference/Reference.html).
 
 Example:
-	
+
 	[WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
 		NSLog(@"Received message from javascript: %@", data);
 		if (responseCallback) {
 			responseCallback(@"Right back atcha");
 		}
 	}]
-	
+
 	[WebViewJavascriptBridge bridgeForWebView:webView webViewDelegate:self handler:^(id data, WVJBResponseCallback responseCallback) { /* ... */ }];
 
 ##### `[bridge send:(id)data]`
