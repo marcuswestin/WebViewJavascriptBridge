@@ -32,22 +32,26 @@ To use a WebViewJavascriptBridge in your own project:
 
   - In the dialog that appears, uncheck "Copy items into destination group's folder" and select "Create groups for any folders"
   
-2) Import the header file:
+2) Import the header file and declare an ivar property:
 
 	#import "WebViewJavascriptBridge.h"
 
+...
+
+	@property WebViewJavascriptBridge* bridge;
+
 3) Instantiate WebViewJavascriptBridge with a UIWebView (iOS) or WebView (OSX):
 
-	WebViewJavascriptBridge* bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
+	self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
 		NSLog(@"Received message from javascript: %@", data);
 		responseCallback(@"Right back atcha");
 	}];
 
 4) Go ahead and send some messages from ObjC to javascript:
 
-	[bridge send:@"Well hello there"];
-	[bridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
-	[bridge send:@"Give me a response, will you?" responseCallback:^(id responseData) {
+	[self.bridge send:@"Well hello there"];
+	[self.bridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
+	[self.bridge send:@"Give me a response, will you?" responseCallback:^(id responseData) {
 		NSLog(@"ObjC got its response! %@", responseData);
 	}];
 
@@ -117,9 +121,9 @@ Send a message to javascript. Optionally expect a response by giving a `response
 
 Example:
 
-	[bridge send:@"Hi"];
-	[bridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
-	[bridge send:@"I expect a response!" responseCallback:^(id responseData) {
+	[self.bridge send:@"Hi"];
+	[self.bridge send:[NSDictionary dictionaryWithObject:@"Foo" forKey:@"Bar"]];
+	[self.bridge send:@"I expect a response!" responseCallback:^(id responseData) {
 		NSLog(@"Got response! %@", responseData);
 	}];
 
@@ -129,7 +133,7 @@ Register a handler called `handlerName`. The javascript can then call this handl
 
 Example:
 
-	[bridge registerHandler:@"getScreenHeight" handler:^(id data, WVJBResponseCallback responseCallback) {
+	[self.bridge registerHandler:@"getScreenHeight" handler:^(id data, WVJBResponseCallback responseCallback) {
 		responseCallback([NSNumber numberWithInt:[UIScreen mainScreen].bounds.size.height]);
 	}];
 
@@ -140,8 +144,8 @@ Call the javascript handler called `handlerName`. Optionally expect a response b
 
 Example:
 
-	[bridge callHandler:@"showAlert" data:@"Hi from ObjC to JS!"];
-	[bridge callHandler:@"getCurrentPageUrl" data:nil responseCallback:^(id responseData) {
+	[self.bridge callHandler:@"showAlert" data:@"Hi from ObjC to JS!"];
+	[self.bridge callHandler:@"getCurrentPageUrl" data:nil responseCallback:^(id responseData) {
 		NSLog(@"Current UIWebView page URL is: %@", responseData);
 	}];
 
