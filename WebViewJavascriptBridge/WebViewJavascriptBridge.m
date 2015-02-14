@@ -245,6 +245,7 @@ static bool logging = false;
 }
 
 - (void) _platformSpecificDealloc {
+    NSLog(@"WebViewJavascriptBridge: WARNING: Deallocated");
     _webView.frameLoadDelegate = nil;
     _webView.resourceLoadDelegate = nil;
     _webView.policyDelegate = nil;
@@ -334,6 +335,7 @@ static bool logging = false;
 }
 
 - (void) _platformSpecificDealloc {
+    NSLog(@"WebViewJavascriptBridge: WARNING: Deallocated");
     _webView.delegate = nil;
 }
 

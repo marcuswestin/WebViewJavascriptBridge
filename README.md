@@ -47,6 +47,8 @@ To use a WebViewJavascriptBridge in your own project:
 		responseCallback(@"Right back atcha");
 	}];
 
+Please note that you need to save the instance of the bridge to a variable that does not goes out of scope (an instance variable in your ViewController e.g.). Otherwise the bridge will be garbage collected.
+
 4) Go ahead and send some messages from ObjC to javascript:
 
 	[self.bridge send:@"Well hello there"];
