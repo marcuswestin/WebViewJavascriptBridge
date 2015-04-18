@@ -345,6 +345,7 @@ static bool logging = false;
     if (_numRequestsLoading == 0 && ![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
         NSBundle *bundle = _resourceBundle ? _resourceBundle : [NSBundle mainBundle];
         NSString *filePath = [bundle pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
+        NSAssert(filePath != nil, @"WebViewJavascriptBridge.js.txt is missing. Your bundle is probably not setup correctly (using bundle %@)", bundle);
         NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         [webView stringByEvaluatingJavaScriptFromString:js];
     }
