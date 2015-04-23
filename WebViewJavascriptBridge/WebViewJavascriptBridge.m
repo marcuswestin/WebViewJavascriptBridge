@@ -256,7 +256,7 @@ static bool logging = false;
     if (webView != _webView) { return; }
     
     if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
-        NSLog(@"%@", [webView stringByEvaluatingJavaScriptFromString:WebViewJavascriptBridge_js]);
+        [webView stringByEvaluatingJavaScriptFromString:WebViewJavascriptBridge_js];
     }
     
     if (_startupMessageQueue) {
@@ -340,7 +340,7 @@ static bool logging = false;
     _numRequestsLoading--;
     
     if (_numRequestsLoading == 0 && ![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
-        NSLog(@"%@", [webView stringByEvaluatingJavaScriptFromString:WebViewJavascriptBridge_js]);
+        [webView stringByEvaluatingJavaScriptFromString:WebViewJavascriptBridge_js];
     }
     
     if (_startupMessageQueue) {
