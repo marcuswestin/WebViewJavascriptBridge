@@ -9,7 +9,7 @@
 #import "WebViewJavascriptBridge.h"
 
 static NSString * WebViewJavascriptBridge_js = @
-#include "WebViewJavascriptBridge.js.h"
+#include "Private/WebViewJavascriptBridge.js.h"
 ;
 
 #if __has_feature(objc_arc_weak)
