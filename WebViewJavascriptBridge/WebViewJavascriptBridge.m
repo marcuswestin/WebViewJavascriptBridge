@@ -53,6 +53,7 @@ static bool logging = false;
 
 + (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)_
 {
+  #pragma unused(_)
   return [self bridgeForWebView:webView webViewDelegate:webViewDelegate handler:messageHandler];
 }
 
