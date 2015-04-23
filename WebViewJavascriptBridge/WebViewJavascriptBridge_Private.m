@@ -1,11 +1,14 @@
-#ifdef _______STRINGIFY
-#error _______STRINGIFY already defined!
-#endif
+
+#import "WebViewJavascriptBridge_Private.h"
+
+NSString * WebViewJavascriptBridge_js() {
+// Create a unique preprocessor symbol that last only the duration of this function
+#define __func__(x) #x
 
 // The preprocessor will remove line-endings so you MUST use semi-colons to denote the end of a line.
+  
+static NSString * source = @__func__(
 
-#define _______STRINGIFY(x) #x
-_______STRINGIFY(
 ;(function() {
   if (window.WebViewJavascriptBridge) { return; }
   var messagingIframe;
@@ -123,5 +126,10 @@ _______STRINGIFY(
   readyEvent.bridge = WebViewJavascriptBridge;
   doc.dispatchEvent(readyEvent);
 })();
-)
-#undef _______STRINGIFY
+
+);
+
+#undef __func__
+  
+  return source;
+};

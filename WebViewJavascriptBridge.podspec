@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.osx.platform     = :osx
   s.ios.source_files = 'WebViewJavascriptBridge/*.{h,m}'
   s.osx.source_files = 'WebViewJavascriptBridge/*.{h,m}'
-  s.private_header_files = "WebViewJavascriptBridge/Private/WebViewJavascriptBridge.js.h"
+  s.private_header_files = 'WebViewJavascriptBridge/*_Private.h'
   s.ios.framework    = 'UIKit'
   s.osx.framework    = 'WebKit'
 end

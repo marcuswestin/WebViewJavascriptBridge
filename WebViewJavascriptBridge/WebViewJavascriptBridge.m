@@ -7,10 +7,7 @@
 //
 
 #import "WebViewJavascriptBridge.h"
-
-static NSString * WebViewJavascriptBridge_js = @
-#include "Private/WebViewJavascriptBridge.js.h"
-;
+#import "WebViewJavascriptBridge_Private.h"
 
 #if __has_feature(objc_arc_weak)
     #define WVJB_WEAK __weak
@@ -256,7 +253,7 @@ static bool logging = false;
     if (webView != _webView) { return; }
     
     if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
-        [webView stringByEvaluatingJavaScriptFromString:WebViewJavascriptBridge_js];
+        [webView stringByEvaluatingJavaScriptFromString:WebViewJavascriptBridge_js()];
     }
     
     if (_startupMessageQueue) {
@@ -340,7 +337,7 @@ static bool logging = false;
     _numRequestsLoading--;
     
     if (_numRequestsLoading == 0 && ![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
-        [webView stringByEvaluatingJavaScriptFromString:WebViewJavascriptBridge_js];
+        [webView stringByEvaluatingJavaScriptFromString:WebViewJavascriptBridge_js()];
     }
     
     if (_startupMessageQueue) {
