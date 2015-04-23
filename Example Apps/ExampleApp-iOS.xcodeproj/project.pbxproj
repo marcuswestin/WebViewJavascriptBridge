@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2C1562B5176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2C1562B4176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt */; };
+		2C1562B5176B9F8400B4AE50 /* WebViewJavascriptBridge.js.h in Resources */ = {isa = PBXBuildFile; fileRef = 2C1562B4176B9F8400B4AE50 /* WebViewJavascriptBridge.js.h */; };
 		2C1562C0176BA63500B4AE50 /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C1562A9176B9F6200B4AE50 /* WebViewJavascriptBridge.m */; };
 		2C45CA2C1884AD520002A4E2 /* ExampleAppViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C45CA2B1884AD520002A4E2 /* ExampleAppViewController.m */; };
 		2CA045BF17117439006DEE8B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2CA045B717117439006DEE8B /* InfoPlist.strings */; };
@@ -23,7 +23,7 @@
 /* Begin PBXFileReference section */
 		2C1562A8176B9F6200B4AE50 /* WebViewJavascriptBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge.h; sourceTree = "<group>"; };
 		2C1562A9176B9F6200B4AE50 /* WebViewJavascriptBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge.m; sourceTree = "<group>"; };
-		2C1562B4176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = WebViewJavascriptBridge.js.txt; sourceTree = "<group>"; };
+		2C1562B4176B9F8400B4AE50 /* WebViewJavascriptBridge.js.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge.js.h; sourceTree = "<group>"; };
 		2C45CA2A1884AD520002A4E2 /* ExampleAppViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ExampleAppViewController.h; sourceTree = "<group>"; };
 		2C45CA2B1884AD520002A4E2 /* ExampleAppViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ExampleAppViewController.m; sourceTree = "<group>"; };
 		2CA045B817117439006DEE8B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -57,7 +57,7 @@
 		2C1562A7176B9F5400B4AE50 /* WebViewJavascriptBridge */ = {
 			isa = PBXGroup;
 			children = (
-				2C1562B4176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt */,
+				2C1562B4176B9F8400B4AE50 /* WebViewJavascriptBridge.js.h */,
 				2C1562A8176B9F6200B4AE50 /* WebViewJavascriptBridge.h */,
 				2C1562A9176B9F6200B4AE50 /* WebViewJavascriptBridge.m */,
 			);
@@ -169,7 +169,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C1562B5176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt in Resources */,
+				2C1562B5176B9F8400B4AE50 /* WebViewJavascriptBridge.js.h in Resources */,
 				2CA045BF17117439006DEE8B /* InfoPlist.strings in Resources */,
 				2CA0465C1711AC8E006DEE8B /* ExampleApp.html in Resources */,
 				2CAB869B1727684300BD9ED1 /* Default-568h@2x.png in Resources */,

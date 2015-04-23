@@ -8,6 +8,10 @@
 
 #import "WebViewJavascriptBridge.h"
 
+static NSString * WebViewJavascriptBridge_js = @
+#include "WebViewJavascriptBridge.js.h"
+;
+
 #if __has_feature(objc_arc_weak)
     #define WVJB_WEAK __weak
 #else
@@ -24,8 +28,6 @@ typedef NSDictionary WVJBMessage;
     NSMutableDictionary* _messageHandlers;
     long _uniqueId;
     WVJBHandler _messageHandler;
-    
-    NSBundle *_resourceBundle;
     
 #if defined WVJB_PLATFORM_IOS
     NSUInteger _numRequestsLoading;
@@ -44,14 +46,14 @@ static bool logging = false;
 }
 
 + (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler {
-    return [self bridgeForWebView:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:nil];
+    WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
+    [bridge _platformSpecificSetup:webView webViewDelegate:webViewDelegate handler:messageHandler];
+    return bridge;
 }
 
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle
++ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)_
 {
-    WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
-    [bridge _platformSpecificSetup:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:bundle];
-    return bridge;
+  return [self bridgeForWebView:webView webViewDelegate:webViewDelegate handler:messageHandler];
 }
 
 - (void)send:(id)data {
@@ -231,7 +233,7 @@ static bool logging = false;
  **********************************/
 #if defined WVJB_PLATFORM_OSX
 
-- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle{
+- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler{
     _messageHandler = messageHandler;
     _webView = webView;
     _webViewDelegate = webViewDelegate;
@@ -240,8 +242,6 @@ static bool logging = false;
     _webView.frameLoadDelegate = self;
     _webView.resourceLoadDelegate = self;
     _webView.policyDelegate = self;
-    
-    _resourceBundle = bundle;
 }
 
 - (void) _platformSpecificDealloc {
@@ -255,10 +255,7 @@ static bool logging = false;
     if (webView != _webView) { return; }
     
     if (![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
-        NSBundle *bundle = _resourceBundle ? _resourceBundle : [NSBundle mainBundle];
-        NSString *filePath = [bundle pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
-        NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        [webView stringByEvaluatingJavaScriptFromString:js];
+        NSLog(@"%@", [webView stringByEvaluatingJavaScriptFromString:WebViewJavascriptBridge_js]);
     }
     
     if (_startupMessageQueue) {
@@ -324,13 +321,12 @@ static bool logging = false;
  **********************************/
 #elif defined WVJB_PLATFORM_IOS
 
-- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle{
+- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler{
     _messageHandler = messageHandler;
     _webView = webView;
     _webViewDelegate = webViewDelegate;
     _messageHandlers = [NSMutableDictionary dictionary];
     _webView.delegate = self;
-    _resourceBundle = bundle;
 }
 
 - (void) _platformSpecificDealloc {
@@ -343,10 +339,7 @@ static bool logging = false;
     _numRequestsLoading--;
     
     if (_numRequestsLoading == 0 && ![[webView stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == 'object'"] isEqualToString:@"true"]) {
-        NSBundle *bundle = _resourceBundle ? _resourceBundle : [NSBundle mainBundle];
-        NSString *filePath = [bundle pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
-        NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        [webView stringByEvaluatingJavaScriptFromString:js];
+        NSLog(@"%@", [webView stringByEvaluatingJavaScriptFromString:WebViewJavascriptBridge_js]);
     }
     
     if (_startupMessageQueue) {
