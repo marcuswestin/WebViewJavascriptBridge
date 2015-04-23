@@ -1,6 +1,9 @@
 #ifdef _______STRINGIFY
 #error _______STRINGIFY already defined!
 #endif
+
+// The preprocessor will remove line-endings so you MUST use semi-colons to denote the end of a line.
+
 #define _______STRINGIFY(x) #x
 _______STRINGIFY(
 ;(function() {
