@@ -39,5 +39,6 @@ typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
 - (void)callHandler:(NSString*)handlerName;
 - (void)callHandler:(NSString*)handlerName data:(id)data;
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
+- (void)disableJavscriptAlertBoxSafetyTimeout:(BOOL)isDisabled;
 
 @end
