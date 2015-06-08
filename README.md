@@ -21,6 +21,7 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 - Dojo4's [Imbed](http://dojo4.github.io/imbed/)
 - [CareZone](https://carezone.com)
 - [Hemlig](http://www.hemlig.co)
+- [BrowZine](http://thirdiron.com/browzine/)
 
 Setup & Examples (iOS & OSX)
 ----------------------------
@@ -150,6 +151,15 @@ Example:
 		NSLog(@"Current UIWebView page URL is: %@", responseData);
 	}];
 
+##### `[bridge disableJavscriptAlertBoxSafetyTimeout:(BOOL)isDisabled]`
+
+Disable the use of setTimeout when sending a message across the bridge. It is only safe to disable this timeout if you do not call any of the javascript popup box functions (alert, confirm, and prompt). If you call one of these functions from the bridged javascript code, the app will hang. When this setTimeout call is not used, there can be a significant decrease in the amount of time it takes to send and receive messages across the bridge.
+
+Example:
+
+	[self.bridge disableJavscriptAlertBoxSafetyTimeout:YES];
+
+
 #### Custom bundle
 `WebViewJavascriptBridge` requires `WebViewJavascriptBridge.js.txt` file that is injected into web view to create a bridge on JS side. Standard implementation uses `mainBundle` to search for this file. If you e.g. build a static library and you have that file placed somewhere else you can use this method to specify which bundle should be searched for `WebViewJavascriptBridge.js.txt` file:
 
@@ -181,11 +191,13 @@ Example:
 		// Start using the bridge
 	}, false)
 
-##### `bridge.init(function messageHandler(data, response) { ... })`
+##### `bridge.init(function messageHandler(data, response) { ... }, disableAlertSafety)`
 
 Initialize the bridge. This should be called inside of the `'WebViewJavascriptBridgeReady'` event handler.
 
 The `messageHandler` function will receive all messages sent from ObjC via `[bridge send:(id)data]` and `[bridge send:(id)data responseCallback:(WVJBResponseCallback)responseCallback]`.
+
+The `disableAlertSafety` parameter has the same effect as calling `[bridge disableJavscriptAlertBoxSafetyTimeout:(BOOL)isDisabled]`.
 
 The `response` object will be defined if if ObjC sent the message with a `WVJBResponseCallback` block.
 
