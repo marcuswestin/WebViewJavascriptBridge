@@ -23,7 +23,7 @@
 	function init(messageHandler, disableAlertSafety) {
 		if (WebViewJavascriptBridge._messageHandler) { throw new Error('WebViewJavascriptBridge.init called twice') }
 		WebViewJavascriptBridge._messageHandler = messageHandler
-        _disableJavscriptAlertBoxSafetyTimeout(disableAlertSafety)
+        _disableJavascriptAlertBoxSafetyTimeout(disableAlertSafety)
 		var receivedMessages = receiveMessageQueue
 		receiveMessageQueue = null
 		for (var i=0; i<receivedMessages.length; i++) {
@@ -43,7 +43,7 @@
 		_doSend({ handlerName:handlerName, data:data }, responseCallback)
 	}
 	
-    function _disableJavscriptAlertBoxSafetyTimeout(safetyDisabled) {
+    function _disableJavascriptAlertBoxSafetyTimeout(safetyDisabled) {
         if (safetyDisabled !== undefined) {
             disableDispatchTimeout = safetyDisabled
         }
@@ -123,7 +123,7 @@
 		send: send,
 		registerHandler: registerHandler,
 		callHandler: callHandler,
-        _disableJavscriptAlertBoxSafetyTimeout: _disableJavscriptAlertBoxSafetyTimeout,
+        _disableJavascriptAlertBoxSafetyTimeout: _disableJavascriptAlertBoxSafetyTimeout,
 		_fetchQueue: _fetchQueue,
 		_handleMessageFromObjC: _handleMessageFromObjC
 	}
