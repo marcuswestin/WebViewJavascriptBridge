@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0ECB01491A0EEB3A0037FF4E /* WebViewJavascriptBridgeBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ECB01461A0EEB3A0037FF4E /* WebViewJavascriptBridgeBase.m */; };
+		0ECB014A1A0EEB3A0037FF4E /* WKWebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 0ECB01481A0EEB3A0037FF4E /* WKWebViewJavascriptBridge.m */; };
 		2C136A2517641106004C7401 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C136A2417641106004C7401 /* Cocoa.framework */; };
 		2C136A2F17641106004C7401 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2C136A2D17641106004C7401 /* InfoPlist.strings */; };
 		2C136A3117641106004C7401 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C136A3017641106004C7401 /* main.m */; };
@@ -20,6 +22,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0ECB01451A0EEB3A0037FF4E /* WebViewJavascriptBridgeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridgeBase.h; sourceTree = "<group>"; };
+		0ECB01461A0EEB3A0037FF4E /* WebViewJavascriptBridgeBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridgeBase.m; sourceTree = "<group>"; };
+		0ECB01471A0EEB3A0037FF4E /* WKWebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKWebViewJavascriptBridge.h; sourceTree = "<group>"; };
+		0ECB01481A0EEB3A0037FF4E /* WKWebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKWebViewJavascriptBridge.m; sourceTree = "<group>"; };
 		2C136A2117641106004C7401 /* ExampleApp-OSX.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ExampleApp-OSX.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C136A2417641106004C7401 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		2C136A2717641106004C7401 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -118,6 +124,10 @@
 		2C1562C1176BA9FF00B4AE50 /* WebViewJavascriptBridge */ = {
 			isa = PBXGroup;
 			children = (
+				0ECB01451A0EEB3A0037FF4E /* WebViewJavascriptBridgeBase.h */,
+				0ECB01461A0EEB3A0037FF4E /* WebViewJavascriptBridgeBase.m */,
+				0ECB01471A0EEB3A0037FF4E /* WKWebViewJavascriptBridge.h */,
+				0ECB01481A0EEB3A0037FF4E /* WKWebViewJavascriptBridge.m */,
 				2C1562C2176BA9FF00B4AE50 /* WebViewJavascriptBridge.h */,
 				2C1562C3176BA9FF00B4AE50 /* WebViewJavascriptBridge.js.txt */,
 				2C1562C4176BA9FF00B4AE50 /* WebViewJavascriptBridge.m */,
@@ -192,6 +202,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0ECB01491A0EEB3A0037FF4E /* WebViewJavascriptBridgeBase.m in Sources */,
+				0ECB014A1A0EEB3A0037FF4E /* WKWebViewJavascriptBridge.m in Sources */,
 				2C136A3117641106004C7401 /* main.m in Sources */,
 				2C1562C6176BA9FF00B4AE50 /* WebViewJavascriptBridge.m in Sources */,
 				2C136A3817641106004C7401 /* AppDelegate.m in Sources */,
