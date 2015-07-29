@@ -10,6 +10,8 @@
 	
 	var responseCallbacks = {}
 	var uniqueId = 1
+
+	var disableDispatchTimeout = false
 	
 	function _createQueueReadyIframe(doc) {
 		messagingIframe = doc.createElement('iframe')
@@ -18,9 +20,10 @@
 		doc.documentElement.appendChild(messagingIframe)
 	}
 
-	function init(messageHandler) {
+	function init(messageHandler, disableAlertSafety) {
 		if (WebViewJavascriptBridge._messageHandler) { throw new Error('WebViewJavascriptBridge.init called twice') }
 		WebViewJavascriptBridge._messageHandler = messageHandler
+        _disableJavascriptAlertBoxSafetyTimeout(disableAlertSafety)
 		var receivedMessages = receiveMessageQueue
 		receiveMessageQueue = null
 		for (var i=0; i<receivedMessages.length; i++) {
@@ -40,11 +43,18 @@
 		_doSend({ handlerName:handlerName, data:data }, responseCallback)
 	}
 	
+    function _disableJavascriptAlertBoxSafetyTimeout(safetyDisabled) {
+        if (safetyDisabled !== undefined) {
+            disableDispatchTimeout = safetyDisabled
+        }
+    }
+
 	function _doSend(message, responseCallback) {
 		if (responseCallback) {
 			var callbackId = 'cb_'+(uniqueId++)+'_'+new Date().getTime()
 			responseCallbacks[callbackId] = responseCallback
 			message['callbackId'] = callbackId
+            message['startTime'] = Date.now()
 		}
 		sendMessageQueue.push(message)
 		messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE
@@ -57,38 +67,47 @@
 	}
 
 	function _dispatchMessageFromObjC(messageJSON) {
-		setTimeout(function _timeoutDispatchMessageFromObjC() {
-			var message = JSON.parse(messageJSON)
-			var messageHandler
-			var responseCallback
+		if (disableDispatchTimeout) {
+			_executeMessageFromObjC(messageJSON)
+		}
+		else {
+			setTimeout(function _timeoutDispatchMessageFromObjC() {
+				_executeMessageFromObjC(messageJSON)
+			}, 0)
+		}
+	}
 
-			if (message.responseId) {
-				responseCallback = responseCallbacks[message.responseId]
-				if (!responseCallback) { return; }
-				responseCallback(message.responseData)
-				delete responseCallbacks[message.responseId]
-			} else {
-				if (message.callbackId) {
-					var callbackResponseId = message.callbackId
-					responseCallback = function(responseData) {
-						_doSend({ responseId:callbackResponseId, responseData:responseData })
-					}
-				}
-				
-				var handler = WebViewJavascriptBridge._messageHandler
-				if (message.handlerName) {
-					handler = messageHandlers[message.handlerName]
-				}
-				
-				try {
-					handler(message.data, responseCallback)
-				} catch(exception) {
-					if (typeof console != 'undefined') {
-						console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception)
-					}
+    function _executeMessageFromObjC(messageJSON) {
+		var message = JSON.parse(messageJSON)
+		var messageHandler
+		var responseCallback
+
+		if (message.responseId) {
+			responseCallback = responseCallbacks[message.responseId]
+			if (!responseCallback) { return; }
+			responseCallback(message.responseData)
+			delete responseCallbacks[message.responseId]
+		} else {
+			if (message.callbackId) {
+				var callbackResponseId = message.callbackId
+				responseCallback = function(responseData) {
+					_doSend({ responseId:callbackResponseId, responseData:responseData })
 				}
 			}
-		})
+
+			var handler = WebViewJavascriptBridge._messageHandler
+			if (message.handlerName) {
+				handler = messageHandlers[message.handlerName]
+			}
+
+			try {
+				handler(message.data, responseCallback)
+			} catch(exception) {
+				if (typeof console != 'undefined') {
+					console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception)
+				}
+			}
+		}
 	}
 	
 	function _handleMessageFromObjC(messageJSON) {
@@ -104,6 +123,7 @@
 		send: send,
 		registerHandler: registerHandler,
 		callHandler: callHandler,
+        _disableJavascriptAlertBoxSafetyTimeout: _disableJavascriptAlertBoxSafetyTimeout,
 		_fetchQueue: _fetchQueue,
 		_handleMessageFromObjC: _handleMessageFromObjC
 	}

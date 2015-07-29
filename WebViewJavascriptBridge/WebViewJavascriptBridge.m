@@ -69,6 +69,19 @@
     _base.messageHandlers[handlerName] = [handler copy];
 }
 
+- (void)disableJavscriptAlertBoxSafetyTimeout:(BOOL)isDisabled {
+    NSString* javascriptCommand = [NSString stringWithFormat:@"WebViewJavascriptBridge._disableJavscriptAlertBoxSafetyTimeout(%@);", isDisabled ? @"true" : @"false"];
+    
+    if ([[NSThread currentThread] isMainThread]) {
+        [_webView stringByEvaluatingJavaScriptFromString:javascriptCommand];
+    } else {
+        __strong WVJB_WEBVIEW_TYPE* strongWebView = _webView;
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            [strongWebView stringByEvaluatingJavaScriptFromString:javascriptCommand];
+        });
+    }
+}
+
 /* Platform agnostic internals
  *****************************/
 
