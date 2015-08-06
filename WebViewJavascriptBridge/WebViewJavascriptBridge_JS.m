@@ -1,5 +1,14 @@
+// This file contains the source for the Javascript side of the
+// WebViewJavascriptBridge. It is plaintext, but converted to an NSString
+// via some preprocessor tricks.
+//
+// Previous implementations of WebViewJavascriptBridge loaded the javascript source
+// from a resource. This worked fine for app developers, but library developers who
+// included the bridge into their library, awkwardly had to ask consumers of their
+// library to include the resource, violating their encapsulation. By including the
+// Javascript as a string resource, the encapsulation of the library is maintained.
 
-#import "WebViewJavascriptBridge_Private.h"
+#import "WebViewJavascriptBridge_JS.h"
 
 NSString * WebViewJavascriptBridge_js() {
 // Create a unique preprocessor symbol that last only the duration of this function

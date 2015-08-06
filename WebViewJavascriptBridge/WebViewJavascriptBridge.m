@@ -7,7 +7,7 @@
 //
 
 #import "WebViewJavascriptBridge.h"
-#import "WebViewJavascriptBridge_Private.h"
+#import "WebViewJavascriptBridge_JS.h"
 
 #if __has_feature(objc_arc_weak)
     #define WVJB_WEAK __weak
