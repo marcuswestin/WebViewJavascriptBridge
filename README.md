@@ -21,6 +21,7 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 - Dojo4's [Imbed](http://dojo4.github.io/imbed/)
 - [CareZone](https://carezone.com)
 - [Hemlig](http://www.hemlig.co)
+- [FRIL](https://fril.jp)
 
 Setup & Examples (iOS & OSX)
 ----------------------------
