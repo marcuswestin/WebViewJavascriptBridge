@@ -12,6 +12,7 @@
     id _webViewDelegate;
     long _uniqueId;
     NSBundle *_resourceBundle;
+	
 }
 
 static bool logging = false;
