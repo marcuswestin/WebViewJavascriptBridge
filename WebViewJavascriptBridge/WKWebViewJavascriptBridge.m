@@ -32,7 +32,7 @@
 
 + (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle
 {
-    WKWebViewJavascriptBridge* bridge = [[WKWebViewJavascriptBridge alloc] init];
+    WKWebViewJavascriptBridge* bridge = [[self alloc] init];
     [bridge _setupInstance:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:bundle];
     [bridge reset];
     return bridge;
