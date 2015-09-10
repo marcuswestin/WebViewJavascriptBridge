@@ -40,7 +40,7 @@
 
 + (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle
 {
-    WebViewJavascriptBridge* bridge = [[WebViewJavascriptBridge alloc] init];
+    WebViewJavascriptBridge* bridge = [[self alloc] init];
     [bridge _platformSpecificSetup:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:bundle];
     return bridge;
 }
