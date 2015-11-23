@@ -127,7 +127,7 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
         } else {
             [_base logUnkownMessage:url];
         }
-        decisionHandler(WKNavigationActionPolicyCancel)
+        decisionHandler(WKNavigationActionPolicyCancel);
     }
     
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
