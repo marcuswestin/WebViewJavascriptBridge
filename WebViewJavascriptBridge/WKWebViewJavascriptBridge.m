@@ -102,8 +102,11 @@
     _base.numRequestsLoading--;
     
     if (_base.numRequestsLoading == 0) {
+        NSString *url = [webView.URL absoluteString];
         [webView evaluateJavaScript:[_base webViewJavascriptCheckCommand] completionHandler:^(NSString *result, NSError *error) {
-            [_base injectJavascriptFile:![result boolValue]];
+            if([[webView.URL absoluteString] isEqualToString:url]) {
+                [_base injectJavascriptFile:![result boolValue]];
+            }
         }];
     }
     
