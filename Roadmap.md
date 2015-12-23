@@ -1,20 +1,18 @@
 Roadmap
 =======
 
-v4.1.4/5
+v4.1.6
 --------
 
-- [ ] 4.1.4 or 4.1.5?
 - [ ] Add WKWebView support to podspec file? (#149)
 - [ ] iOS8 WKWebView support? (#126)
 - [ ] WKWebView issue in OSX? (#84)
 - [ ] Release new version (#143, #155, #167)
 
-v4.1.6
+v4.1.7
 ------
 
 Pull requests:
-
 - [ ] Dev env / docs
 	- [ ] Automated tests (PR #128, I #151)
 	- [ ] Embed js in objc source (PR #129)
@@ -29,8 +27,9 @@ Pull requests:
 	- [ ] Detect offline failed requests (PR #170)
 	- [ ] Handle redirects (PR #172)
 	- [ ] Bridge never initiates without a didLoad (I #156)
+- [ ] Fix OSX lint warnings (`pod spec lint`)
 
-v4.1.7
+v4.1.8
 ------
 - [ ] Swift and WKWebView (#153, #158)
 - [ ] Misc fixes
@@ -40,9 +39,9 @@ v4.1.7
 	- [ ] Consider making webpage reloads easier (I #134)
 	- [ ] Fix use in $(document).ready (I #131)
 	- [ ] Error message on missing handler (I #120)
+	
 v4.2.x
 ------
-
 - [ ] Swift
 	- [ ] Swift examples (I #173)
 - [ ] Javascript
