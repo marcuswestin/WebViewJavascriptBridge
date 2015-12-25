@@ -178,7 +178,7 @@ static bool logging = false;
 }
 
 - (void)_dispatchMessage:(WVJBMessage*)message {
-    NSString *messageJSON = [self _serializeMessage:message];
+    NSString *messageJSON = [self _serializeMessage:message pretty:NO];
     [self _log:@"SEND" json:messageJSON];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
     messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
@@ -200,8 +200,8 @@ static bool logging = false;
     }
 }
 
-- (NSString *)_serializeMessage:(id)message {
-    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:0 error:nil] encoding:NSUTF8StringEncoding];
+- (NSString *)_serializeMessage:(id)message pretty:(BOOL)pretty{
+    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:(NSJSONWritingOptions)(pretty ? NSJSONWritingPrettyPrinted : 0) error:nil] encoding:NSUTF8StringEncoding];
 }
 
 - (NSArray*)_deserializeMessageJSON:(NSString *)messageJSON {
@@ -211,7 +211,7 @@ static bool logging = false;
 - (void)_log:(NSString *)action json:(id)json {
     if (!logging) { return; }
     if (![json isKindOfClass:[NSString class]]) {
-        json = [self _serializeMessage:json];
+        json = [self _serializeMessage:json pretty:YES];
     }
     if ([json length] > 500) {
         NSLog(@"WVJB %@: %@ [...]", action, [json substringToIndex:500]);
