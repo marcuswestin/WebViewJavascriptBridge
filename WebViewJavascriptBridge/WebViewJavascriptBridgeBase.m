@@ -15,8 +15,10 @@
 }
 
 static bool logging = false;
+static int logMaxLength = 500;
 
 + (void)enableLogging { logging = true; }
++ (void)setLogMaxLength:(int)length { logMaxLength = length;}
 
 -(id)initWithHandler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle
 {
@@ -213,8 +215,8 @@ static bool logging = false;
     if (![json isKindOfClass:[NSString class]]) {
         json = [self _serializeMessage:json pretty:YES];
     }
-    if ([json length] > 500) {
-        NSLog(@"WVJB %@: %@ [...]", action, [json substringToIndex:500]);
+    if ([json length] > logMaxLength) {
+        NSLog(@"WVJB %@: %@ [...]", action, [json substringToIndex:logMaxLength]);
     } else {
         NSLog(@"WVJB %@: %@", action, json);
     }
