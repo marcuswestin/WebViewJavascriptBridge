@@ -29,6 +29,7 @@
  *****/
 
 + (void)enableLogging { [WebViewJavascriptBridgeBase enableLogging]; }
++ (void)setLogMaxLength:(int)length { [WebViewJavascriptBridgeBase setLogMaxLength:length]; }
 
 + (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView handler:(WVJBHandler)handler {
     return [self bridgeForWebView:webView webViewDelegate:nil handler:handler];

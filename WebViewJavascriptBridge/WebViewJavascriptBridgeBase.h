@@ -29,6 +29,7 @@ typedef NSDictionary WVJBMessage;
 @property NSUInteger numRequestsLoading;
 
 + (void)enableLogging;
++ (void)setLogMaxLength:(int)length;
 - (id)initWithHandler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle;
 - (void)reset;
 - (void)sendData:(id)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName;
