@@ -27,15 +27,14 @@
 }
 
 + (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)messageHandler {
-    return [self bridgeForWebView:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:nil];
-}
-
-+ (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle
-{
     WKWebViewJavascriptBridge* bridge = [[self alloc] init];
-    [bridge _setupInstance:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:bundle];
+    [bridge _setupInstance:webView webViewDelegate:webViewDelegate handler:messageHandler];
     [bridge reset];
     return bridge;
+}
+
++ (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle {
+    return [self bridgeForWebView:webView webViewDelegate:webViewDelegate handler:messageHandler];
 }
 
 - (void)send:(id)data {
@@ -80,11 +79,11 @@
 /* WKWebView Specific Internals
  ******************************/
 
-- (void) _setupInstance:(WKWebView*)webView webViewDelegate:(id<WKNavigationDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle{
+- (void) _setupInstance:(WKWebView*)webView webViewDelegate:(id<WKNavigationDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler {
     _webView = webView;
     _webViewDelegate = webViewDelegate;
     _webView.navigationDelegate = self;
-    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
+    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler];
     _base.delegate = self;
 }
 

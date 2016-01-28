@@ -19,7 +19,6 @@
 
 + (instancetype)bridgeForWebView:(WKWebView*)webView handler:(WVJBHandler)handler;
 + (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)handler;
-+ (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)handler resourceBundle:(NSBundle*)bundle;
 + (void)enableLogging;
 
 - (void)send:(id)message;
@@ -29,6 +28,9 @@
 - (void)callHandler:(NSString*)handlerName data:(id)data;
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
 - (void)reset;
+
+// Deprecated
++ (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)handler resourceBundle:(NSBundle*)bundle __attribute__((deprecated("resourceBundle is no longer required. Use bridgeForWebView:webViewDelegate:handler: instead")));
 
 @end
 

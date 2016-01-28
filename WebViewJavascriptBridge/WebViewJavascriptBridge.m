@@ -36,14 +36,13 @@
 }
 
 + (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler {
-    return [self bridgeForWebView:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:nil];
+    WebViewJavascriptBridge* bridge = [[self alloc] init];
+    [bridge _platformSpecificSetup:webView webViewDelegate:webViewDelegate handler:messageHandler];
+    return bridge;
 }
 
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle
-{
-    WebViewJavascriptBridge* bridge = [[self alloc] init];
-    [bridge _platformSpecificSetup:webView webViewDelegate:webViewDelegate handler:messageHandler resourceBundle:bundle];
-    return bridge;
++ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle *)bundle {
+    return [self bridgeForWebView:webView webViewDelegate:webViewDelegate handler:messageHandler];
 }
 
 - (void)send:(id)data {
@@ -89,7 +88,7 @@
  **********************************/
 #if defined WVJB_PLATFORM_OSX
 
-- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle{
+- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler {
     _webView = webView;
     _webViewDelegate = webViewDelegate;
     
@@ -97,7 +96,7 @@
     _webView.resourceLoadDelegate = self;
     _webView.policyDelegate = self;
     
-    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
+    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler];
     _base.delegate = self;
 }
 
@@ -174,11 +173,11 @@
  **********************************/
 #elif defined WVJB_PLATFORM_IOS
 
-- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle{
+- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler {
     _webView = webView;
     _webView.delegate = self;
     _webViewDelegate = webViewDelegate;
-    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle];
+    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler];
     _base.delegate = self;
 }
 
