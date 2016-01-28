@@ -14,11 +14,11 @@ v4.1.7
 
 Pull requests:
 - [ ] Dev env / docs
-	- [ ] Automated tests (PR #128, I #151)
+	- [X] Automated tests (PR #128, I #151)
 		- [ ] Travis? https://github.com/integrations/feature/code
-	- [ ] Embed js in objc source (PR #129)
-		- [ ] Also fixes PR #138, I #160, I #108
-	- [ ] Docs for podfile installation (PR #140)
+	- [X] Embed js in objc source (PR #129)
+		- [X] Also fixes PR #138, I #160, I #108
+	- [X] Docs for podfile installation (PR #140)
 - [ ] Features & fixes to consider
 	- [ ] Message response timeout (PR #106)
 	- [ ] Optional alert-unsafe message speedup (PR #133, I #132)
