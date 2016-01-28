@@ -3,4 +3,4 @@ before_script:
   - brew update
   - brew upgrade xctool || true
 script:
-  - xctool -project WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge -configuration Release -sdk iphonesimulator test
+  - xctool -project Tests/WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge -configuration Release -sdk iphonesimulator test
