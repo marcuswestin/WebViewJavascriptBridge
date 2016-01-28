@@ -16,6 +16,9 @@ Version History
 Intended v5.0.0
 + Removed `WebViewJavascriptBridge -reset`. It should never have been exposed as a public API.
 + Fixed compilation in C99 mode
++ Inline JS source code. WVJB no longer requires `WebViewJavascriptBridge.js.txt` to be included as a resource.
++ Automated testing: see `make test`
++ Added Makefile with common commands
 
 Next version
 + Pretty-print json in log messages
