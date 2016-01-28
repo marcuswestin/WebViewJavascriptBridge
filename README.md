@@ -3,8 +3,6 @@ WebViewJavascriptBridge
 
 An iOS/OSX bridge for sending messages between Obj-C and JavaScript in UIWebViews/WebViews.
 
-If you like WebViewJavascriptBridge you may also want to check out [WebViewProxy](https://github.com/marcuswestin/WebViewProxy).
-
 In the Wild
 -----------
 WebViewJavascriptBridge is used by a range of companies and projects. This list is incomplete, but feel free to add your's and send a PR.
@@ -23,30 +21,33 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 - [Hemlig](http://www.hemlig.co)
 - [FRIL](https://fril.jp)
 
-Setup & Examples (iOS & OSX)
-----------------------------
+Installation (iOS & OSX)
+------------------------
 
 ### Installation with CocoaPods
+Add this to your [podfile](https://guides.cocoapods.org/using/getting-started.html) and run `pod install` to install:
 
-[CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like WebViewJavascriptBridge in your projects. See the following [Getting Started](https://guides.cocoapods.org/using/getting-started.html) page for CocoaPods for more information.
-
-#### Podfile
-Add the following to your podfile to add this library to your project. Run `pod install` to install them afterwards.
 ```ruby
 `pod 'WebViewJavascriptBridge', '~> 4.1.4'`
 ```
 
-## Other Usage
+### Manual installation
 
-Start with the Example Apps/ folder. Open either the iOS or OSX project and hit run to see it in action.
+Drag the `WebViewJavascriptBridge` folder into your project.
+
+In the dialog that appears, uncheck "Copy items into destination group's folder" and select "Create groups for any folders".
+
+Examples
+--------
+
+See the `Example Apps/` folder. Open either the iOS or OSX project and hit run to see it in action.
 
 To use a WebViewJavascriptBridge in your own project:
 
-1) Drag the `WebViewJavascriptBridge` folder into your project.
+Usage
+-----
 
-  - In the dialog that appears, uncheck "Copy items into destination group's folder" and select "Create groups for any folders"
-  
-2) Import the header file and declare an ivar property:
+1) Import the header file and declare an ivar property:
 
 ```objc
 #import "WebViewJavascriptBridge.h"
@@ -58,7 +59,7 @@ To use a WebViewJavascriptBridge in your own project:
 @property WebViewJavascriptBridge* bridge;
 ```
 
-3) Instantiate WebViewJavascriptBridge with a UIWebView (iOS) or WebView (OSX):
+2) Instantiate WebViewJavascriptBridge with a UIWebView (iOS) or WebView (OSX):
 
 ```objc
 self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
@@ -67,7 +68,7 @@ self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id dat
 }];
 ```
 
-4) Go ahead and send some messages from ObjC to javascript:
+3) Go ahead and send some messages from ObjC to javascript:
 
 ```objc
 [self.bridge send:@"Well hello there"];
