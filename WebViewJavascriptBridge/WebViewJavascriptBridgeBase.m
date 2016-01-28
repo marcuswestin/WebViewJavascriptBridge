@@ -7,11 +7,11 @@
 
 #import <Foundation/Foundation.h>
 #import "WebViewJavascriptBridgeBase.h"
+#import "WebViewJavascriptBridge_JS.h"
 
 @implementation WebViewJavascriptBridgeBase {
     id _webViewDelegate;
     long _uniqueId;
-    NSBundle *_resourceBundle;
 }
 
 static bool logging = false;
@@ -20,10 +20,8 @@ static int logMaxLength = 500;
 + (void)enableLogging { logging = true; }
 + (void)setLogMaxLength:(int)length { logMaxLength = length;}
 
--(id)initWithHandler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle
-{
+-(id)initWithHandler:(WVJBHandler)messageHandler {
     self = [super init];
-    _resourceBundle = bundle;
     self.messageHandler = messageHandler;
     self.messageHandlers = [NSMutableDictionary dictionary];
     self.startupMessageQueue = [NSMutableArray array];
@@ -117,10 +115,8 @@ static int logMaxLength = 500;
 }
 
 - (void)injectJavascriptFile:(BOOL)shouldInject {
-    if(shouldInject){
-        NSBundle *bundle = _resourceBundle ? _resourceBundle : [NSBundle bundleForClass:[self class]];
-        NSString *filePath = [bundle pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
-        NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
+    if (shouldInject){
+        NSString *js = WebViewJavascriptBridge_js();
         [self _evaluateJavascript:js];
         [self dispatchStartUpMessageQueue];
     }
