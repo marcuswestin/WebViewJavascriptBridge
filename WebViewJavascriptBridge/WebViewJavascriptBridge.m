@@ -188,7 +188,9 @@
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
     if (webView != _webView) { return; }
     
-    _numRequestsLoading--;
+	if (_numRequestsLoading > 0){
+    	_numRequestsLoading--;
+	}
     
     if (_numRequestsLoading == 0 && ![[webView stringByEvaluatingJavaScriptFromString:[_base webViewJavascriptCheckCommand]] isEqualToString:@"true"]) {
         [_base injectJavascriptFile:YES];
@@ -205,7 +207,9 @@
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
     if (webView != _webView) { return; }
     
-    _numRequestsLoading--;
+	if (_numRequestsLoading > 0){
+    	_numRequestsLoading--;
+	}
     
     __strong WVJB_WEBVIEW_DELEGATE_TYPE* strongDelegate = _webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
