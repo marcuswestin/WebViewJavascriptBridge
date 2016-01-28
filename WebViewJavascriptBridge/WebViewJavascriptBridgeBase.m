@@ -118,7 +118,7 @@ static int logMaxLength = 500;
 
 - (void)injectJavascriptFile:(BOOL)shouldInject {
     if(shouldInject){
-        NSBundle *bundle = _resourceBundle ? _resourceBundle : [NSBundle mainBundle];
+        NSBundle *bundle = _resourceBundle ? _resourceBundle : [NSBundle bundleForClass:[self class]];
         NSString *filePath = [bundle pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
         NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
         [self _evaluateJavascript:js];
