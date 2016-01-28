@@ -1,0 +1,29 @@
+<!doctype html>
+<html><head>
+</head><body>
+	<p>WebViewJavascriptBridgeTests - echo.html</p>
+	<script>
+	function connectWebViewJavascriptBridge(callback) {
+		if (window.WebViewJavascriptBridge) {
+			callback(WebViewJavascriptBridge)
+		} else {
+			document.addEventListener('WebViewJavascriptBridgeReady', function() {
+				callback(WebViewJavascriptBridge)
+			}, false)
+		}
+	}
+
+	connectWebViewJavascriptBridge(function(bridge) {
+		bridge.init(function(message, responseCallback) {
+			if(responseCallback) {
+				responseCallback(message);
+			}
+		})
+		bridge.send('Hello world')
+
+		bridge.registerHandler('echoHandler', function(data, responseCallback) {
+			responseCallback(data)
+		})
+	})
+	</script>
+</body></html>

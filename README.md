@@ -1,6 +1,8 @@
 WebViewJavascriptBridge
 =======================
 
+[![Build Status](https://travis-ci.org/marcuswestin/WebViewJavascriptBridge.svg)](https://travis-ci.org/marcuswestin/WebViewJavascriptBridge)
+
 An iOS/OSX bridge for sending messages between Obj-C and JavaScript in UIWebViews/WebViews.
 
 In the Wild
