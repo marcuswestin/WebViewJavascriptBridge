@@ -26,6 +26,18 @@ WebViewJavascriptBridge is used by a range of companies and projects. This list 
 Setup & Examples (iOS & OSX)
 ----------------------------
 
+### Installation with CocoaPods
+
+[CocoaPods](http://cocoapods.org) is a dependency manager for Objective-C, which automates and simplifies the process of using 3rd-party libraries like WebViewJavascriptBridge in your projects. See the following [Getting Started](https://guides.cocoapods.org/using/getting-started.html) page for CocoaPods for more information.
+
+#### Podfile
+Add the following to your podfile to add this library to your project. Run `pod install` to install them afterwards.
+```ruby
+`pod 'WebViewJavascriptBridge', '~> 4.1.4'`
+```
+
+## Other Usage
+
 Start with the Example Apps/ folder. Open either the iOS or OSX project and hit run to see it in action.
 
 To use a WebViewJavascriptBridge in your own project:
