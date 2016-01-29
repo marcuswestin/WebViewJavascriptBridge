@@ -111,15 +111,12 @@ static int logMaxLength = 500;
 - (void)injectJavascriptFile {
     NSString *js = WebViewJavascriptBridge_js();
     [self _evaluateJavascript:js];
-    [self _dispatchStartUpMessageQueue];
-}
-
-- (void)_dispatchStartUpMessageQueue {
     if (self.startupMessageQueue) {
-        for (id queuedMessage in self.startupMessageQueue) {
+        NSArray* queue = self.startupMessageQueue;
+        self.startupMessageQueue = nil;
+        for (id queuedMessage in queue) {
             [self _dispatchMessage:queuedMessage];
         }
-        self.startupMessageQueue = nil;
     }
 }
 

@@ -28,7 +28,6 @@ NSString * WebViewJavascriptBridge_js() {
 
 	var messagingIframe;
 	var sendMessageQueue = [];
-	var receiveMessageQueue = [];
 	var messageHandlers = {};
 	
 	var CUSTOM_PROTOCOL_SCHEME = 'wvjbscheme';
@@ -95,23 +94,13 @@ NSString * WebViewJavascriptBridge_js() {
 	}
 	
 	function _handleMessageFromObjC(messageJSON) {
-		if (receiveMessageQueue) {
-			receiveMessageQueue.push(messageJSON);
-		} else {
-			_dispatchMessageFromObjC(messageJSON);
-		}
+        _dispatchMessageFromObjC(messageJSON);
 	}
 
 	messagingIframe = document.createElement('iframe');
 	messagingIframe.style.display = 'none';
 	messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE;
 	document.documentElement.appendChild(messagingIframe);
-
-	var receivedMessages = receiveMessageQueue;
-	receiveMessageQueue = null;
-	for (var i=0; i<receivedMessages.length; i++) {
-		_dispatchMessageFromObjC(receivedMessages[i]);
-	}
 
 	setTimeout(_callWVJBCallbacks, 0);
 	function _callWVJBCallbacks() {

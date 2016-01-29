@@ -30,7 +30,7 @@ Misc
 - [ ] Style consistency through all code
 - [ ] Test pod
 - [ ] Fix OSX lint warnings (`pod spec lint`)
-- [ ] I believe `receiveMessageQueue` in JS is no longer needed, since the JS explicitly tells ObjC when to start sending messages. Remove?
+- [X] I believe `receiveMessageQueue` in JS is no longer needed, since the JS explicitly tells ObjC when to start sending messages. Remove?
 
 v5.0.1
 ------
