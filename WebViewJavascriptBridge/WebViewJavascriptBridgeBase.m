@@ -61,11 +61,12 @@ static int logMaxLength = 500;
 }
 
 - (void)flushMessageQueue:(NSString *)messageQueueString{
-    id messages = [self _deserializeMessageJSON:messageQueueString];
-    if (![messages isKindOfClass:[NSArray class]]) {
-        NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [messages class], messages);
+    if (messageQueueString == nil || messageQueueString.length == 0) {
+        NSLog(@"WebViewJavascriptBridge: WARNING: ObjC got nil while fetching the message queue JSON from webview. This can happen if the WebViewJavascriptBridge JS is not currently present in the webview, e.g if the webview just loaded a new page.");
         return;
     }
+
+    id messages = [self _deserializeMessageJSON:messageQueueString];
     for (WVJBMessage* message in messages) {
         if (![message isKindOfClass:[WVJBMessage class]]) {
             NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [message class], message);
