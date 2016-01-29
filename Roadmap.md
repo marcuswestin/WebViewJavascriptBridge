@@ -41,8 +41,8 @@ v4.1.8
 	- [ ] Fix use in $(document).ready (I #131)
 	- [ ] Error message on missing handler (I #120)
 	
-v4.2.x
-------
+Future considerations
+---------------------
 - [ ] Swift
 	- [ ] Swift examples (I #173)
 - [ ] Javascript
@@ -56,6 +56,7 @@ v4.2.x
 - [ ] Other platforms to consider
 	- [ ] Android - partly done by @fangj (#103)
 	- [ ] Chrome - partly done by @fangj (#104)
+	- [ ] Windows phone
 
 Pending bug repro/info
 ----------------------
