@@ -35,12 +35,6 @@
 			if (log.children.length) { log.insertBefore(el, log.children[0]) }
 			else { log.appendChild(el) }
 		}
-		bridge.init(function(message, responseCallback) {
-			log('JS got a message', message)
-			var data = { 'Javascript Responds':'Wee!' }
-			log('JS responding with', data)
-			responseCallback(data)
-		})
 
 		bridge.registerHandler('testJavascriptHandler', function(data, responseCallback) {
 			log('ObjC called testJavascriptHandler with', data)
@@ -48,17 +42,6 @@
 			log('JS responding with', responseData)
 			responseCallback(responseData)
 		})
-
-		var button = document.getElementById('buttons').appendChild(document.createElement('button'))
-		button.innerHTML = 'Send message to ObjC'
-		button.onclick = function(e) {
-			e.preventDefault()
-			var data = 'Hello from JS button'
-			log('JS sending message', data)
-			bridge.send(data, function(responseData) {
-				log('JS got response', responseData)
-			})
-		}
 
 		document.body.appendChild(document.createElement('br'))
 

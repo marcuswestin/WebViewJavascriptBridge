@@ -17,20 +17,15 @@
 
 @interface WKWebViewJavascriptBridge : NSObject<WKNavigationDelegate, WebViewJavascriptBridgeBaseDelegate>
 
-+ (instancetype)bridgeForWebView:(WKWebView*)webView handler:(WVJBHandler)handler;
-+ (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)handler;
++ (instancetype)bridgeForWebView:(WKWebView*)webView;
 + (void)enableLogging;
 
-- (void)send:(id)message;
-- (void)send:(id)message responseCallback:(WVJBResponseCallback)responseCallback;
 - (void)registerHandler:(NSString*)handlerName handler:(WVJBHandler)handler;
 - (void)callHandler:(NSString*)handlerName;
 - (void)callHandler:(NSString*)handlerName data:(id)data;
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
 - (void)reset;
-
-// Deprecated
-+ (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)handler resourceBundle:(NSBundle*)bundle __attribute__((deprecated("resourceBundle is no longer required. Use bridgeForWebView:webViewDelegate:handler: instead")));
+- (void)setWebViewDelegate:(id<WKNavigationDelegate>)webViewDelegate;
 
 @end
 

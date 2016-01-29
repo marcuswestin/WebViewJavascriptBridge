@@ -27,18 +27,14 @@
 + (void)enableLogging { [WebViewJavascriptBridgeBase enableLogging]; }
 + (void)setLogMaxLength:(int)length { [WebViewJavascriptBridgeBase setLogMaxLength:length]; }
 
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView handler:(WVJBHandler)handler {
-    return [self bridgeForWebView:webView webViewDelegate:nil handler:handler];
-}
-
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler {
++ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView {
     WebViewJavascriptBridge* bridge = [[self alloc] init];
-    [bridge _platformSpecificSetup:webView webViewDelegate:webViewDelegate handler:messageHandler];
+    [bridge _platformSpecificSetup:webView];
     return bridge;
 }
 
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle *)bundle {
-    return [self bridgeForWebView:webView webViewDelegate:webViewDelegate handler:messageHandler];
+- (void)setWebViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate {
+    _webViewDelegate = webViewDelegate;
 }
 
 - (void)send:(id)data {
@@ -84,13 +80,12 @@
  **********************************/
 #if defined WVJB_PLATFORM_OSX
 
-- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)messageHandler {
+- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView {
     _webView = webView;
-    _webViewDelegate = webViewDelegate;
     
     _webView.policyDelegate = self;
     
-    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler];
+    _base = [[WebViewJavascriptBridgeBase alloc] init];
     _base.delegate = self;
 }
 
@@ -126,11 +121,10 @@
  **********************************/
 #elif defined WVJB_PLATFORM_IOS
 
-- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(id<UIWebViewDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler {
+- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView {
     _webView = webView;
     _webView.delegate = self;
-    _webViewDelegate = webViewDelegate;
-    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler];
+    _base = [[WebViewJavascriptBridgeBase alloc] init];
     _base.delegate = self;
 }
 

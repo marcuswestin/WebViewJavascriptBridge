@@ -20,9 +20,8 @@ static int logMaxLength = 500;
 + (void)enableLogging { logging = true; }
 + (void)setLogMaxLength:(int)length { logMaxLength = length;}
 
--(id)initWithHandler:(WVJBHandler)messageHandler {
+-(id)init {
     self = [super init];
-    self.messageHandler = messageHandler;
     self.messageHandlers = [NSMutableDictionary dictionary];
     self.startupMessageQueue = [NSMutableArray array];
     self.responseCallbacks = [NSMutableDictionary dictionary];
@@ -34,7 +33,6 @@ static int logMaxLength = 500;
     self.startupMessageQueue = nil;
     self.responseCallbacks = nil;
     self.messageHandlers = nil;
-    self.messageHandler = nil;
 }
 
 - (void)reset {
@@ -98,12 +96,7 @@ static int logMaxLength = 500;
                 };
             }
             
-            WVJBHandler handler;
-            if (message[@"handlerName"]) {
-                handler = self.messageHandlers[message[@"handlerName"]];
-            } else {
-                handler = self.messageHandler;
-            }
+            WVJBHandler handler = self.messageHandlers[message[@"handlerName"]];
             
             if (!handler) {
                 NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);

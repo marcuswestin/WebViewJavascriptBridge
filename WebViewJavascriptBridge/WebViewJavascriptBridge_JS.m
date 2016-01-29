@@ -20,8 +20,6 @@ NSString * WebViewJavascriptBridge_js() {
 		return;
 	}
 	window.WebViewJavascriptBridge = {
-		init: init,
-		send: send,
 		registerHandler: registerHandler,
 		callHandler: callHandler,
 		_fetchQueue: _fetchQueue,
@@ -39,22 +37,6 @@ NSString * WebViewJavascriptBridge_js() {
 	var responseCallbacks = {};
 	var uniqueId = 1;
 
-	function init(messageHandler) {
-		if (WebViewJavascriptBridge._messageHandler) {
-			throw new Error('WebViewJavascriptBridge.init called twice');
-		}
-		WebViewJavascriptBridge._messageHandler = messageHandler;
-		var receivedMessages = receiveMessageQueue;
-		receiveMessageQueue = null;
-		for (var i=0; i<receivedMessages.length; i++) {
-			_dispatchMessageFromObjC(receivedMessages[i]);
-		}
-	}
-
-	function send(data, responseCallback) {
-		_doSend({ data:data }, responseCallback);
-	}
-	
 	function registerHandler(handlerName, handler) {
 		messageHandlers[handlerName] = handler;
 	}
@@ -100,11 +82,7 @@ NSString * WebViewJavascriptBridge_js() {
 					};
 				}
 				
-				var handler = WebViewJavascriptBridge._messageHandler;
-				if (message.handlerName) {
-					handler = messageHandlers[message.handlerName];
-				}
-				
+				var handler = messageHandlers[message.handlerName];
 				try {
 					handler(message.data, responseCallback);
 				} catch(exception) {
@@ -128,6 +106,12 @@ NSString * WebViewJavascriptBridge_js() {
 	messagingIframe.style.display = 'none';
 	messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE;
 	document.documentElement.appendChild(messagingIframe);
+
+	var receivedMessages = receiveMessageQueue;
+	receiveMessageQueue = null;
+	for (var i=0; i<receivedMessages.length; i++) {
+		_dispatchMessageFromObjC(receivedMessages[i]);
+	}
 
 	setTimeout(_callWVJBCallbacks, 0);
 	function _callWVJBCallbacks() {
