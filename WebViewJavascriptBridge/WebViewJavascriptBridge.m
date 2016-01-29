@@ -88,8 +88,6 @@
     _webView = webView;
     _webViewDelegate = webViewDelegate;
     
-    _webView.frameLoadDelegate = self;
-    _webView.resourceLoadDelegate = self;
     _webView.policyDelegate = self;
     
     _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler];
@@ -97,26 +95,7 @@
 }
 
 - (void) _platformSpecificDealloc {
-    _webView.frameLoadDelegate = nil;
-    _webView.resourceLoadDelegate = nil;
     _webView.policyDelegate = nil;
-}
-
-- (void)webView:(WebView *)webView didFinishLoadForFrame:(WebFrame *)frame
-{
-    if (webView != _webView) { return; }
-    
-    if (_webViewDelegate && [_webViewDelegate respondsToSelector:@selector(webView:didFinishLoadForFrame:)]) {
-        [_webViewDelegate webView:webView didFinishLoadForFrame:frame];
-    }
-}
-
-- (void)webView:(WebView *)webView didFailLoadWithError:(NSError *)error forFrame:(WebFrame *)frame {
-    if (webView != _webView) { return; }
-    
-    if (_webViewDelegate && [_webViewDelegate respondsToSelector:@selector(webView:didFailLoadWithError:forFrame:)]) {
-        [_webViewDelegate webView:webView didFailLoadWithError:error forFrame:frame];
-    }
 }
 
 - (void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener
@@ -139,24 +118,6 @@
     } else {
         [listener use];
     }
-}
-
-- (void)webView:(WebView *)webView didCommitLoadForFrame:(WebFrame *)frame {
-    if (webView != _webView) { return; }
-    
-    if (_webViewDelegate && [_webViewDelegate respondsToSelector:@selector(webView:didCommitLoadForFrame:)]) {
-        [_webViewDelegate webView:webView didCommitLoadForFrame:frame];
-    }
-}
-
-- (NSURLRequest *)webView:(WebView *)webView resource:(id)identifier willSendRequest:(NSURLRequest *)request redirectResponse:(NSURLResponse *)redirectResponse fromDataSource:(WebDataSource *)dataSource {
-    if (webView != _webView) { return request; }
-    
-    if (_webViewDelegate && [_webViewDelegate respondsToSelector:@selector(webView:resource:willSendRequest:redirectResponse:fromDataSource:)]) {
-        return [_webViewDelegate webView:webView resource:identifier willSendRequest:request redirectResponse:redirectResponse fromDataSource:dataSource];
-    }
-    
-    return request;
 }
 
 

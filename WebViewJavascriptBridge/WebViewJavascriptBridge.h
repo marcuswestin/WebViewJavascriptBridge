@@ -14,7 +14,7 @@
     #define WVJB_PLATFORM_OSX
     #define WVJB_WEBVIEW_TYPE WebView
     #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<WebViewJavascriptBridgeBaseDelegate>
-    #define WVJB_WEBVIEW_DELEGATE_INTERFACE NSObject<WebViewJavascriptBridgeBaseDelegate>
+    #define WVJB_WEBVIEW_DELEGATE_INTERFACE NSObject<WebViewJavascriptBridgeBaseDelegate, WebPolicyDelegate>
 #elif defined __IPHONE_OS_VERSION_MAX_ALLOWED
     #import <UIKit/UIWebView.h>
     #define WVJB_PLATFORM_IOS
