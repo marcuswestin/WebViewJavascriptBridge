@@ -9,7 +9,19 @@ Who uses WebViewJavascriptBridge?
 ---------------------------------
 WebViewJavascriptBridge is used by a range of companies and projects. This is a small and incomplete sample list:
 
-[Facebook Messenger](https://www.facebook.com/mobile/messenger), [Facebook Paper](https://facebook.com/paper), [Yardsale](http://www.getyardsale.com/), [EverTrue](http://www.evertrue.com/), [Game Insight](http://www.game-insight.com/), [Sush.io](http://www.sush.io), Flutterby Labs, Dojo4's [Imbed](http://imbed.github.io/), [CareZone](https://carezone.com), [Hemlig](http://www.hemlig.co), [Altralogica](http://www.altralogica.it), [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8), [FRIL](https://fril.jp), [留白·WHITE](http://liubaiapp.com)
+- [Facebook Messenger](https://www.facebook.com/mobile/messenger)
+- [Facebook Paper](https://facebook.com/paper)
+- [Yardsale](http://www.getyardsale.com/)
+- [EverTrue](http://www.evertrue.com/)
+- [Game Insight](http://www.game-insight.com/)
+- [Sush.io](http://www.sush.io)
+- [Imbed](http://imbed.github.io/)
+- [CareZone](https://carezone.com)
+- [Hemlig](http://www.hemlig.co)
+- [Altralogica](http://www.altralogica.it)
+- [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
+- [FRIL](https://fril.jp)
+- [留白·WHITE](http://liubaiapp.com)
 
 Installation (iOS & OSX)
 ------------------------
