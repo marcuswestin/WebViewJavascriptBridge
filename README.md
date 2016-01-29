@@ -5,23 +5,11 @@ WebViewJavascriptBridge
 
 An iOS/OSX bridge for sending messages between Obj-C and JavaScript in UIWebViews/WebViews.
 
-In the Wild
------------
-WebViewJavascriptBridge is used by a range of companies and projects. This list is incomplete, but feel free to add your's and send a PR.
+Who uses WebViewJavascriptBridge?
+---------------------------------
+WebViewJavascriptBridge is used by a range of companies and projects. This is a small and incomplete sample list:
 
-- [Facebook Messenger](https://www.facebook.com/mobile/messenger)
-- [Facebook Paper](https://facebook.com/paper)
-- [Yardsale](https://www.getyardsale.com/)
-- [EverTrue](http://www.evertrue.com/)
-- [Game Insight](http://www.game-insight.com/)
-- [Altralogica](http://www.altralogica.it)
-- [Sush.io](http://www.sush.io)
-- Flutterby Labs
-- JD Media's [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
-- Dojo4's [Imbed](http://imbed.github.io/)
-- [CareZone](https://carezone.com)
-- [Hemlig](http://www.hemlig.co)
-- [FRIL](https://fril.jp)
+[Facebook Messenger](https://www.facebook.com/mobile/messenger), [Facebook Paper](https://facebook.com/paper), [Yardsale](http://www.getyardsale.com/), [EverTrue](http://www.evertrue.com/), [Game Insight](http://www.game-insight.com/), [Sush.io](http://www.sush.io), Flutterby Labs, Dojo4's [Imbed](http://imbed.github.io/), [CareZone](https://carezone.com), [Hemlig](http://www.hemlig.co), [Altralogica](http://www.altralogica.it), [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8), [FRIL](https://fril.jp), [留白·WHITE](http://liubaiapp.com)
 
 Installation (iOS & OSX)
 ------------------------
