@@ -52,13 +52,10 @@ Usage
 2) Instantiate WebViewJavascriptBridge with a UIWebView (iOS) or WebView (OSX):
 
 ```objc
-self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id data, WVJBResponseCallback responseCallback) {
-	NSLog(@"Received message from javascript: %@", data);
-	responseCallback(@"Right back atcha");
-}];
+self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
 ```
 
-3) Go ahead and send some messages from ObjC to javascript:
+3) Register a handler in ObjC, and call a JS handler:
 
 ```objc
 [self.bridge registerHandler:@"ObjC Echo" handler:^(id data, WVJBResponseCallback responseCallback) {
@@ -70,7 +67,7 @@ self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id dat
 }];
 ```
 
-4) Finally, set up the javascript side:
+4) Copy and paste `setupWebViewJavascriptBridge` into your JS:
 	
 ```javascript
 function setupWebViewJavascriptBridge(callback) {
@@ -83,7 +80,11 @@ function setupWebViewJavascriptBridge(callback) {
 	document.documentElement.appendChild(WVJBIframe);
 	setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
 }
+```
 
+5) Finally, call `setupWebViewJavascriptBridge` and then use the bridge to register handlers and call ObjC handlers:
+
+```javascript
 setupWebViewJavascriptBridge(function(bridge) {
 	
 	/* Initialize your app here */
@@ -158,7 +159,7 @@ Example:
 ##### `[bridge callHandler:(NSString*)handlerName data:(id)data]`
 ##### `[bridge callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)callback]`
 
-Call the javascript handler called `handlerName`. Optionally expect a response by giving a `responseCallback` block.
+Call the javascript handler called `handlerName`. If a `responseCallback` block is given the javascript handler can respond.
 
 Example:
 
@@ -192,9 +193,10 @@ bridge.registerHandler("getCurrentPageUrl", function(data, responseCallback) {
 ```
 
 
+##### `bridge.callHander("handlerName", data)`
 ##### `bridge.callHander("handlerName", data, function responseCallback(responseData) { ... })`
 
-Call an ObjC handler called `handlerName`. If `responseCallback` is defined, the ObjC handler can respond.
+Call an ObjC handler called `handlerName`. If a `responseCallback` function is given the ObjC handler can respond.
 
 Example:
 
