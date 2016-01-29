@@ -97,14 +97,6 @@
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
 {
     if (webView != _webView) { return; }
-
-    _base.numRequestsLoading--;
-    
-    if (_base.numRequestsLoading == 0) {
-        [webView evaluateJavaScript:[_base webViewJavascriptCheckCommand] completionHandler:^(NSString *result, NSError *error) {
-            [_base injectJavascriptFile:![result boolValue]];
-        }];
-    }
     
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFinishNavigation:)]) {
@@ -121,7 +113,9 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
 
     if ([_base isCorrectProcotocolScheme:url]) {
-        if ([_base isCorrectHost:url]) {
+        if ([_base isBridgeLoadedURL:url]) {
+            [_base injectJavascriptFile];
+        } else if ([_base isQueueMessageURL:url]) {
             [self WKFlushMessageQueue];
         } else {
             [_base logUnkownMessage:url];
@@ -139,8 +133,6 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     if (webView != _webView) { return; }
     
-    _base.numRequestsLoading++;
-    
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didStartProvisionalNavigation:)]) {
         [strongDelegate webView:webView didStartProvisionalNavigation:navigation];
@@ -152,8 +144,6 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 didFailNavigation:(WKNavigation *)navigation
       withError:(NSError *)error {
     if (webView != _webView) { return; }
-    
-    _base.numRequestsLoading--;
     
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailNavigation:withError:)]) {

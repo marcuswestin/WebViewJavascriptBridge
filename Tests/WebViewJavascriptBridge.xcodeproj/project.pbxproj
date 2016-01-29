@@ -43,7 +43,6 @@
 		3D0FE47B1AE2886500BB4104 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3D99867D1AE2A3B2001DDA2C /* echo.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = echo.html; path = WebViewJavascriptBridgeTests/echo.html; sourceTree = SOURCE_ROOT; };
 		3D9E5F2E1AE288E5009D1C36 /* BridgeTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BridgeTests.m; sourceTree = "<group>"; };
-		3D9E5F301AE28A5E009D1C36 /* WebViewJavascriptBridge.js.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = WebViewJavascriptBridge.js.txt; path = ../WebViewJavascriptBridge/WebViewJavascriptBridge.js.txt; sourceTree = "<group>"; };
 		3DCCF7D61AE28C2900CE7C51 /* WebViewJavascriptBridgeTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WebViewJavascriptBridgeTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3DCCF7D91AE28C2900CE7C51 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3DCCF7DA1AE28C2900CE7C51 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -141,7 +140,6 @@
 				3D99867D1AE2A3B2001DDA2C /* echo.html */,
 				3DCCF7D91AE28C2900CE7C51 /* Info.plist */,
 				3DCCF7DA1AE28C2900CE7C51 /* main.m */,
-				3D9E5F301AE28A5E009D1C36 /* WebViewJavascriptBridge.js.txt */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

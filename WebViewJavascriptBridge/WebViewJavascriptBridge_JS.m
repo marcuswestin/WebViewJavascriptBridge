@@ -38,13 +38,6 @@ NSString * WebViewJavascriptBridge_js() {
 	
 	var responseCallbacks = {};
 	var uniqueId = 1;
-	
-	function _createQueueReadyIframe(doc) {
-		messagingIframe = doc.createElement('iframe');
-		messagingIframe.style.display = 'none';
-		messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE;
-		doc.documentElement.appendChild(messagingIframe);
-	}
 
 	function init(messageHandler) {
 		if (WebViewJavascriptBridge._messageHandler) {
@@ -131,12 +124,19 @@ NSString * WebViewJavascriptBridge_js() {
 		}
 	}
 
-	var doc = document;
-	_createQueueReadyIframe(doc);
-	var readyEvent = doc.createEvent('Events');
-	readyEvent.initEvent('WebViewJavascriptBridgeReady');
-	readyEvent.bridge = WebViewJavascriptBridge;
-	doc.dispatchEvent(readyEvent);
+	messagingIframe = document.createElement('iframe');
+	messagingIframe.style.display = 'none';
+	messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE;
+	document.documentElement.appendChild(messagingIframe);
+
+	setTimeout(_callWVJBCallbacks, 0);
+	function _callWVJBCallbacks() {
+		var callbacks = window.WVJBCallbacks;
+		delete window.WVJBCallbacks;
+		for (var i=0; i<callbacks.length; i++) {
+			callbacks[i](WebViewJavascriptBridge);
+		}
+	}
 })();
 	); // END preprocessorJSCode
 

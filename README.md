@@ -83,26 +83,27 @@ self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView handler:^(id dat
 4) Finally, set up the javascript side:
 	
 ```javascript
-function connectWebViewJavascriptBridge(callback) {
-	if (window.WebViewJavascriptBridge) {
-		callback(WebViewJavascriptBridge)
-	} else {
-		document.addEventListener('WebViewJavascriptBridgeReady', function() {
-			callback(WebViewJavascriptBridge)
-		}, false)
-	}
+function setupWebViewJavascriptBridge(callback) {
+	if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+	if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+	window.WVJBCallbacks = [callback];
+	var WVJBIframe = document.createElement('iframe');
+	WVJBIframe.style.display = 'none';
+	WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+	document.documentElement.appendChild(WVJBIframe);
+	setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
 }
 
-connectWebViewJavascriptBridge(function(bridge) {
-	
-	/* Init your app here */
-
+setupWebViewJavascriptBridge(function(bridge) {
 	bridge.init(function(message, responseCallback) {
 		alert('Received message: ' + message)   
 		if (responseCallback) {
 			responseCallback("Right back atcha")
 		}
 	})
+	
+	/* Initialize your app here */
+
 	bridge.send('Hello from the javascript')
 	bridge.send('Please respond to this', function responseCallback(responseData) {
 		console.log("Javascript got its response", responseData)

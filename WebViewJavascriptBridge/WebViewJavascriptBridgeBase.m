@@ -115,16 +115,13 @@ static int logMaxLength = 500;
     }
 }
 
-- (void)injectJavascriptFile:(BOOL)shouldInject {
-    if (shouldInject){
-        NSString *js = WebViewJavascriptBridge_js();
-        [self _evaluateJavascript:js];
-        [self dispatchStartUpMessageQueue];
-    }
-    
+- (void)injectJavascriptFile {
+    NSString *js = WebViewJavascriptBridge_js();
+    [self _evaluateJavascript:js];
+    [self _dispatchStartUpMessageQueue];
 }
 
-- (void)dispatchStartUpMessageQueue {
+- (void)_dispatchStartUpMessageQueue {
     if (self.startupMessageQueue) {
         for (id queuedMessage in self.startupMessageQueue) {
             [self _dispatchMessage:queuedMessage];
@@ -141,12 +138,16 @@ static int logMaxLength = 500;
     }
 }
 
--(BOOL)isCorrectHost:(NSURL*)url {
+-(BOOL)isQueueMessageURL:(NSURL*)url {
     if([[url host] isEqualToString:kQueueHasMessage]){
         return YES;
     } else {
         return NO;
     }
+}
+
+-(BOOL)isBridgeLoadedURL:(NSURL*)url {
+    return ([[url scheme] isEqualToString:kCustomProtocolScheme] && [[url host] isEqualToString:kBridgeLoaded]);
 }
 
 -(void)logUnkownMessage:(NSURL*)url {

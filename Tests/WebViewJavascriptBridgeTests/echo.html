@@ -3,25 +3,25 @@
 </head><body>
 	<p>WebViewJavascriptBridgeTests - echo.html</p>
 	<script>
-	function connectWebViewJavascriptBridge(callback) {
-		if (window.WebViewJavascriptBridge) {
-			callback(WebViewJavascriptBridge)
-		} else {
-			document.addEventListener('WebViewJavascriptBridgeReady', function() {
-				callback(WebViewJavascriptBridge)
-			}, false)
-		}
+	function setupWebViewJavascriptBridge(callback) {
+		if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+		if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+		window.WVJBCallbacks = [callback];
+		var WVJBIframe = document.createElement('iframe');
+		WVJBIframe.style.display = 'none';
+		WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+		document.documentElement.appendChild(WVJBIframe);
+		setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
 	}
 
-	connectWebViewJavascriptBridge(function(bridge) {
-		bridge.init(function(message, responseCallback) {
-			if(responseCallback) {
-				responseCallback(message);
+	setupWebViewJavascriptBridge(function(bridge) {
+		bridge.init(function(data, responseCallback) {
+			if (responseCallback) {
+				responseCallback(data);
 			}
-		})
-		bridge.send('Hello world')
-
-		bridge.registerHandler('echoHandler', function(data, responseCallback) {
+		});
+		WebViewJavascriptBridge.send('Hello world')
+		WebViewJavascriptBridge.registerHandler('echoHandler', function(data, responseCallback) {
 			responseCallback(data)
 		})
 	})

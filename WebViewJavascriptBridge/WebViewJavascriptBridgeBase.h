@@ -9,6 +9,7 @@
 
 #define kCustomProtocolScheme @"wvjbscheme"
 #define kQueueHasMessage      @"__WVJB_QUEUE_MESSAGE__"
+#define kBridgeLoaded         @"__BRIDGE_LOADED__"
 
 typedef void (^WVJBResponseCallback)(id responseData);
 typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
@@ -26,7 +27,6 @@ typedef NSDictionary WVJBMessage;
 @property (strong, nonatomic) NSMutableDictionary* responseCallbacks;
 @property (strong, nonatomic) NSMutableDictionary* messageHandlers;
 @property (strong, nonatomic) WVJBHandler messageHandler;
-@property NSUInteger numRequestsLoading;
 
 + (void)enableLogging;
 + (void)setLogMaxLength:(int)length;
@@ -34,11 +34,11 @@ typedef NSDictionary WVJBMessage;
 - (void)reset;
 - (void)sendData:(id)data responseCallback:(WVJBResponseCallback)responseCallback handlerName:(NSString*)handlerName;
 - (void)flushMessageQueue:(NSString *)messageQueueString;
-- (void)injectJavascriptFile:(BOOL)shouldInject;
+- (void)injectJavascriptFile;
 - (BOOL)isCorrectProcotocolScheme:(NSURL*)url;
-- (BOOL)isCorrectHost:(NSURL*)urll;
+- (BOOL)isQueueMessageURL:(NSURL*)urll;
+- (BOOL)isBridgeLoadedURL:(NSURL*)urll;
 - (void)logUnkownMessage:(NSURL*)url;
-- (void)dispatchStartUpMessageQueue;
 - (NSString *)webViewJavascriptCheckCommand;
 - (NSString *)webViewJavascriptFetchQueyCommand;
 
