@@ -53,7 +53,20 @@ static void loadEchoSample(UIWebView *webView)
   XCTAssertNotNil(bridge);
 
   loadEchoSample(_webView);
-  [self waitForExpectationsWithTimeout:10 handler:NULL];
+  [self waitForExpectationsWithTimeout:1 handler:NULL];
+}
+
+- (void)testMessageAfterSetup {
+    WebViewJavascriptBridge *bridge = [WebViewJavascriptBridge bridgeForWebView:_webView handler:nullHandler];
+    loadEchoSample(_webView);
+    XCTestExpectation *callbackInvoked = [self expectationWithDescription:@"Callback invoked"];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 150 * NSEC_PER_MSEC), dispatch_get_main_queue(), ^{
+        [bridge send:@"testResponseHandler" responseCallback:^(id responseData) {
+            XCTAssertEqualObjects(responseData, @"testResponseHandler");
+            [callbackInvoked fulfill];
+        }];
+    });
+    [self waitForExpectationsWithTimeout:1 handler:NULL];
 }
 
 - (void)testResponseHandler
@@ -67,7 +80,7 @@ static void loadEchoSample(UIWebView *webView)
   }];
 
   loadEchoSample(_webView);
-  [self waitForExpectationsWithTimeout:10 handler:NULL];
+  [self waitForExpectationsWithTimeout:1 handler:NULL];
 }
 
 - (void)testEchoHandler
@@ -81,7 +94,7 @@ static void loadEchoSample(UIWebView *webView)
   }];
 
   loadEchoSample(_webView);
-  [self waitForExpectationsWithTimeout:10 handler:NULL];
+  [self waitForExpectationsWithTimeout:1 handler:NULL];
 }
 
 - (void)testObjectEncoding
@@ -102,7 +115,7 @@ static void loadEchoSample(UIWebView *webView)
   echoObject(@{ @"a" : @1, @"b" : @2 });
 
   loadEchoSample(_webView);
-  [self waitForExpectationsWithTimeout:10 handler:NULL];
+  [self waitForExpectationsWithTimeout:1 handler:NULL];
 }
 
 @end
