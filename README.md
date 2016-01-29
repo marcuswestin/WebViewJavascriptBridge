@@ -205,10 +205,3 @@ bridge.callHandler("getScreenHeight", null, function(response) {
 	alert('Screen height:' + response)
 })
 ```
-
-iOS4 support (with JSONKit)
----------------------------
-
-*Note*: iOS4 support has not yet been tested in v2+.
-
-WebViewJavascriptBridge uses `NSJSONSerialization` by default. If you need iOS 4 support then you can use [JSONKit](https://github.com/johnezang/JSONKit/), and add `USE_JSONKIT` to the preprocessor macros for your project.
