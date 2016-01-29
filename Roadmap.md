@@ -69,3 +69,34 @@ Future considerations
 	- [ ] Android - partly done by @fangj (#103)
 	- [ ] Chrome - partly done by @fangj (#104)
 	- [ ] Windows phone
+
+
+Common Messages
+---------------
+
+#### Fixed in v5.x.y:
+
+Hi!
+
+I believe this may be fixed in v5.0.1.
+
+When you switch to the new version, please note that the API has changed. In particular, make sure that you use the javascript setup code, as it has changed: https://github.com/marcuswestin/WebViewJavascriptBridge#usage
+
+If you are still having trouble when using v5.0.x, feel free to reopen.
+
+Cheers!
+
+
+#### Need repro:
+
+Hi!
+
+Without a repro I won't be able to help you :(
+
+If you create a PR with a failing test then I will definitely give you a hand (see https://github.com/marcuswestin/WebViewJavascriptBridge/blob/master/Tests/WebViewJavascriptBridgeTests/BridgeTests.m and https://github.com/marcuswestin/WebViewJavascriptBridge/blob/master/Tests/WebViewJavascriptBridgeTests/echo.html).
+
+You could also create a PR with an example in `Example Apps` with the problem you're seeing in - that would definitely help me help you :)
+
+I'll close this in the meantime since there's nothing I can do. Feel free to reopen with a repro or more information.
+
+Cheers!
