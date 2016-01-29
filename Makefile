@@ -4,4 +4,4 @@ test:
 
 publish-pod:
 	# pod trunk register narcvs@gmail.com 'Marcus Westin' --description='MBA/MBP-xyz'
-	pod trunk push --allow-warnings --verbose WebViewJavascriptBridge.podspec
+	pod trunk push --verbose WebViewJavascriptBridge.podspec
