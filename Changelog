@@ -16,7 +16,10 @@ Version History
 Next version
 + Pretty-print json in log messages
 
-Intended v5.0.1
+v5.0.2
++ Fix bug that could cause a crash if the webview loads a new page immediately after JS sends a message.
+
+v5.0.1
 + Removed `WebViewJavascriptBridge -reset`. It should never have been exposed as a public API.
 + Fixed compilation in C99 mode
 + Inline JS source code. WVJB no longer requires `WebViewJavascriptBridge.js.txt` to be included as a resource.
