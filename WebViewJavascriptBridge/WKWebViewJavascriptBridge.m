@@ -120,7 +120,7 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
         } else {
             [_base logUnkownMessage:url];
         }
-        [webView stopLoading];
+        decisionHandler(WKNavigationActionPolicyCancel);
     }
     
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
@@ -148,6 +148,17 @@ didFailNavigation:(WKNavigation *)navigation
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailNavigation:withError:)]) {
         [strongDelegate webView:webView didFailNavigation:navigation withError:error];
+    }
+}
+
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+    if (webView != _webView) { return; }
+    
+    _base.numRequestsLoading--;
+    
+    __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
+    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailProvisionalNavigation:withError:)]) {
+        [strongDelegate webView:webView didFailProvisionalNavigation:navigation withError:error];
     }
 }
 
