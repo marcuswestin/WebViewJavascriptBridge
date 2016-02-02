@@ -1,6 +1,3 @@
 language: objective-c
-before_script:
-  - brew update
-  - brew upgrade xctool || true
 script:
-  - xctool -project Tests/WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge -configuration Release -sdk iphonesimulator test
+  - make test
