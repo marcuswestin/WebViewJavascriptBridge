@@ -41,6 +41,10 @@ NSString * WebViewJavascriptBridge_js() {
 	}
 	
 	function callHandler(handlerName, data, responseCallback) {
+		if (arguments.length == 2 && typeof data == 'function') {
+			responseCallback = data
+			data = null
+		}
 		_doSend({ handlerName:handlerName, data:data }, responseCallback);
 	}
 	
