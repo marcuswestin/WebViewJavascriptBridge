@@ -16,9 +16,12 @@ Version History
 Next version
 + Pretty-print json in log messages
 
-v5.0.3
+v5.0.5
 + Run all tests for both UIWebView and WKWebView webviews/bridges.
 + Allow for calling handlers from JS with just a handler name and responseCallback function (#184).
+
+v5.0.3 & v5.0.4
++ Recalled builds :)
 
 v5.0.2
 + Fix bug that could cause a crash if the webview loads a new page immediately after JS sends a message.
