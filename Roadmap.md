@@ -4,7 +4,9 @@ Roadmap
 Issues
 ------
 
-- [ ] Add WKWebView support to podspec file? (#149)
+- [ ] `make test` fails becuase the command line invocation can't find WebKit framework. Fix.
+- [ ] Sometimes tests randomly fail! Race condition...
+- [X] Add WKWebView support to podspec file? (#149)
 - [ ] iOS8 WKWebView support? (#126)
 - [ ] WKWebView issue in OSX? (#84)
 - [ ] Release new version (#143, #155, #167)
