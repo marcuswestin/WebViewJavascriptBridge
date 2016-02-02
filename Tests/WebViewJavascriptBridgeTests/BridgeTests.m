@@ -48,7 +48,7 @@ static void loadEchoSample(id webView) {
 - (void)testInitialization {
     [self classSpecificTestInitialization:[WebViewJavascriptBridge class] webView:_uiWebView];
     [self classSpecificTestInitialization:[WKWebViewJavascriptBridge class] webView:_wkWebView];
-    [self waitForExpectationsWithTimeout:10 handler:NULL];
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
 }
 - (void)classSpecificTestInitialization:(Class)cls webView:(id)webView {
     XCTestExpectation *startup = [self expectationWithDescription:@"Startup completed"];
@@ -65,7 +65,7 @@ static void loadEchoSample(id webView) {
 - (void)testEchoHandler {
     [self classSpecificTestEchoHandler:[WebViewJavascriptBridge class] webView:_uiWebView];
     [self classSpecificTestEchoHandler:[WKWebViewJavascriptBridge class] webView:_wkWebView];
-    [self waitForExpectationsWithTimeout:10 handler:NULL];
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
 }
 - (void)classSpecificTestEchoHandler:(Class)cls webView:(id)webView {
     WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
@@ -82,7 +82,7 @@ static void loadEchoSample(id webView) {
 - (void)testEchoHandlerAfterSetup {
     [self classSpecificTestEchoHandlerAfterSetup:[WebViewJavascriptBridge class] webView:_uiWebView];
     [self classSpecificTestEchoHandlerAfterSetup:[WKWebViewJavascriptBridge class] webView:_wkWebView];
-    [self waitForExpectationsWithTimeout:10 handler:NULL];
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
 }
 - (void)classSpecificTestEchoHandlerAfterSetup:(Class)cls webView:(id)webView {
     WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
@@ -100,7 +100,7 @@ static void loadEchoSample(id webView) {
 - (void)testObjectEncoding {
     [self classSpecificTestObjectEncoding:[WebViewJavascriptBridge class] webView:_uiWebView];
     [self classSpecificTestObjectEncoding:[WKWebViewJavascriptBridge class] webView:_wkWebView];
-    [self waitForExpectationsWithTimeout:10 handler:NULL];
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
 }
 - (void)classSpecificTestObjectEncoding:(Class)cls webView:(id)webView {
     WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
