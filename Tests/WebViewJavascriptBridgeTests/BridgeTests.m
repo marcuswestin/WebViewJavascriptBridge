@@ -1,6 +1,6 @@
 //
 //  BridgeTests.m
-//  WebViewJavascriptBridge
+//  WKWebViewJavascriptBridge
 //
 //  Created by Pieter De Baets on 18/04/2015.
 //  Copyright (c) 2015 marcuswestin. All rights reserved.
@@ -9,6 +9,7 @@
 #import <XCTest/XCTest.h>
 
 #import "WebViewJavascriptBridge.h"
+#import "WKWebViewJavascriptBridge.h"
 #import "AppDelegate.h"
 
 static NSString *const echoHandler = @"echoHandler";
@@ -18,92 +19,114 @@ static NSString *const echoHandler = @"echoHandler";
 @end
 
 @implementation BridgeTests {
-  UIWebView *_webView;
+    UIWebView *_uiWebView;
+    WKWebView *_wkWebView;
 }
 
-- (void)setUp
-{
-  [super setUp];
-
-  UIViewController *rootVC = [[(AppDelegate *)[[UIApplication sharedApplication] delegate] window] rootViewController];
-  _webView = [[UIWebView alloc] initWithFrame:rootVC.view.bounds];
-  [rootVC.view addSubview:_webView];
+- (void)setUp {
+    [super setUp];
+    
+    UIViewController *rootVC = [[(AppDelegate *)[[UIApplication sharedApplication] delegate] window] rootViewController];
+    _uiWebView = [[UIWebView alloc] initWithFrame:rootVC.view.bounds];
+    CGRect wkFrame = _uiWebView.frame;
+    wkFrame.origin.y += _uiWebView.frame.size.height;
+    _wkWebView = [[WKWebView alloc] initWithFrame:wkFrame];
+    [rootVC.view addSubview:_wkWebView];
 }
 
-- (void)tearDown
-{
-  [super tearDown];
-  [_webView removeFromSuperview];
+- (void)tearDown {
+    [super tearDown];
+    [_uiWebView removeFromSuperview];
+    [_wkWebView removeFromSuperview];
 }
 
-static void loadEchoSample(UIWebView *webView)
-{
-  NSURLRequest *request = [NSURLRequest requestWithURL:[[NSBundle mainBundle] URLForResource:@"echo" withExtension:@"html"]];
-  [webView loadRequest:request];
+static void loadEchoSample(id webView) {
+    NSURLRequest *request = [NSURLRequest requestWithURL:[[NSBundle mainBundle] URLForResource:@"echo" withExtension:@"html"]];
+    [(UIWebView*)webView loadRequest:request];
 }
 
-- (void)testInitialization
-{
-  XCTestExpectation *startup = [self expectationWithDescription:@"Startup completed"];
-    WebViewJavascriptBridge *bridge = [WebViewJavascriptBridge bridgeForWebView:_webView];
+- (void)testInitialization {
+    [self classSpecificTestInitialization:[WebViewJavascriptBridge class] webView:_uiWebView];
+    [self classSpecificTestInitialization:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self waitForExpectationsWithTimeout:10 handler:NULL];
+}
+- (void)classSpecificTestInitialization:(Class)cls webView:(id)webView {
+    XCTestExpectation *startup = [self expectationWithDescription:@"Startup completed"];
+    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
     [bridge registerHandler:@"Greet" handler:^(id data, WVJBResponseCallback responseCallback) {
         XCTAssertEqualObjects(data, @"Hello world");
         [startup fulfill];
     }];
-  XCTAssertNotNil(bridge);
-
-  loadEchoSample(_webView);
-  [self waitForExpectationsWithTimeout:1 handler:NULL];
+    XCTAssertNotNil(bridge);
+    
+    loadEchoSample(webView);
 }
 
-- (void)testEchoHandler
-{
-  WebViewJavascriptBridge *bridge = [WebViewJavascriptBridge bridgeForWebView:_webView];
-
-  XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
-  [bridge callHandler:echoHandler data:@"testEchoHandler" responseCallback:^(id responseData) {
-    XCTAssertEqualObjects(responseData, @"testEchoHandler");
-    [callbackInvocked fulfill];
-  }];
-
-  loadEchoSample(_webView);
-  [self waitForExpectationsWithTimeout:1 handler:NULL];
+- (void)testEchoHandler {
+    [self classSpecificTestEchoHandler:[WebViewJavascriptBridge class] webView:_uiWebView];
+    [self classSpecificTestEchoHandler:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self waitForExpectationsWithTimeout:10 handler:NULL];
 }
-
-- (void)testEchoHandlerAfterSetup
-{
-    WebViewJavascriptBridge *bridge = [WebViewJavascriptBridge bridgeForWebView:_webView];
+- (void)classSpecificTestEchoHandler:(Class)cls webView:(id)webView {
+    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
     
     XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
-    loadEchoSample(_webView);
+    [bridge callHandler:echoHandler data:@"testEchoHandler" responseCallback:^(id responseData) {
+        XCTAssertEqualObjects(responseData, @"testEchoHandler");
+        [callbackInvocked fulfill];
+    }];
+    
+    loadEchoSample(webView);
+}
+
+- (void)testEchoHandlerAfterSetup {
+    [self classSpecificTestEchoHandlerAfterSetup:[WebViewJavascriptBridge class] webView:_uiWebView];
+    [self classSpecificTestEchoHandlerAfterSetup:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self waitForExpectationsWithTimeout:10 handler:NULL];
+}
+- (void)classSpecificTestEchoHandlerAfterSetup:(Class)cls webView:(id)webView {
+    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
+    
+    XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
+    loadEchoSample(webView);
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 150 * NSEC_PER_MSEC), dispatch_get_main_queue(), ^{
         [bridge callHandler:echoHandler data:@"testEchoHandler" responseCallback:^(id responseData) {
             XCTAssertEqualObjects(responseData, @"testEchoHandler");
             [callbackInvocked fulfill];
         }];
     });
-    [self waitForExpectationsWithTimeout:1 handler:NULL];
 }
 
-- (void)testObjectEncoding
-{
-  WebViewJavascriptBridge *bridge = [WebViewJavascriptBridge bridgeForWebView:_webView];
-
-  void (^echoObject)(id) = ^void(id object) {
-    XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
-    [bridge callHandler:echoHandler data:object responseCallback:^(id responseData) {
-      XCTAssertEqualObjects(responseData, object);
-      [callbackInvocked fulfill];
-    }];
-  };
-
-  echoObject(@"A string sent over the wire");
-  echoObject(@"A string with '\"'/\\");
-  echoObject(@[ @1, @2, @3 ]);
-  echoObject(@{ @"a" : @1, @"b" : @2 });
-
-  loadEchoSample(_webView);
-  [self waitForExpectationsWithTimeout:1 handler:NULL];
+- (void)testObjectEncoding {
+    [self classSpecificTestObjectEncoding:[WebViewJavascriptBridge class] webView:_uiWebView];
+    [self classSpecificTestObjectEncoding:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self waitForExpectationsWithTimeout:10 handler:NULL];
+}
+- (void)classSpecificTestObjectEncoding:(Class)cls webView:(id)webView {
+    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
+    
+    void (^echoObject)(id) = ^void(id object) {
+        XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
+        [bridge callHandler:echoHandler data:object responseCallback:^(id responseData) {
+            XCTAssertEqualObjects(responseData, object);
+            [callbackInvocked fulfill];
+        }];
+    };
+    
+    echoObject(@"A string sent over the wire");
+    echoObject(@"A string with '\"'/\\");
+    echoObject(@[ @1, @2, @3 ]);
+    echoObject(@{ @"a" : @1, @"b" : @2 });
+    
+    loadEchoSample(webView);
 }
 
+
+- (WebViewJavascriptBridge*)bridgeForCls:(Class)cls webView:(id)webView {
+    if (cls == [WebViewJavascriptBridge class]) {
+        return [WebViewJavascriptBridge bridgeForWebView:webView];
+    } else {
+        return (WebViewJavascriptBridge*)[WKWebViewJavascriptBridge bridgeForWebView:_wkWebView];
+    }
+}
 @end
