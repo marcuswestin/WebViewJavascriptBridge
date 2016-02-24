@@ -204,8 +204,8 @@ bridge.registerHandler("getCurrentPageUrl", function(data, responseCallback) {
 ```
 
 
-##### `bridge.callHander("handlerName", data)`
-##### `bridge.callHander("handlerName", data, function responseCallback(responseData) { ... })`
+##### `bridge.callHandler("handlerName", data)`
+##### `bridge.callHandler("handlerName", data, function responseCallback(responseData) { ... })`
 
 Call an ObjC handler called `handlerName`. If a `responseCallback` function is given the ObjC handler can respond.
 
