@@ -7,11 +7,11 @@
 
 #import <Foundation/Foundation.h>
 #import "WebViewJavascriptBridgeBase.h"
+#import "WebViewJavascriptBridge_JS.h"
 
 @implementation WebViewJavascriptBridgeBase {
     id _webViewDelegate;
     long _uniqueId;
-    NSBundle *_resourceBundle;
 }
 
 static bool logging = false;
@@ -20,11 +20,8 @@ static int logMaxLength = 500;
 + (void)enableLogging { logging = true; }
 + (void)setLogMaxLength:(int)length { logMaxLength = length;}
 
--(id)initWithHandler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle
-{
+-(id)init {
     self = [super init];
-    _resourceBundle = bundle;
-    self.messageHandler = messageHandler;
     self.messageHandlers = [NSMutableDictionary dictionary];
     self.startupMessageQueue = [NSMutableArray array];
     self.responseCallbacks = [NSMutableDictionary dictionary];
@@ -36,7 +33,6 @@ static int logMaxLength = 500;
     self.startupMessageQueue = nil;
     self.responseCallbacks = nil;
     self.messageHandlers = nil;
-    self.messageHandler = nil;
 }
 
 - (void)reset {
@@ -65,11 +61,12 @@ static int logMaxLength = 500;
 }
 
 - (void)flushMessageQueue:(NSString *)messageQueueString{
-    id messages = [self _deserializeMessageJSON:messageQueueString];
-    if (![messages isKindOfClass:[NSArray class]]) {
-        NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [messages class], messages);
+    if (messageQueueString == nil || messageQueueString.length == 0) {
+        NSLog(@"WebViewJavascriptBridge: WARNING: ObjC got nil while fetching the message queue JSON from webview. This can happen if the WebViewJavascriptBridge JS is not currently present in the webview, e.g if the webview just loaded a new page.");
         return;
     }
+
+    id messages = [self _deserializeMessageJSON:messageQueueString];
     for (WVJBMessage* message in messages) {
         if (![message isKindOfClass:[WVJBMessage class]]) {
             NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [message class], message);
@@ -100,15 +97,11 @@ static int logMaxLength = 500;
                 };
             }
             
-            WVJBHandler handler;
-            if (message[@"handlerName"]) {
-                handler = self.messageHandlers[message[@"handlerName"]];
-            } else {
-                handler = self.messageHandler;
-            }
+            WVJBHandler handler = self.messageHandlers[message[@"handlerName"]];
             
             if (!handler) {
-                [NSException raise:@"WVJBNoHandlerException" format:@"No handler for message from JS: %@", message];
+                NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
+                continue;
             }
             
             handler(message[@"data"], responseCallback);
@@ -116,23 +109,15 @@ static int logMaxLength = 500;
     }
 }
 
-- (void)injectJavascriptFile:(BOOL)shouldInject {
-    if(shouldInject){
-        NSBundle *bundle = _resourceBundle ? _resourceBundle : [NSBundle mainBundle];
-        NSString *filePath = [bundle pathForResource:@"WebViewJavascriptBridge.js" ofType:@"txt"];
-        NSString *js = [NSString stringWithContentsOfFile:filePath encoding:NSUTF8StringEncoding error:nil];
-        [self _evaluateJavascript:js];
-        [self dispatchStartUpMessageQueue];
-    }
-    
-}
-
-- (void)dispatchStartUpMessageQueue {
+- (void)injectJavascriptFile {
+    NSString *js = WebViewJavascriptBridge_js();
+    [self _evaluateJavascript:js];
     if (self.startupMessageQueue) {
-        for (id queuedMessage in self.startupMessageQueue) {
+        NSArray* queue = self.startupMessageQueue;
+        self.startupMessageQueue = nil;
+        for (id queuedMessage in queue) {
             [self _dispatchMessage:queuedMessage];
         }
-        self.startupMessageQueue = nil;
     }
 }
 
@@ -144,12 +129,16 @@ static int logMaxLength = 500;
     }
 }
 
--(BOOL)isCorrectHost:(NSURL*)url {
+-(BOOL)isQueueMessageURL:(NSURL*)url {
     if([[url host] isEqualToString:kQueueHasMessage]){
         return YES;
     } else {
         return NO;
     }
+}
+
+-(BOOL)isBridgeLoadedURL:(NSURL*)url {
+    return ([[url scheme] isEqualToString:kCustomProtocolScheme] && [[url host] isEqualToString:kBridgeLoaded]);
 }
 
 -(void)logUnkownMessage:(NSURL*)url {

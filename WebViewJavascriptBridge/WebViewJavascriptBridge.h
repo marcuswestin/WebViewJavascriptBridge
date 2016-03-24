@@ -14,7 +14,7 @@
     #define WVJB_PLATFORM_OSX
     #define WVJB_WEBVIEW_TYPE WebView
     #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<WebViewJavascriptBridgeBaseDelegate>
-    #define WVJB_WEBVIEW_DELEGATE_INTERFACE NSObject<WebViewJavascriptBridgeBaseDelegate>
+    #define WVJB_WEBVIEW_DELEGATE_INTERFACE NSObject<WebViewJavascriptBridgeBaseDelegate, WebPolicyDelegate>
 #elif defined __IPHONE_OS_VERSION_MAX_ALLOWED
     #import <UIKit/UIWebView.h>
     #define WVJB_PLATFORM_IOS
@@ -25,17 +25,13 @@
 
 @interface WebViewJavascriptBridge : WVJB_WEBVIEW_DELEGATE_INTERFACE
 
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView handler:(WVJBHandler)handler;
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)handler;
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView webViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate handler:(WVJBHandler)handler resourceBundle:(NSBundle*)bundle;
++ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView;
 + (void)enableLogging;
 + (void)setLogMaxLength:(int)length;
 
-- (void)send:(id)message;
-- (void)send:(id)message responseCallback:(WVJBResponseCallback)responseCallback;
 - (void)registerHandler:(NSString*)handlerName handler:(WVJBHandler)handler;
 - (void)callHandler:(NSString*)handlerName;
 - (void)callHandler:(NSString*)handlerName data:(id)data;
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
-
+- (void)setWebViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate;
 @end
