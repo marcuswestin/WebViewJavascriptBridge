@@ -19,6 +19,12 @@ NSString * WebViewJavascriptBridge_js() {
 	if (window.WebViewJavascriptBridge) {
 		return;
 	}
+
+	if (!window.onerror) {
+		window.onerror = function(msg, url, line) {
+			alert("WebViewJavascriptBridge: ERROR:" + msg + "@" + url + ":" + line);
+		}
+	}
 	window.WebViewJavascriptBridge = {
 		registerHandler: registerHandler,
 		callHandler: callHandler,
@@ -88,6 +94,10 @@ NSString * WebViewJavascriptBridge_js() {
 				var handler = messageHandlers[message.handlerName];
 				if (!handler) {
 					console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
+				}else
+                {
+                    handler(message.data, responseCallback);
+                }
 			}
 		});
 	}
