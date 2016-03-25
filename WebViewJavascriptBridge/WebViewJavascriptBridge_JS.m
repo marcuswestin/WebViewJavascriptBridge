@@ -22,7 +22,7 @@ NSString * WebViewJavascriptBridge_js() {
 
 	if (!window.onerror) {
 		window.onerror = function(msg, url, line) {
-			alert("WebViewJavascriptBridge: ERROR:" + msg + "@" + url + ":" + line);
+			console.log("WebViewJavascriptBridge: ERROR:" + msg + "@" + url + ":" + line);
 		}
 	}
 	window.WebViewJavascriptBridge = {
@@ -95,15 +95,15 @@ NSString * WebViewJavascriptBridge_js() {
 				if (!handler) {
 					console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
 				}else
-                {
-                    handler(message.data, responseCallback);
-                }
+				{
+					handler(message.data, responseCallback);
+				}
 			}
 		});
 	}
 	
 	function _handleMessageFromObjC(messageJSON) {
-        _dispatchMessageFromObjC(messageJSON);
+		_dispatchMessageFromObjC(messageJSON);
 	}
 
 	messagingIframe = document.createElement('iframe');
