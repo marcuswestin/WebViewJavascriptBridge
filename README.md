@@ -130,6 +130,19 @@ WebViewJavascriptBridge supports [WKWebView](http://nshipster.com/wkwebkit/) for
 WKWebViewJavascriptBridge* bridge = [WKWebViewJavascriptBridge bridgeForWebView:webView];
 ```
 
+Automatic reference counting (ARC)
+----------------------------------
+This library relies on ARC, so if you use ARC in you project, all works fine.
+But if your project have no ARC support, be sure to do next steps:
+
+1) In your Xcode project open project settings -> 'Build Phases'
+
+2) Expand 'Compile Sources' header and find all *.m files which are belongs to this library. Make attention on the 'Compiler Flags' in front of each source file in this list
+
+3) For each file add '-fobjc-arc' flag
+
+Now all WVJB files will be compiled with ARC support.
+
 Contributors & Forks
 --------------------
 Contributors: https://github.com/marcuswestin/WebViewJavascriptBridge/graphs/contributors
