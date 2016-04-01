@@ -72,8 +72,8 @@
 				2C1562B4176B9F8400B4AE50 /* WebViewJavascriptBridge.js.txt */,
 				2C1562A8176B9F6200B4AE50 /* WebViewJavascriptBridge.h */,
 				2C1562A9176B9F6200B4AE50 /* WebViewJavascriptBridge.m */,
-				0E8082DA19EDC32300479452 /* WKWebViewJavascriptBridge.m */,
 				0E8082D919EDC32300479452 /* WKWebViewJavascriptBridge.h */,
+				0E8082DA19EDC32300479452 /* WKWebViewJavascriptBridge.m */,
 				0E50601B1A01B442000BEEEA /* WebViewJavascriptBridgeBase.m */,
 				0E50601D1A01B44C000BEEEA /* WebViewJavascriptBridgeBase.h */,
 			);
