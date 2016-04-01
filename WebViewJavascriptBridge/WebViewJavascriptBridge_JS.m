@@ -87,7 +87,7 @@ NSString * WebViewJavascriptBridge_js() {
 				if (message.callbackId) {
 					var callbackResponseId = message.callbackId;
 					responseCallback = function(responseData) {
-						_doSend({ responseId:callbackResponseId, responseData:responseData });
+						_doSend({handlerName:message.handlerName, responseId:callbackResponseId, responseData:responseData });
 					};
 				}
 				
