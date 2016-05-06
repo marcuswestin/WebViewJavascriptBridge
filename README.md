@@ -105,7 +105,7 @@ setupWebViewJavascriptBridge(function(bridge) {
 		console.log("JS Echo called with:", data)
 		responseCallback(data)
 	})
-	bridge.callHandler('ObjC Echo', function responseCallback(responseData) {
+	bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
 		console.log("JS received response:", responseData)
 	})
 })
