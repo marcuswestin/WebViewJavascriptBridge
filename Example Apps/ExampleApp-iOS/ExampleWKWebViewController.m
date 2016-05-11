@@ -25,6 +25,7 @@
     [self.view addSubview:webView];
     [WKWebViewJavascriptBridge enableLogging];
     _bridge = [WKWebViewJavascriptBridge bridgeForWebView:webView];
+    [_bridge setWebViewDelegate:self];
     
     [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
@@ -37,11 +38,11 @@
     [self loadExamplePage:webView];
 }
 
-- (void)webViewDidStartLoad:(UIWebView *)webView {
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     NSLog(@"webViewDidStartLoad");
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     NSLog(@"webViewDidFinishLoad");
 }
 
