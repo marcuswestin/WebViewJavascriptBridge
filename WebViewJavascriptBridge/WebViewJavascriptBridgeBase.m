@@ -10,7 +10,7 @@
 #import "WebViewJavascriptBridge_JS.h"
 
 @implementation WebViewJavascriptBridgeBase {
-    id _webViewDelegate;
+    __weak id _webViewDelegate;
     long _uniqueId;
 }
 
