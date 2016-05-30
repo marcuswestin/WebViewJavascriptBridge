@@ -158,6 +158,13 @@ didFailNavigation:(WKNavigation *)navigation
     }
 }
 
+- (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView {
+  __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
+  if (strongDelegate && [strongDelegate respondsToSelector:@selector(webViewWebContentProcessDidTerminate:)]) {
+    [strongDelegate webViewWebContentProcessDidTerminate:webView];
+  }
+}
+
 - (NSString*) _evaluateJavascript:(NSString*)javascriptCommand
 {
     [_webView evaluateJavaScript:javascriptCommand completionHandler:nil];
