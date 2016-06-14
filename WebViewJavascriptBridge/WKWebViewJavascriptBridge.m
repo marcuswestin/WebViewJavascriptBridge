@@ -11,8 +11,8 @@
 #if defined(supportsWKWebKit)
 
 @implementation WKWebViewJavascriptBridge {
-    WKWebView* _webView;
-    id<WKNavigationDelegate> _webViewDelegate;
+    __weak WKWebView* _webView;
+    __weak id<WKNavigationDelegate> _webViewDelegate;
     long _uniqueId;
     WebViewJavascriptBridgeBase *_base;
 }
