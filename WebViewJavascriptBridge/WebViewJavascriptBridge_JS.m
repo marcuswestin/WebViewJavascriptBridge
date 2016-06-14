@@ -87,15 +87,14 @@ NSString * WebViewJavascriptBridge_js() {
 				if (message.callbackId) {
 					var callbackResponseId = message.callbackId;
 					responseCallback = function(responseData) {
-						_doSend({handlerName:message.handlerName, responseId:callbackResponseId, responseData:responseData });
+						_doSend({ handlerName:message.handlerName, responseId:callbackResponseId, responseData:responseData });
 					};
 				}
 				
 				var handler = messageHandlers[message.handlerName];
 				if (!handler) {
 					console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
-				}else
-				{
+				} else {
 					handler(message.data, responseCallback);
 				}
 			}
@@ -103,7 +102,7 @@ NSString * WebViewJavascriptBridge_js() {
 	}
 	
 	function _handleMessageFromObjC(messageJSON) {
-		_dispatchMessageFromObjC(messageJSON);
+        _dispatchMessageFromObjC(messageJSON);
 	}
 
 	messagingIframe = document.createElement('iframe');
