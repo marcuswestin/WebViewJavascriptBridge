@@ -61,6 +61,10 @@
     _webViewDelegate = webViewDelegate;
 }
 
+- (void)disableJavscriptAlertBoxSafetyTimeout {
+    [_base disableJavscriptAlertBoxSafetyTimeout];
+}
+
 /* Internals
  ***********/
 

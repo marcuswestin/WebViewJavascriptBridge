@@ -139,6 +139,26 @@ static void loadEchoSample(id webView) {
     }];
 }
 
+- (void)testJavascriptReceiveResponseWithoutSafetyTimeout {
+    [self classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:[WebViewJavascriptBridge class] webView:_uiWebView];
+    [self classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self waitForExpectationsWithTimeout:3 handler:NULL];
+}
+- (void)classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:(Class)cls webView:(id)webView {
+    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
+    [bridge disableJavscriptAlertBoxSafetyTimeout];
+    loadEchoSample(webView);
+    XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
+    [bridge registerHandler:@"objcEchoToJs" handler:^(id data, WVJBResponseCallback responseCallback) {
+        responseCallback(data);
+    }];
+    [bridge callHandler:@"jsRcvResponseTest" data:nil responseCallback:^(id responseData) {
+        XCTAssertEqualObjects(responseData, @"Response from JS");
+        [callbackInvocked fulfill];
+    }];
+}
+
+
 - (WebViewJavascriptBridge*)bridgeForCls:(Class)cls webView:(id)webView {
     if (cls == [WebViewJavascriptBridge class]) {
         return [WebViewJavascriptBridge bridgeForWebView:webView];

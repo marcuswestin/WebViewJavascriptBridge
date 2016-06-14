@@ -26,6 +26,7 @@
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
 - (void)reset;
 - (void)setWebViewDelegate:(id<WKNavigationDelegate>)webViewDelegate;
+- (void)disableJavscriptAlertBoxSafetyTimeout;
 
 @end
 

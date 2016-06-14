@@ -153,6 +153,10 @@ static int logMaxLength = 500;
     return @"WebViewJavascriptBridge._fetchQueue();";
 }
 
+- (void)disableJavscriptAlertBoxSafetyTimeout {
+    [self sendData:nil responseCallback:nil handlerName:@"_disableJavascriptAlertBoxSafetyTimeout"];
+}
+
 // Private
 // -------------------------------------------
 
