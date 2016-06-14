@@ -19,6 +19,12 @@ NSString * WebViewJavascriptBridge_js() {
 	if (window.WebViewJavascriptBridge) {
 		return;
 	}
+
+	if (!window.onerror) {
+		window.onerror = function(msg, url, line) {
+			console.log("WebViewJavascriptBridge: ERROR:" + msg + "@" + url + ":" + line);
+		}
+	}
 	window.WebViewJavascriptBridge = {
 		registerHandler: registerHandler,
 		callHandler: callHandler,
@@ -81,25 +87,23 @@ NSString * WebViewJavascriptBridge_js() {
 				if (message.callbackId) {
 					var callbackResponseId = message.callbackId;
 					responseCallback = function(responseData) {
-						_doSend({ responseId:callbackResponseId, responseData:responseData });
+						_doSend({handlerName:message.handlerName, responseId:callbackResponseId, responseData:responseData });
 					};
 				}
 				
 				var handler = messageHandlers[message.handlerName];
-				try {
-					handler(message.data, responseCallback);
-				} catch(exception) {
-					console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception);
-				}
 				if (!handler) {
 					console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
+				}else
+				{
+					handler(message.data, responseCallback);
 				}
 			}
 		});
 	}
 	
 	function _handleMessageFromObjC(messageJSON) {
-        _dispatchMessageFromObjC(messageJSON);
+		_dispatchMessageFromObjC(messageJSON);
 	}
 
 	messagingIframe = document.createElement('iframe');
