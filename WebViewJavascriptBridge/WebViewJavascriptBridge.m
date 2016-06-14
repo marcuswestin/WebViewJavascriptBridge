@@ -61,6 +61,11 @@
     _base.messageHandlers[handlerName] = [handler copy];
 }
 
+- (void)disableJavscriptAlertBoxSafetyTimeout {
+    [_base disableJavscriptAlertBoxSafetyTimeout];
+}
+
+
 /* Platform agnostic internals
  *****************************/
 

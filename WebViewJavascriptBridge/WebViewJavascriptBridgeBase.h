@@ -40,5 +40,6 @@ typedef NSDictionary WVJBMessage;
 - (void)logUnkownMessage:(NSURL*)url;
 - (NSString *)webViewJavascriptCheckCommand;
 - (NSString *)webViewJavascriptFetchQueyCommand;
+- (void)disableJavscriptAlertBoxSafetyTimeout;
 
 @end

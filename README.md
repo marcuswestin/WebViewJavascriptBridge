@@ -22,6 +22,7 @@ WebViewJavascriptBridge is used by a range of companies and projects. This is a 
 - [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
 - [FRIL](https://fril.jp)
 - [留白·WHITE](http://liubaiapp.com)
+- [BrowZine](http://thirdiron.com/browzine/)
 
 Installation (iOS & OSX)
 ------------------------
@@ -198,6 +199,13 @@ Example:
 
 Optionally, set a `UIWebViewDelegate` if you need to respond to the [web view's lifecycle events](http://developer.apple.com/library/ios/documentation/uikit/reference/UIWebViewDelegate_Protocol/Reference/Reference.html).
 
+##### `[bridge disableJavscriptAlertBoxSafetyTimeout]`
+
+UNSAFE. Speed up bridge message passing by disabling the setTimeout safety check. It is only safe to disable this safety check if you do not call any of the javascript popup box functions (alert, confirm, and prompt). If you call any of these functions from the bridged javascript code, the app will hang.
+
+Example:
+
+	[self.bridge disableJavscriptAlertBoxSafetyTimeout];
 
 
 
@@ -229,4 +237,15 @@ bridge.callHandler("Log", "Foo")
 bridge.callHandler("getScreenHeight", null, function(response) {
 	alert('Screen height:' + response)
 })
+```
+
+
+##### `bridge.disableJavscriptAlertBoxSafetyTimeout()`
+
+Calling `bridge.disableJavscriptAlertBoxSafetyTimeout()` has the same effect as calling `[bridge disableJavscriptAlertBoxSafetyTimeout];` in ObjC.
+
+Example:
+
+```javascript
+bridge.disableJavscriptAlertBoxSafetyTimeout()
 ```
