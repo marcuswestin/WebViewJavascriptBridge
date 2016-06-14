@@ -76,7 +76,6 @@ static int logMaxLength = 500;
         
         NSString* responseId = message[@"responseId"];
         if (responseId) {
-            [[NSNotificationCenter defaultCenter] postNotificationName: kJavascriptResponse object: self userInfo:message];
             WVJBResponseCallback responseCallback = _responseCallbacks[responseId];
             responseCallback(message[@"responseData"]);
             [self.responseCallbacks removeObjectForKey:responseId];
