@@ -33,6 +33,7 @@
 - (void)callHandler:(NSString*)handlerName;
 - (void)callHandler:(NSString*)handlerName data:(id)data;
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
+- (void)removeHandler:(NSString*)handlerName;
 - (void)setWebViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate;
 - (void)disableJavscriptAlertBoxSafetyTimeout;
 

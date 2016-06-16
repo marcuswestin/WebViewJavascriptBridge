@@ -57,6 +57,13 @@
     [_base sendData:data responseCallback:responseCallback handlerName:handlerName];
 }
 
+- (void)removeHandler:(NSString *)handlerName{
+    if (!handlerName) {
+        return;
+    }
+    [_base.messageHandlers removeObjectForKey:handlerName];
+}
+
 - (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
     _base.messageHandlers[handlerName] = [handler copy];
 }
