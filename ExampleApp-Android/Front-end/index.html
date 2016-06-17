@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>WebView Bridge</title>
+    <link rel="stylesheet" href="stylesheets/grid.css">
+    <link rel="stylesheet" href="stylesheets/app.css">
+</head>
+<body>
+<div id="main">
+    <div id="device-info">
+        <h4>Device Information:</h4>
+
+        <p class="content"></p>
+    </div>
+    <div class="row">
+        <div class="col col-5">
+            <button id="message-sender" class="button">Send Message to App</button>
+        </div>
+        <div class="col col-5"></div>
+    </div>
+    <div class="message-box-container">
+        <div class="message-box-wrapper">
+            <h4>Response data from App:</h4>
+
+            <div id="message-web" class="message-box message-box-web">
+
+            </div>
+        </div>
+        <div class="message-box-wrapper">
+            <h4>Received data from App:</h4>
+
+            <div id="message-app" class="message-box message-box-app">
+            </div>
+        </div>
+    </div>
+</div>
+<script src="javascripts/meow-bridge.js"></script>
+<script>
+
+    window.ready(function () {
+
+        // Device Information
+        document.querySelector("#device-info").querySelector(".content").innerText = "iOS : " + window.webViewBridge.iOS +
+                "\nAndroid : " + window.webViewBridge.android;
+
+        // WebView Bridge Register
+        window.webViewBridge.registerHandler("demo-web", function (data, responseCallback) {
+            responseCallback(data);
+            document.querySelector("#message-app").innerText += JSON.stringify(data) + "\n";
+        });
+
+        // WebView Bridge Caller
+        document.querySelector("#message-sender").addEventListener("click", function () {
+            window.webViewBridge.callHandler("demo-app", {
+                "code": 200,
+                "type": "alert",
+                "message": {"content": "From front-end!"}
+            }, function (responseData) {
+                document.querySelector("#message-web").innerText += JSON.stringify(responseData) + "\n";
+            });
+        });
+    });
+</script>
+</body>
+</html>

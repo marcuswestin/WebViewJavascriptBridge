@@ -1,0 +1,42 @@
+.row, .col {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    border: 0;
+}
+
+.row {
+    display: flex;
+}
+
+.col {
+    display: block;
+    flex: 1;
+}
+
+.col-25 {
+    flex: 0 0 25%;
+    max-width: 25%;
+}
+
+.col-33 {
+    flex: 0 0 33.3333%;
+    max-width: 33.3333%;
+}
+
+.col-50 {
+    flex: 0 0 50%;
+    max-width: 50%;
+}
+
+.col-67 {
+    flex: 0 0 66.6666%;
+    max-width: 66.6666%;
+}
+
+.col-75 {
+    flex: 0 0 75%;
+    max-width: 75%;
+}
+
