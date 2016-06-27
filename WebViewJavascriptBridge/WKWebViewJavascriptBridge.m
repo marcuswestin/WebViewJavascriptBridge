@@ -159,6 +159,8 @@ didFailNavigation:(WKNavigation *)navigation
 }
 
 - (void)webViewWebContentProcessDidTerminate:(WKWebView *)webView {
+  if (webView != _webView) { return; }
+  
   __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
   if (strongDelegate && [strongDelegate respondsToSelector:@selector(webViewWebContentProcessDidTerminate:)]) {
     [strongDelegate webViewWebContentProcessDidTerminate:webView];
