@@ -132,6 +132,9 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
             [_base logUnkownMessage:url];
         }
         decisionHandler(WKNavigationActionPolicyCancel);
+        
+        // fix bug . if you had  handler the decision for current action, you should never go to next step.
+        return;
     }
     
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
