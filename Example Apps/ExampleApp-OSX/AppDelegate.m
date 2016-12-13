@@ -56,7 +56,8 @@
     // Load Page
     NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
     NSString* html = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
-    [[_webView mainFrame] loadHTMLString:html baseURL:nil];
+    NSURL *baseURL = [NSURL fileURLWithPath:htmlPath]
+    [[_webView mainFrame] loadHTMLString:html baseURL: baseURL];
 }
 
 
@@ -89,7 +90,8 @@
     // Load Page
     NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
     NSString* html = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
-    [_WKWebView loadHTMLString:html baseURL:nil];
+    NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
+    [_WKWebView loadHTMLString:html baseURL:baseURL];
 }
 
 -(void)_toggleExample {
