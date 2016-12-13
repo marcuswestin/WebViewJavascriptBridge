@@ -3,5 +3,5 @@ test:
 
 publish-pod:
 	# pod trunk register narcvs@gmail.com 'Marcus Westin' --description='MBA/MBP-xyz'
-	# First, create tag: `git tag -a "v5.0.X" -m "Tag v5.0.X" && git push --tags`
+	# First, bump podspec version, then commit & create tag: `git tag -a "v5.0.X" -m "Tag v5.0.X" && git push --tags`
 	pod trunk push --verbose WebViewJavascriptBridge.podspec
