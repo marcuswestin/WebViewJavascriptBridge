@@ -75,7 +75,7 @@ self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
 	NSLog(@"ObjC Echo called with: %@", data);
 	responseCallback(data);
 }];
-[self.bridge callHandler:@"JS Echo" responseCallback:^(id responseData) {
+[self.bridge callHandler:@"JS Echo" data:nil responseCallback:^(id responseData) {
 	NSLog(@"ObjC received response: %@", responseData);
 }];
 ```
