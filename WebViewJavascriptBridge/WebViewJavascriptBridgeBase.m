@@ -142,7 +142,7 @@ static int logMaxLength = 500;
 }
 
 -(void)logUnkownMessage:(NSURL*)url {
-    NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@://%@", kCustomProtocolScheme, [url path]);
+    NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@", [url absoluteString]);
 }
 
 -(NSString *)webViewJavascriptCheckCommand {
