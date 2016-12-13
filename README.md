@@ -195,7 +195,7 @@ Example:
 }];
 ```
 
-#### `[bridge setWebViewDelegate:UIWebViewDelegate*)webViewDelegate]`
+#### `[bridge setWebViewDelegate:(UIWebViewDelegate*)webViewDelegate]`
 
 Optionally, set a `UIWebViewDelegate` if you need to respond to the [web view's lifecycle events](http://developer.apple.com/library/ios/documentation/uikit/reference/UIWebViewDelegate_Protocol/Reference/Reference.html).
 
