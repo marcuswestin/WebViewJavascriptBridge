@@ -20,8 +20,6 @@
 		2CA0465C1711AC8E006DEE8B /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0465B1711AC8D006DEE8B /* ExampleApp.html */; };
 		2CAB869B1727684300BD9ED1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CAB869A1727684300BD9ED1 /* Default-568h@2x.png */; };
 		2CEB3EC01602563600548120 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CEB3EBF1602563600548120 /* UIKit.framework */; };
-		2CEB3EC21602563600548120 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CEB3EC11602563600548120 /* Foundation.framework */; };
-		2CEB3EC41602563600548120 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CEB3EC31602563600548120 /* CoreGraphics.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,8 +57,6 @@
 			files = (
 				0E4E9D4C1A101E0B00043087 /* WebKit.framework in Frameworks */,
 				2CEB3EC01602563600548120 /* UIKit.framework in Frameworks */,
-				2CEB3EC21602563600548120 /* Foundation.framework in Frameworks */,
-				2CEB3EC41602563600548120 /* CoreGraphics.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
