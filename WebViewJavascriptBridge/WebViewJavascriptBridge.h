@@ -2,38 +2,28 @@
 //  WebViewJavascriptBridge.h
 //  ExampleApp-iOS
 //
-//  Created by Marcus Westin on 6/14/13.
-//  Copyright (c) 2013 Marcus Westin. All rights reserved.
+//  Created by ryan on 14/12/2016.
+//  Copyright © 2016 Marcus Westin. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#ifndef WEBVIEW_JAVASCRIPT_BRIDGE_H
+#define WEBVIEW_JAVASCRIPT_BRIDGE_H
+
+#if __has_include(<WebViewJavascriptBridge/WebViewJavascriptBridge.h>)
+
+#import <WebViewJavascriptBridge/WebViewJavascriptBridgeProtocol.h>
+#import <WebViewJavascriptBridge/_WebViewJavascriptBridge.h>
+#import <WebViewJavascriptBridge/WKWebViewJavascriptBridge.h>
+#import <WebViewJavascriptBridge/WebViewJavascriptBridgeBase.h>
+
+#else
+
+#import "WebViewJavascriptBridgeProtocol.h"
+#import "_WebViewJavascriptBridge.h"
+#import "WKWebViewJavascriptBridge.h"
 #import "WebViewJavascriptBridgeBase.h"
 
-#if defined __MAC_OS_X_VERSION_MAX_ALLOWED
-    #import <WebKit/WebKit.h>
-    #define WVJB_PLATFORM_OSX
-    #define WVJB_WEBVIEW_TYPE WebView
-    #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<WebViewJavascriptBridgeBaseDelegate>
-    #define WVJB_WEBVIEW_DELEGATE_INTERFACE NSObject<WebViewJavascriptBridgeBaseDelegate, WebPolicyDelegate>
-#elif defined __IPHONE_OS_VERSION_MAX_ALLOWED
-    #import <UIKit/UIWebView.h>
-    #define WVJB_PLATFORM_IOS
-    #define WVJB_WEBVIEW_TYPE UIWebView
-    #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<UIWebViewDelegate>
-    #define WVJB_WEBVIEW_DELEGATE_INTERFACE NSObject<UIWebViewDelegate, WebViewJavascriptBridgeBaseDelegate>
-#endif
 
-@interface WebViewJavascriptBridge : WVJB_WEBVIEW_DELEGATE_INTERFACE
+#endif /* __has_include(<WebViewJavascriptBridge/WebViewJavascriptBridge.h>) */
 
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView;
-+ (void)enableLogging;
-+ (void)setLogMaxLength:(int)length;
-
-- (void)registerHandler:(NSString*)handlerName handler:(WVJBHandler)handler;
-- (void)callHandler:(NSString*)handlerName;
-- (void)callHandler:(NSString*)handlerName data:(id)data;
-- (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
-- (void)setWebViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate;
-- (void)disableJavscriptAlertBoxSafetyTimeout;
-
-@end
+#endif /* WEBVIEW_JAVASCRIPT_BRIDGE_H */
