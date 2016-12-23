@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-#define kCustomProtocolScheme @"http"
+#define kCustomProtocolScheme @"https"
 #define kQueueHasMessage      @"__wvjb_queue_message__"
 #define kBridgeLoaded         @"__bridge_loaded__"
 

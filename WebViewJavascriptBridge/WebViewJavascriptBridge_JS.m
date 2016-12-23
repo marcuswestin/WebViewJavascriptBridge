@@ -37,7 +37,7 @@ NSString * WebViewJavascriptBridge_js() {
 	var sendMessageQueue = [];
 	var messageHandlers = {};
 	
-	var CUSTOM_PROTOCOL_SCHEME = 'http';
+	var CUSTOM_PROTOCOL_SCHEME = 'https';
 	var QUEUE_HAS_MESSAGE = '__wvjb_queue_message__';
 	
 	var responseCallbacks = {};
