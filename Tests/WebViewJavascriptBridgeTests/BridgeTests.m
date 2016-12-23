@@ -27,10 +27,14 @@ static NSString *const echoHandler = @"echoHandler";
     [super setUp];
     
     UIViewController *rootVC = [[(AppDelegate *)[[UIApplication sharedApplication] delegate] window] rootViewController];
-    _uiWebView = [[UIWebView alloc] initWithFrame:rootVC.view.bounds];
-    CGRect wkFrame = _uiWebView.frame;
-    wkFrame.origin.y += _uiWebView.frame.size.height;
-    _wkWebView = [[WKWebView alloc] initWithFrame:wkFrame];
+    CGRect frame = rootVC.view.bounds;
+    frame.size.height /= 2;
+    _uiWebView = [[UIWebView alloc] initWithFrame:frame];
+    _uiWebView.backgroundColor = [UIColor blueColor];
+    [rootVC.view addSubview:_uiWebView];
+    frame.origin.y += frame.size.height;
+    _wkWebView = [[WKWebView alloc] initWithFrame:frame];
+    _wkWebView.backgroundColor = [UIColor redColor];
     [rootVC.view addSubview:_wkWebView];
 }
 
