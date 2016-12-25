@@ -8,6 +8,10 @@
 
 #import "WebViewJavascriptBridge.h"
 
+#if defined(supportsWKWebView)
+#import "WKWebViewJavascriptBridge.h"
+#endif
+
 #if __has_feature(objc_arc_weak)
     #define WVJB_WEAK __weak
 #else
@@ -31,10 +35,19 @@
     [WebViewJavascriptBridgeBase setLogMaxLength:length];
 }
 
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView {
-    WebViewJavascriptBridge* bridge = [[self alloc] init];
-    [bridge _platformSpecificSetup:webView];
-    return bridge;
++ (instancetype)bridgeForWebView:(id)webView {
+#if defined supportsWKWebView
+    if ([webView isKindOfClass:[WKWebView class]]) {
+        return (WebViewJavascriptBridge*) [WKWebViewJavascriptBridge bridgeForWebView:webView];
+    }
+#endif
+    if ([webView isKindOfClass:[WVJB_WEBVIEW_TYPE class]]) {
+        WebViewJavascriptBridge* bridge = [[self alloc] init];
+        [bridge _platformSpecificSetup:webView];
+        return bridge;
+    }
+    [NSException raise:@"BadWebViewType" format:@"Unknown web view type."];
+    return nil;
 }
 
 - (void)setWebViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate {

@@ -9,13 +9,12 @@
 #import "AppDelegate.h"
 #import <WebKit/WebKit.h>
 #import "WebViewJavascriptBridge.h"
-#import "WKWebViewJavascriptBridge.h"
 
 @implementation AppDelegate {
     WebView* _webView;
     WKWebView *_WKWebView;
     WebViewJavascriptBridge* _bridge;
-    WKWebViewJavascriptBridge* _WKBridge;
+    WebViewJavascriptBridge* _WKBridge;
     NSView* _WKWebViewWrapper;
 }
 
@@ -63,7 +62,7 @@
 
 - (void)_configureWKWebview {
     // Create Bridge
-    _WKBridge = [WKWebViewJavascriptBridge bridgeForWebView:_WKWebView];
+    _WKBridge = [WebViewJavascriptBridge bridgeForWebView:_WKWebView];
     
     [_WKBridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);

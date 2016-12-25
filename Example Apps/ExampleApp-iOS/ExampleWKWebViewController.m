@@ -7,11 +7,11 @@
 //
 
 #import "ExampleWKWebViewController.h"
-#import "WKWebViewJavascriptBridge.h"
+#import "WebViewJavascriptBridge.h"
 
 @interface ExampleWKWebViewController ()
 
-@property WKWebViewJavascriptBridge* bridge;
+@property WebViewJavascriptBridge* bridge;
 
 @end
 
@@ -23,8 +23,8 @@
     WKWebView* webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
     webView.navigationDelegate = self;
     [self.view addSubview:webView];
-    [WKWebViewJavascriptBridge enableLogging];
-    _bridge = [WKWebViewJavascriptBridge bridgeForWebView:webView];
+    [WebViewJavascriptBridge enableLogging];
+    _bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
     [_bridge setWebViewDelegate:self];
     
     [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {

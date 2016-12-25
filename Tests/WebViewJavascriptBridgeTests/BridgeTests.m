@@ -9,7 +9,6 @@
 #import <XCTest/XCTest.h>
 
 #import "WebViewJavascriptBridge.h"
-#import "WKWebViewJavascriptBridge.h"
 #import "AppDelegate.h"
 
 static NSString *const echoHandler = @"echoHandler";
@@ -21,8 +20,7 @@ static NSString *const echoHandler = @"echoHandler";
 @implementation BridgeTests {
     UIWebView *_uiWebView;
     WKWebView *_wkWebView;
-    WebViewJavascriptBridge* _uiWebViewBridge;
-    WKWebViewJavascriptBridge* _wkWebViewBridge;
+    NSMutableArray* _bridgeRefs;
 }
 
 - (void)setUp {
@@ -38,6 +36,8 @@ static NSString *const echoHandler = @"echoHandler";
     _wkWebView = [[WKWebView alloc] initWithFrame:frame];
     _wkWebView.backgroundColor = [UIColor redColor];
     [rootVC.view addSubview:_wkWebView];
+    
+    _bridgeRefs = [NSMutableArray array];
 }
 
 - (void)tearDown {
@@ -46,14 +46,10 @@ static NSString *const echoHandler = @"echoHandler";
     [_wkWebView removeFromSuperview];
 }
 
-- (WebViewJavascriptBridge*)bridgeForCls:(Class)cls webView:(id)webView {
-    if (cls == [WebViewJavascriptBridge class]) {
-        _uiWebViewBridge = [WebViewJavascriptBridge bridgeForWebView:webView];
-        return _uiWebViewBridge;
-    } else {
-        _wkWebViewBridge = [WKWebViewJavascriptBridge bridgeForWebView:_wkWebView];
-        return (WebViewJavascriptBridge*) _wkWebViewBridge;
-    }
+- (WebViewJavascriptBridge*)bridgeForWebView:(id)webView {
+    WebViewJavascriptBridge* bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
+    [_bridgeRefs addObject:bridge];
+    return bridge;
 }
 
 static void loadEchoSample(id webView) {
@@ -64,13 +60,13 @@ static void loadEchoSample(id webView) {
 const NSTimeInterval timeoutSec = 100;
 
 - (void)testInitialization {
-    [self classSpecificTestInitialization:[WebViewJavascriptBridge class] webView:_uiWebView];
-    [self classSpecificTestInitialization:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self classSpecificTestInitialization:_uiWebView];
+    [self classSpecificTestInitialization:_wkWebView];
     [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
 }
-- (void)classSpecificTestInitialization:(Class)cls webView:(id)webView {
+- (void)classSpecificTestInitialization:(id)webView {
     XCTestExpectation *startup = [self expectationWithDescription:@"Startup completed"];
-    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
+    WebViewJavascriptBridge *bridge = [self bridgeForWebView:webView];
     [bridge registerHandler:@"Greet" handler:^(id data, WVJBResponseCallback responseCallback) {
         XCTAssertEqualObjects(data, @"Hello world");
         [startup fulfill];
@@ -81,12 +77,12 @@ const NSTimeInterval timeoutSec = 100;
 }
 
 - (void)testEchoHandler {
-    [self classSpecificTestEchoHandler:[WebViewJavascriptBridge class] webView:_uiWebView];
-    [self classSpecificTestEchoHandler:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self classSpecificTestEchoHandler:_uiWebView];
+    [self classSpecificTestEchoHandler:_wkWebView];
     [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
 }
-- (void)classSpecificTestEchoHandler:(Class)cls webView:(id)webView {
-    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
+- (void)classSpecificTestEchoHandler:(id)webView {
+    WebViewJavascriptBridge *bridge = [self bridgeForWebView:webView];
     
     XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
     [bridge callHandler:echoHandler data:@"testEchoHandler" responseCallback:^(id responseData) {
@@ -98,12 +94,12 @@ const NSTimeInterval timeoutSec = 100;
 }
 
 - (void)testEchoHandlerAfterSetup {
-    [self classSpecificTestEchoHandlerAfterSetup:[WebViewJavascriptBridge class] webView:_uiWebView];
-    [self classSpecificTestEchoHandlerAfterSetup:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self classSpecificTestEchoHandlerAfterSetup:_uiWebView];
+    [self classSpecificTestEchoHandlerAfterSetup:_wkWebView];
     [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
 }
-- (void)classSpecificTestEchoHandlerAfterSetup:(Class)cls webView:(id)webView {
-    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
+- (void)classSpecificTestEchoHandlerAfterSetup:(id)webView {
+    WebViewJavascriptBridge *bridge = [self bridgeForWebView:webView];
     
     XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
     loadEchoSample(webView);
@@ -116,12 +112,12 @@ const NSTimeInterval timeoutSec = 100;
 }
 
 - (void)testObjectEncoding {
-    [self classSpecificTestObjectEncoding:[WebViewJavascriptBridge class] webView:_uiWebView];
-    [self classSpecificTestObjectEncoding:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self classSpecificTestObjectEncoding:_uiWebView];
+    [self classSpecificTestObjectEncoding:_wkWebView];
     [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
 }
-- (void)classSpecificTestObjectEncoding:(Class)cls webView:(id)webView {
-    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
+- (void)classSpecificTestObjectEncoding:(id)webView {
+    WebViewJavascriptBridge *bridge = [self bridgeForWebView:webView];
     
     void (^echoObject)(id) = ^void(id object) {
         XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
@@ -140,12 +136,12 @@ const NSTimeInterval timeoutSec = 100;
 }
 
 - (void)testJavascriptReceiveResponse {
-    [self classSpecificTestJavascriptReceiveResponse:[WebViewJavascriptBridge class] webView:_uiWebView];
-    [self classSpecificTestJavascriptReceiveResponse:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self classSpecificTestJavascriptReceiveResponse:_uiWebView];
+    [self classSpecificTestJavascriptReceiveResponse:_wkWebView];
     [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
 }
-- (void)classSpecificTestJavascriptReceiveResponse:(Class)cls webView:(id)webView {
-    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
+- (void)classSpecificTestJavascriptReceiveResponse:(id)webView {
+    WebViewJavascriptBridge *bridge = [self bridgeForWebView:webView];
     loadEchoSample(webView);
     XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
     [bridge registerHandler:@"objcEchoToJs" handler:^(id data, WVJBResponseCallback responseCallback) {
@@ -158,12 +154,12 @@ const NSTimeInterval timeoutSec = 100;
 }
 
 - (void)testJavascriptReceiveResponseWithoutSafetyTimeout {
-    [self classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:[WebViewJavascriptBridge class] webView:_uiWebView];
-    [self classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:[WKWebViewJavascriptBridge class] webView:_wkWebView];
+    [self classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:_uiWebView];
+    [self classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:_wkWebView];
     [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
 }
-- (void)classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:(Class)cls webView:(id)webView {
-    WebViewJavascriptBridge *bridge = [self bridgeForCls:cls webView:webView];
+- (void)classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:(id)webView {
+    WebViewJavascriptBridge *bridge = [self bridgeForWebView:webView];
     [bridge disableJavscriptAlertBoxSafetyTimeout];
     loadEchoSample(webView);
     XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];

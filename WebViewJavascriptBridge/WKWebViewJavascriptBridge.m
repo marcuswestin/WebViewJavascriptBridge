@@ -8,7 +8,7 @@
 
 #import "WKWebViewJavascriptBridge.h"
 
-#if defined(supportsWKWebKit)
+#if defined supportsWKWebView
 
 @implementation WKWebViewJavascriptBridge {
     __weak WKWebView* _webView;
