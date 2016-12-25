@@ -16,6 +16,11 @@ Version History
 Next version
 + Pretty-print json in log messages
 
+v5.1.0
++ A single instantiation function for all webview types.
++ Improved test runner.
++ New instructions & templates for github issues and pull requests.
+
 v5.0.5
 + Run all tests for both UIWebView and WKWebView webviews/bridges.
 + Allow for calling handlers from JS with just a handler name and responseCallback function (#184).

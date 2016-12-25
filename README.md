@@ -23,6 +23,7 @@ WebViewJavascriptBridge is used by a range of companies and projects. This is a 
 - [FRIL](https://fril.jp)
 - [留白·WHITE](http://liubaiapp.com)
 - [BrowZine](http://thirdiron.com/browzine/)
+- ... & many more!
 
 Installation (iOS & OSX)
 ------------------------
