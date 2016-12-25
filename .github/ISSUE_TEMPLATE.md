@@ -1,6 +1,6 @@
 # WVJB Bug Report
 
-Thanks for reporting an issue with WebViewJavascriptBridge!
+Thanks for reporting an issue with WebViewJavascriptBridge.
 
 ### Do these 4 things and I will fix your problem!
 
