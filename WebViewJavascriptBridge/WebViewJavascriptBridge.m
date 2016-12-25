@@ -24,8 +24,12 @@
 /* API
  *****/
 
-+ (void)enableLogging { [WebViewJavascriptBridgeBase enableLogging]; }
-+ (void)setLogMaxLength:(int)length { [WebViewJavascriptBridgeBase setLogMaxLength:length]; }
++ (void)enableLogging {
+    [WebViewJavascriptBridgeBase enableLogging];
+}
++ (void)setLogMaxLength:(int)length {
+    [WebViewJavascriptBridgeBase setLogMaxLength:length];
+}
 
 + (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView {
     WebViewJavascriptBridge* bridge = [[self alloc] init];
@@ -76,8 +80,7 @@
     _webViewDelegate = nil;
 }
 
-- (NSString*) _evaluateJavascript:(NSString*)javascriptCommand
-{
+- (NSString*) _evaluateJavascript:(NSString*)javascriptCommand {
     return [_webView stringByEvaluatingJavaScriptFromString:javascriptCommand];
 }
 
@@ -87,9 +90,7 @@
 
 - (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView {
     _webView = webView;
-    
     _webView.policyDelegate = self;
-    
     _base = [[WebViewJavascriptBridgeBase alloc] init];
     _base.delegate = self;
 }
@@ -98,8 +99,7 @@
     _webView.policyDelegate = nil;
 }
 
-- (void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener
-{
+- (void)webView:(WebView *)webView decidePolicyForNavigationAction:(NSDictionary *)actionInformation request:(NSURLRequest *)request frame:(WebFrame *)frame decisionListener:(id<WebPolicyDecisionListener>)listener {
     if (webView != _webView) { return; }
     
     NSURL *url = [request URL];
@@ -157,6 +157,7 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     if (webView != _webView) { return YES; }
+    
     NSURL *url = [request URL];
     __strong WVJB_WEBVIEW_DELEGATE_TYPE* strongDelegate = _webViewDelegate;
     if ([_base isCorrectProcotocolScheme:url]) {
