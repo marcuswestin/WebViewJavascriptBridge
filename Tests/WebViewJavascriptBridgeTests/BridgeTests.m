@@ -21,6 +21,8 @@ static NSString *const echoHandler = @"echoHandler";
 @implementation BridgeTests {
     UIWebView *_uiWebView;
     WKWebView *_wkWebView;
+    WebViewJavascriptBridge* _uiWebViewBridge;
+    WKWebViewJavascriptBridge* _wkWebViewBridge;
 }
 
 - (void)setUp {
@@ -42,6 +44,16 @@ static NSString *const echoHandler = @"echoHandler";
     [super tearDown];
     [_uiWebView removeFromSuperview];
     [_wkWebView removeFromSuperview];
+}
+
+- (WebViewJavascriptBridge*)bridgeForCls:(Class)cls webView:(id)webView {
+    if (cls == [WebViewJavascriptBridge class]) {
+        _uiWebViewBridge = [WebViewJavascriptBridge bridgeForWebView:webView];
+        return _uiWebViewBridge;
+    } else {
+        _wkWebViewBridge = [WKWebViewJavascriptBridge bridgeForWebView:_wkWebView];
+        return (WebViewJavascriptBridge*) _wkWebViewBridge;
+    }
 }
 
 static void loadEchoSample(id webView) {
@@ -162,14 +174,5 @@ const NSTimeInterval timeoutSec = 100;
         XCTAssertEqualObjects(responseData, @"Response from JS");
         [callbackInvocked fulfill];
     }];
-}
-
-
-- (WebViewJavascriptBridge*)bridgeForCls:(Class)cls webView:(id)webView {
-    if (cls == [WebViewJavascriptBridge class]) {
-        return [WebViewJavascriptBridge bridgeForWebView:webView];
-    } else {
-        return (WebViewJavascriptBridge*)[WKWebViewJavascriptBridge bridgeForWebView:_wkWebView];
-    }
 }
 @end
