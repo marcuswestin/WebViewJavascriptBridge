@@ -20,13 +20,14 @@ static int logMaxLength = 500;
 + (void)enableLogging { logging = true; }
 + (void)setLogMaxLength:(int)length { logMaxLength = length;}
 
--(id)init {
-    self = [super init];
-    self.messageHandlers = [NSMutableDictionary dictionary];
-    self.startupMessageQueue = [NSMutableArray array];
-    self.responseCallbacks = [NSMutableDictionary dictionary];
-    _uniqueId = 0;
-    return(self);
+- (id)init {
+    if (self = [super init]) {
+        self.messageHandlers = [NSMutableDictionary dictionary];
+        self.startupMessageQueue = [NSMutableArray array];
+        self.responseCallbacks = [NSMutableDictionary dictionary];
+        _uniqueId = 0;
+    }
+    return self;
 }
 
 - (void)dealloc {
