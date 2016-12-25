@@ -13,7 +13,7 @@ Thanks for reporting an issue with WebViewJavascriptBridge.
 
 I will take it from there and promise that I'll fix your problem ASAP.
 
-#### If you don't do these 3 things then I can't help you effectively.
+#### If you don't do this then I can't help you!
 
 And I probably won't :)
 
