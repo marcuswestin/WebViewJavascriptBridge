@@ -20,13 +20,14 @@ static int logMaxLength = 500;
 + (void)enableLogging { logging = true; }
 + (void)setLogMaxLength:(int)length { logMaxLength = length;}
 
--(id)init {
-    self = [super init];
-    self.messageHandlers = [NSMutableDictionary dictionary];
-    self.startupMessageQueue = [NSMutableArray array];
-    self.responseCallbacks = [NSMutableDictionary dictionary];
-    _uniqueId = 0;
-    return(self);
+- (instancetype)init {
+    if (self = [super init]) {
+        self.messageHandlers = [NSMutableDictionary dictionary];
+        self.startupMessageQueue = [NSMutableArray array];
+        self.responseCallbacks = [NSMutableDictionary dictionary];
+        _uniqueId = 0;
+    }
+    return self;
 }
 
 - (void)dealloc {
@@ -121,7 +122,7 @@ static int logMaxLength = 500;
     }
 }
 
--(BOOL)isCorrectProcotocolScheme:(NSURL*)url {
+- (BOOL)isCorrectProcotocolScheme:(NSURL*)url {
     if([[url scheme] isEqualToString:kCustomProtocolScheme]){
         return YES;
     } else {
@@ -129,7 +130,7 @@ static int logMaxLength = 500;
     }
 }
 
--(BOOL)isQueueMessageURL:(NSURL*)url {
+- (BOOL)isQueueMessageURL:(NSURL*)url {
     if([[url host] isEqualToString:kQueueHasMessage]){
         return YES;
     } else {
@@ -137,19 +138,19 @@ static int logMaxLength = 500;
     }
 }
 
--(BOOL)isBridgeLoadedURL:(NSURL*)url {
+- (BOOL)isBridgeLoadedURL:(NSURL*)url {
     return ([[url scheme] isEqualToString:kCustomProtocolScheme] && [[url host] isEqualToString:kBridgeLoaded]);
 }
 
--(void)logUnkownMessage:(NSURL*)url {
+- (void)logUnkownMessage:(NSURL*)url {
     NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@", [url absoluteString]);
 }
 
--(NSString *)webViewJavascriptCheckCommand {
+- (NSString *)webViewJavascriptCheckCommand {
     return @"typeof WebViewJavascriptBridge == \'object\';";
 }
 
--(NSString *)webViewJavascriptFetchQueyCommand {
+- (NSString *)webViewJavascriptFetchQueyCommand {
     return @"WebViewJavascriptBridge._fetchQueue();";
 }
 

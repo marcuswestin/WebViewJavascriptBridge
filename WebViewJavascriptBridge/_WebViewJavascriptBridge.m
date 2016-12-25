@@ -6,7 +6,7 @@
 //  Copyright (c) 2013 Marcus Westin. All rights reserved.
 //
 
-#import "WebViewJavascriptBridge.h"
+#import "_WebViewJavascriptBridge.h"
 
 #if __has_feature(objc_arc_weak)
     #define WVJB_WEAK __weak
@@ -59,6 +59,10 @@
 
 - (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
     _base.messageHandlers[handlerName] = [handler copy];
+}
+
+- (void)reset {
+    [_base reset];
 }
 
 - (void)disableJavscriptAlertBoxSafetyTimeout {
