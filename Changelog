@@ -13,8 +13,9 @@ Release Checklist
 Version History
 ---------------
 
-Next version
-+ Pretty-print json in log messages
+v5.1.1
++ Swift unit tests and examples
++ Implement removeHandler
 
 v5.1.0
 + A single instantiation function for all webview types.
