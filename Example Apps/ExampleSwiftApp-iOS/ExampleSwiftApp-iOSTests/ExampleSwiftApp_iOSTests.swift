@@ -149,6 +149,7 @@ class ExampleSwiftApp_iOSTests: XCTestCase {
         loadEchoSample(webView);
         let callbackInvoked = expectation(description: "Callback invoked")
         bridge.registerHandler("objcEchoToJs") { (data, responseCallback) in
+            XCTAssertEqual(data as! NSDictionary, ["foo":"bar"]);
             responseCallback!(data)
         }
         bridge.callHandler("jsRcvResponseTest", data:nil) { (responseData) in
@@ -168,11 +169,42 @@ class ExampleSwiftApp_iOSTests: XCTestCase {
         loadEchoSample(webView);
         let callbackInvoked = expectation(description: "Callback invoked")
         bridge.registerHandler("objcEchoToJs") { (data, responseCallback) in
+            XCTAssertEqual(data as! NSDictionary, ["foo":"bar"]);
             responseCallback!(data);
         }
         bridge.callHandler("jsRcvResponseTest", data:nil) { (responseData) in
             XCTAssertEqual(responseData as! String, "Response from JS");
             callbackInvoked.fulfill()
+        }
+    }
+    
+    func testRemoveHandler() {
+        _testRemoveHandler(uiWebView)
+        _testRemoveHandler(wkWebView)
+        waitForExpectations(timeout: timeout, handler: nil)
+    }
+    func _testRemoveHandler(_ webView: Any) {
+        loadEchoSample(webView);
+        let bridge = bridgeForWebView(webView)
+        let callbackNotInvoked = expectation(description: "Callback invoked")
+        var count = 0
+        bridge.registerHandler("objcEchoToJs") { (data, callback) in
+            count += 1
+            callback!(data)
+        }
+        bridge.callHandler("jsRcvResponseTest", data:nil) { (responseData) in
+            XCTAssertEqual(responseData as! String, "Response from JS");
+            bridge.removeHandler("objcEchoToJs")
+            bridge.callHandler("jsRcvResponseTest", data:nil) { (responseData) in
+                // Since we have removed the "objcEchoToJs" handler, and since the
+                // echo.html javascript won't call the response callback until it has
+                // received a response from "objcEchoToJs", we should never get here
+                XCTAssert(false)
+            }
+            bridge.callHandler("echoHandler", data:nil ) { (responseData) in
+                XCTAssertEqual(count, 1)
+                callbackNotInvoked.fulfill()
+            }
         }
     }
     

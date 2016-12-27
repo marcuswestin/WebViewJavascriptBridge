@@ -81,6 +81,10 @@
     _base.messageHandlers[handlerName] = [handler copy];
 }
 
+- (void)removeHandler:(NSString *)handlerName {
+    [_base.messageHandlers removeObjectForKey:handlerName];
+}
+
 - (void)disableJavscriptAlertBoxSafetyTimeout {
     [_base disableJavscriptAlertBoxSafetyTimeout];
 }
