@@ -36,6 +36,9 @@
 }
 
 + (instancetype)bridgeForWebView:(id)webView {
+    return [self bridge:webView];
+}
++ (instancetype)bridge:(id)webView {
 #if defined supportsWKWebView
     if ([webView isKindOfClass:[WKWebView class]]) {
         return (WebViewJavascriptBridge*) [WKWebViewJavascriptBridge bridgeForWebView:webView];
@@ -97,9 +100,9 @@
     return [_webView stringByEvaluatingJavaScriptFromString:javascriptCommand];
 }
 
+#if defined WVJB_PLATFORM_OSX
 /* Platform specific internals: OSX
  **********************************/
-#if defined WVJB_PLATFORM_OSX
 
 - (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView {
     _webView = webView;
@@ -135,9 +138,9 @@
 
 
 
+#elif defined WVJB_PLATFORM_IOS
 /* Platform specific internals: iOS
  **********************************/
-#elif defined WVJB_PLATFORM_IOS
 
 - (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView {
     _webView = webView;

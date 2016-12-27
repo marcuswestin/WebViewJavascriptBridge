@@ -1,0 +1,35 @@
+{
+  "name": "WebViewJavascriptBridge",
+  "version": "5.1.0",
+  "summary": "An iOS & OSX bridge for sending messages between Obj-C/Swift and JavaScript in WKWebViews, UIWebViews & WebViews.",
+  "homepage": "https://github.com/marcuswestin/WebViewJavascriptBridge",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "marcuswestin": "marcus.westin@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/marcuswestin/WebViewJavascriptBridge.git",
+    "tag": "v5.1.0"
+  },
+  "platforms": {
+    "ios": "5.0",
+    "osx": ""
+  },
+  "requires_arc": true,
+  "ios": {
+    "source_files": "WebViewJavascriptBridge/*.{h,m}",
+    "private_header_files": "WebViewJavascriptBridge/WebViewJavascriptBridge_JS.h",
+    "frameworks": [
+      "UIKit",
+      "WebKit"
+    ]
+  },
+  "osx": {
+    "source_files": "WebViewJavascriptBridge/*.{h,m}",
+    "private_header_files": "WebViewJavascriptBridge/WebViewJavascriptBridge_JS.h"
+  },
+  "frameworks": "WebKit"
+}

@@ -12,6 +12,7 @@
 		2C3E7C641C5A928700A1E322 /* WebViewJavascriptBridge_JS.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3E7C5E1C5A928700A1E322 /* WebViewJavascriptBridge_JS.m */; };
 		2C3E7C651C5A928700A1E322 /* WebViewJavascriptBridgeBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3E7C601C5A928700A1E322 /* WebViewJavascriptBridgeBase.m */; };
 		2C3E7C661C5A928700A1E322 /* WKWebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3E7C621C5A928700A1E322 /* WKWebViewJavascriptBridge.m */; };
+		2C52B1E21E11858800517DAF /* BridgeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C52B1E11E11858800517DAF /* BridgeTests.swift */; };
 		2C864FFD1C60FC8A00954B70 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2C864FFC1C60FC8A00954B70 /* WebKit.framework */; };
 		3D99867E1AE2A3B2001DDA2C /* echo.html in Resources */ = {isa = PBXBuildFile; fileRef = 3D99867D1AE2A3B2001DDA2C /* echo.html */; };
 		3D9E5F2F1AE288E5009D1C36 /* BridgeTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E5F2E1AE288E5009D1C36 /* BridgeTests.m */; };
@@ -40,6 +41,8 @@
 		2C3E7C601C5A928700A1E322 /* WebViewJavascriptBridgeBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridgeBase.m; sourceTree = "<group>"; };
 		2C3E7C611C5A928700A1E322 /* WKWebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WKWebViewJavascriptBridge.h; sourceTree = "<group>"; };
 		2C3E7C621C5A928700A1E322 /* WKWebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WKWebViewJavascriptBridge.m; sourceTree = "<group>"; };
+		2C52B1E01E11858800517DAF /* WebViewJavascriptBridgeTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WebViewJavascriptBridgeTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		2C52B1E11E11858800517DAF /* BridgeTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BridgeTests.swift; sourceTree = "<group>"; };
 		2C864FFC1C60FC8A00954B70 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		3D0FE4751AE2886500BB4104 /* WebViewJavascriptBridgeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WebViewJavascriptBridgeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3D0FE47B1AE2886500BB4104 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -115,6 +118,8 @@
 			children = (
 				3D0FE47A1AE2886500BB4104 /* Supporting Files */,
 				3D9E5F2E1AE288E5009D1C36 /* BridgeTests.m */,
+				2C52B1E11E11858800517DAF /* BridgeTests.swift */,
+				2C52B1E01E11858800517DAF /* WebViewJavascriptBridgeTests-Bridging-Header.h */,
 			);
 			path = WebViewJavascriptBridgeTests;
 			sourceTree = "<group>";
@@ -205,6 +210,7 @@
 				TargetAttributes = {
 					3D0FE4741AE2886500BB4104 = {
 						CreatedOnToolsVersion = 6.3;
+						LastSwiftMigration = 0820;
 						TestTargetID = 3DCCF7D51AE28C2900CE7C51;
 					};
 					3DCCF7D51AE28C2900CE7C51 = {
@@ -259,6 +265,7 @@
 				2C3E7C661C5A928700A1E322 /* WKWebViewJavascriptBridge.m in Sources */,
 				3D9E5F2F1AE288E5009D1C36 /* BridgeTests.m in Sources */,
 				2C3E7C631C5A928700A1E322 /* WebViewJavascriptBridge.m in Sources */,
+				2C52B1E21E11858800517DAF /* BridgeTests.swift in Sources */,
 				2C3E7C641C5A928700A1E322 /* WebViewJavascriptBridge_JS.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -369,6 +376,7 @@
 		3D0FE4821AE2886500BB4104 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -379,6 +387,9 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "in.marcuswestin.WebViewJavascriptBridge.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WebViewJavascriptBridgeTests/WebViewJavascriptBridgeTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WebViewJavascriptBridgeTestHost.app/WebViewJavascriptBridgeTestHost";
 			};
 			name = Debug;
@@ -386,12 +397,15 @@
 		3D0FE4831AE2886500BB4104 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = WebViewJavascriptBridgeTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "in.marcuswestin.WebViewJavascriptBridge.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "WebViewJavascriptBridgeTests/WebViewJavascriptBridgeTests-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/WebViewJavascriptBridgeTestHost.app/WebViewJavascriptBridgeTestHost";
 			};
 			name = Release;
