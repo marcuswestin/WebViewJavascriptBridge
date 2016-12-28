@@ -4,7 +4,7 @@ test:
 	xcodebuild test -workspace Example\ Apps/ExampleSwiftApp-iOS/ExampleSwiftApp-iOS.xcworkspace -scheme ExampleSwiftApp-iOS \
 		-destination 'platform=iOS Simulator,name=iPhone 7'
 
-test-all:
+test-travis-ci:
 	xcodebuild test -project Tests/WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge \
 		-destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.4'  \
 		-destination 'platform=iOS Simulator,name=iPhone 6s,OS=9.3'  \
