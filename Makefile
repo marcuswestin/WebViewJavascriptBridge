@@ -9,8 +9,6 @@ test-travis-ci:
 		-destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.4'  \
 		-destination 'platform=iOS Simulator,name=iPhone 6s,OS=9.3'  \
 		-destination 'platform=iOS Simulator,name=iPhone 7,OS=10.1'
-	xcodebuild test -workspace Example\ Apps/ExampleSwiftApp-iOS/ExampleSwiftApp-iOS.xcworkspace -scheme ExampleSwiftApp-iOS \
-		-destination 'platform=iOS Simulator,name=iPhone 7,OS=10.1'
 
 publish-pod:
 	# pod trunk register narcvs@gmail.com 'Marcus Westin' --description='MBA/MBP-xyz'
