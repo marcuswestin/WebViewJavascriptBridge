@@ -15,14 +15,14 @@ static NSString *const echoHandler = @"echoHandler";
 
 @interface BridgeTests : XCTestCase
 @end
-@interface TestWebPageLoadDelegate : NSObject<UIWebViewDelegate>
+@interface TestWebPageLoadDelegate : NSObject<UIWebViewDelegate, WKNavigationDelegate>
 @property XCTestExpectation* expectation;
 @end
 
 @implementation BridgeTests {
     UIWebView *_uiWebView;
     WKWebView *_wkWebView;
-    NSMutableArray* _bridgeRefs;
+    NSMutableArray* _retains;
 }
 
 - (void)setUp {
@@ -39,7 +39,7 @@ static NSString *const echoHandler = @"echoHandler";
     _wkWebView.backgroundColor = [UIColor redColor];
     [rootVC.view addSubview:_wkWebView];
     
-    _bridgeRefs = [NSMutableArray array];
+    _retains = [NSMutableArray array];
 }
 
 - (void)tearDown {
@@ -50,7 +50,7 @@ static NSString *const echoHandler = @"echoHandler";
 
 - (WebViewJavascriptBridge*)bridgeForWebView:(id)webView {
     WebViewJavascriptBridge* bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
-    [_bridgeRefs addObject:bridge];
+    [_retains addObject:bridge];
     return bridge;
 }
 
@@ -175,24 +175,26 @@ const NSTimeInterval timeoutSec = 5;
 }
 
 - (void)testWebpageLoad {
-    TestWebPageLoadDelegate* delegate = [self classSpecificTestWebpageLoad:_uiWebView]; // to retain it
-//    [self classSpecificTestWebpageLoad:_wkWebView];
+    [self classSpecificTestWebpageLoad:_uiWebView];
+    [self classSpecificTestWebpageLoad:_wkWebView];
     [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
-    NSLog(@"Retain delegate %@", delegate);
 }
-- (TestWebPageLoadDelegate*)classSpecificTestWebpageLoad:(id)webView {
+- (void)classSpecificTestWebpageLoad:(id)webView {
     WebViewJavascriptBridge* bridge = [self bridgeForWebView:webView];
     TestWebPageLoadDelegate* delegate = [TestWebPageLoadDelegate new];
     delegate.expectation = [self expectationWithDescription:@"Webpage loaded"];
+    [_retains addObject:delegate];
     [bridge setWebViewDelegate:delegate];
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://example.com"]];
     [(UIWebView*)webView loadRequest:request];
-    return delegate;
 }
 @end
 
 @implementation TestWebPageLoadDelegate
 - (void)webViewDidFinishLoad:(UIWebView *)webView {
+    [self.expectation fulfill];
+}
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     [self.expectation fulfill];
 }
 @end
