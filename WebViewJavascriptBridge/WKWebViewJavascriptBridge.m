@@ -134,7 +134,7 @@
     NSURL *url = navigationAction.request.URL;
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
 
-    if ([_base isCorrectProcotocolScheme:url]) {
+    if ([_base isWebViewJavascriptBridgeURL:url]) {
         if ([_base isBridgeLoadedURL:url]) {
             [_base injectJavascriptFile];
         } else if ([_base isQueueMessageURL:url]) {

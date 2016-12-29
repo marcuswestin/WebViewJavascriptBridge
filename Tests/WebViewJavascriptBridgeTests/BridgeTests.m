@@ -14,7 +14,9 @@
 static NSString *const echoHandler = @"echoHandler";
 
 @interface BridgeTests : XCTestCase
-
+@end
+@interface TestWebPageLoadDelegate : NSObject<UIWebViewDelegate>
+@property XCTestExpectation* expectation;
 @end
 
 @implementation BridgeTests {
@@ -57,7 +59,7 @@ static void loadEchoSample(id webView) {
     [(UIWebView*)webView loadRequest:request];
 }
 
-const NSTimeInterval timeoutSec = 100;
+const NSTimeInterval timeoutSec = 5;
 
 - (void)testInitialization {
     [self classSpecificTestInitialization:_uiWebView];
@@ -170,5 +172,27 @@ const NSTimeInterval timeoutSec = 100;
         XCTAssertEqualObjects(responseData, @"Response from JS");
         [callbackInvocked fulfill];
     }];
+}
+
+- (void)testWebpageLoad {
+    TestWebPageLoadDelegate* delegate = [self classSpecificTestWebpageLoad:_uiWebView]; // to retain it
+//    [self classSpecificTestWebpageLoad:_wkWebView];
+    [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
+    NSLog(@"Retain delegate %@", delegate);
+}
+- (TestWebPageLoadDelegate*)classSpecificTestWebpageLoad:(id)webView {
+    WebViewJavascriptBridge* bridge = [self bridgeForWebView:webView];
+    TestWebPageLoadDelegate* delegate = [TestWebPageLoadDelegate new];
+    delegate.expectation = [self expectationWithDescription:@"Webpage loaded"];
+    [bridge setWebViewDelegate:delegate];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:@"https://example.com"]];
+    [(UIWebView*)webView loadRequest:request];
+    return delegate;
+}
+@end
+
+@implementation TestWebPageLoadDelegate
+- (void)webViewDidFinishLoad:(UIWebView *)webView {
+    [self.expectation fulfill];
 }
 @end

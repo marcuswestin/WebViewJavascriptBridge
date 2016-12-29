@@ -122,12 +122,11 @@ static int logMaxLength = 500;
     }
 }
 
-- (BOOL)isCorrectProcotocolScheme:(NSURL*)url {
-    if([[url scheme] isEqualToString:kCustomProtocolScheme]){
-        return YES;
-    } else {
+- (BOOL)isWebViewJavascriptBridgeURL:(NSURL*)url {
+    if (![[url scheme] isEqualToString:kCustomProtocolScheme]){
         return NO;
     }
+    return ([self isBridgeLoadedURL:url] || [self isQueueMessageURL:url]);
 }
 
 - (BOOL)isQueueMessageURL:(NSURL*)url {

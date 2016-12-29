@@ -33,7 +33,7 @@
 @interface WebViewJavascriptBridge : WVJB_WEBVIEW_DELEGATE_INTERFACE
 
 
-+ (instancetype)bridgeForWebView:(id)webView DEPRECATED_MSG_ATTRIBUTE("Use bridge instead");
++ (instancetype)bridgeForWebView:(id)webView;
 + (instancetype)bridge:(id)webView;
 
 + (void)enableLogging;
