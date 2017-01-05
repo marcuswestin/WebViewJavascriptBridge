@@ -5,6 +5,11 @@ WebViewJavascriptBridge
 
 An iOS/OSX bridge for sending messages between Obj-C and JavaScript in WKWebViews, UIWebViews & WebViews.
 
+Migration Guide
+---------------
+
+When upgrading from v5.0.x to 6.0.x you will have to update the `setupWebViewJavascriptBridge` javascript snippet. See https://github.com/marcuswestin/WebViewJavascriptBridge#usage part 4).
+
 Who uses WebViewJavascriptBridge?
 ---------------------------------
 WebViewJavascriptBridge is used by a range of companies and projects. This is a small and incomplete sample list:
