@@ -15,7 +15,6 @@
 	}
 
 	setupWebViewJavascriptBridge(function(bridge) {
-		bridge.callHandler('Greet', 'Hello world');
 		bridge.registerHandler('echoHandler', function(data, responseCallback) {
 			responseCallback(data)
 		})

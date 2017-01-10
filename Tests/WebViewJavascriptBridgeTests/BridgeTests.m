@@ -61,23 +61,6 @@ static void loadEchoSample(id webView) {
 
 const NSTimeInterval timeoutSec = 5;
 
-- (void)testInitialization {
-    [self classSpecificTestInitialization:_uiWebView];
-    [self classSpecificTestInitialization:_wkWebView];
-    [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
-}
-- (void)classSpecificTestInitialization:(id)webView {
-    XCTestExpectation *startup = [self expectationWithDescription:@"Startup completed"];
-    WebViewJavascriptBridge *bridge = [self bridgeForWebView:webView];
-    [bridge registerHandler:@"Greet" handler:^(id data, WVJBResponseCallback responseCallback) {
-        XCTAssertEqualObjects(data, @"Hello world");
-        [startup fulfill];
-    }];
-    XCTAssertNotNil(bridge);
-    
-    loadEchoSample(webView);
-}
-
 - (void)testEchoHandler {
     [self classSpecificTestEchoHandler:_uiWebView];
     [self classSpecificTestEchoHandler:_wkWebView];
