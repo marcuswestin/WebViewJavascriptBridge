@@ -27,6 +27,15 @@
 				}
 			})
 		})
+        bridge.registerHandler('jsInvokeUndefinedHandlerTest', function(data, responseCallback) {
+            bridge.callHandler('undefinedHandler', { foo:'bar' }, function(response) {
+                if (response && Object.keys(response).length == 0) {
+                    responseCallback("Response from JS")
+                } else {
+                    responseCallback("Failed")
+                }
+            })
+        })
 	})
 	</script>
 </body></html>
