@@ -102,6 +102,7 @@ static int logMaxLength = 500;
             
             if (!handler) {
                 NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
+                responseCallback(@{});
                 continue;
             }
             
