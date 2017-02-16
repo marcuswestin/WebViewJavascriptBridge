@@ -37,7 +37,7 @@ Installation (iOS & OSX)
 Add this to your [podfile](https://guides.cocoapods.org/using/getting-started.html) and run `pod install` to install:
 
 ```ruby
-`pod 'WebViewJavascriptBridge', '~> 5.0'`
+pod 'WebViewJavascriptBridge', '~> 6.0'
 ```
 
 ### Manual installation
