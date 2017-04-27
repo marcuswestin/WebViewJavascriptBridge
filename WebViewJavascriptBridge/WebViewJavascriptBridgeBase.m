@@ -166,7 +166,9 @@ static bool logging = false;
 // -------------------------------------------
 
 - (void) _evaluateJavascript:(NSString *)javascriptCommand {
-    [self.delegate _evaluateJavascript:javascriptCommand];
+    if (self.delegate && [self.delegate respondsToSelector:@selector(_evaluateJavascript:)]) {
+        [self.delegate _evaluateJavascript:javascriptCommand];
+    }
 }
 
 - (void)_queueMessage:(WVJBMessage*)message {
