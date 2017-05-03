@@ -10,7 +10,6 @@
 #import "WebViewJavascriptBridge_JS.h"
 
 @implementation WebViewJavascriptBridgeBase {
-    __weak id _webViewDelegate;
     long _uniqueId;
 }
 
@@ -20,19 +19,17 @@ static int logMaxLength = 500;
 + (void)enableLogging { logging = true; }
 + (void)setLogMaxLength:(int)length { logMaxLength = length;}
 
--(id)init {
+- (instancetype)init {
     self = [super init];
-    self.messageHandlers = [NSMutableDictionary dictionary];
-    self.startupMessageQueue = [NSMutableArray array];
-    self.responseCallbacks = [NSMutableDictionary dictionary];
-    _uniqueId = 0;
-    return(self);
-}
-
-- (void)dealloc {
-    self.startupMessageQueue = nil;
-    self.responseCallbacks = nil;
-    self.messageHandlers = nil;
+    
+    if (self) {
+        _messageHandlers = [NSMutableDictionary dictionary];
+        _startupMessageQueue = [NSMutableArray array];
+        _responseCallbacks = [NSMutableDictionary dictionary];
+        _uniqueId = 0;
+    }
+    
+    return self;
 }
 
 - (void)reset {
@@ -60,7 +57,7 @@ static int logMaxLength = 500;
     [self _queueMessage:message];
 }
 
-- (void)flushMessageQueue:(NSString *)messageQueueString{
+- (void)flushMessageQueue:(NSString *)messageQueueString {
     if (messageQueueString == nil || messageQueueString.length == 0) {
         NSLog(@"WebViewJavascriptBridge: WARNING: ObjC got nil while fetching the message queue JSON from webview. This can happen if the WebViewJavascriptBridge JS is not currently present in the webview, e.g if the webview just loaded a new page.");
         return;
@@ -80,7 +77,8 @@ static int logMaxLength = 500;
             responseCallback(message[@"responseData"]);
             [self.responseCallbacks removeObjectForKey:responseId];
         } else {
-            WVJBResponseCallback responseCallback = NULL;
+            WVJBResponseCallback responseCallback = ^(id ignoreResponseData) {};
+            
             NSString* callbackId = message[@"callbackId"];
             if (callbackId) {
                 responseCallback = ^(id responseData) {
@@ -90,10 +88,6 @@ static int logMaxLength = 500;
                     
                     WVJBMessage* msg = @{ @"responseId":callbackId, @"responseData":responseData };
                     [self _queueMessage:msg];
-                };
-            } else {
-                responseCallback = ^(id ignoreResponseData) {
-                    // Do nothing
                 };
             }
             
@@ -113,7 +107,7 @@ static int logMaxLength = 500;
     NSString *js = WebViewJavascriptBridge_js();
     [self _evaluateJavascript:js];
     if (self.startupMessageQueue) {
-        NSArray* queue = self.startupMessageQueue;
+        NSArray* queue = [self.startupMessageQueue copy];
         self.startupMessageQueue = nil;
         for (id queuedMessage in queue) {
             [self _dispatchMessage:queuedMessage];
@@ -124,17 +118,15 @@ static int logMaxLength = 500;
 -(BOOL)isCorrectProcotocolScheme:(NSURL*)url {
     if([[url scheme] isEqualToString:kCustomProtocolScheme]){
         return YES;
-    } else {
-        return NO;
     }
+    return NO;
 }
 
 -(BOOL)isQueueMessageURL:(NSURL*)url {
     if([[url host] isEqualToString:kQueueHasMessage]){
         return YES;
-    } else {
-        return NO;
     }
+    return NO;
 }
 
 -(BOOL)isBridgeLoadedURL:(NSURL*)url {
@@ -161,7 +153,9 @@ static int logMaxLength = 500;
 // -------------------------------------------
 
 - (void) _evaluateJavascript:(NSString *)javascriptCommand {
-    [self.delegate _evaluateJavascript:javascriptCommand];
+    if (self.delegate) {
+        [self.delegate _evaluateJavascript:javascriptCommand];
+    }    
 }
 
 - (void)_queueMessage:(WVJBMessage*)message {

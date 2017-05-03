@@ -17,6 +17,8 @@
 
 @interface WKWebViewJavascriptBridge : NSObject<WKNavigationDelegate, WebViewJavascriptBridgeBaseDelegate>
 
+@property (weak, nonatomic) id<WKNavigationDelegate> webViewDelegate;
+
 + (instancetype)bridgeForWebView:(WKWebView*)webView;
 + (void)enableLogging;
 
@@ -25,7 +27,6 @@
 - (void)callHandler:(NSString*)handlerName data:(id)data;
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
 - (void)reset;
-- (void)setWebViewDelegate:(id<WKNavigationDelegate>)webViewDelegate;
 - (void)disableJavscriptAlertBoxSafetyTimeout;
 
 @end
