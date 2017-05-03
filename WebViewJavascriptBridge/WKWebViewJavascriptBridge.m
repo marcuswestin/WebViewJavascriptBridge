@@ -8,7 +8,7 @@
 
 #import "WKWebViewJavascriptBridge.h"
 
-#if defined(supportsWKWebKit)
+#if defined supportsWKWebView
 
 @interface WKWebViewJavascriptBridge ()
 
@@ -53,6 +53,10 @@
 
 - (void)registerHandler:(NSString *)handlerName handler:(WVJBHandler)handler {
     self.base.messageHandlers[handlerName] = [handler copy];
+}
+
+- (void)removeHandler:(NSString *)handlerName {
+    [_base.messageHandlers removeObjectForKey:handlerName];
 }
 
 - (void)reset {
@@ -117,9 +121,7 @@
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
-    
     NSURL *url = navigationAction.request.URL;
-
     if ([self.base isCorrectProcotocolScheme:url]) {
         if ([self.base isBridgeLoadedURL:url]) {
             [self.base injectJavascriptFile];

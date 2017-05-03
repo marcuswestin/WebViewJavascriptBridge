@@ -20,9 +20,7 @@ static int logMaxLength = 500;
 + (void)setLogMaxLength:(int)length { logMaxLength = length;}
 
 - (instancetype)init {
-    self = [super init];
-    
-    if (self) {
+    if (self = [super init]) {
         _messageHandlers = [NSMutableDictionary dictionary];
         _startupMessageQueue = [NSMutableArray array];
         _responseCallbacks = [NSMutableDictionary dictionary];
@@ -115,33 +113,37 @@ static int logMaxLength = 500;
     }
 }
 
--(BOOL)isCorrectProcotocolScheme:(NSURL*)url {
-    if([[url scheme] isEqualToString:kCustomProtocolScheme]){
-        return YES;
+- (BOOL)isWebViewJavascriptBridgeURL:(NSURL*)url {
+    if (![self isSchemeMatch:url]) {
+        return NO;
     }
-    return NO;
+    return [self isBridgeLoadedURL:url] || [self isQueueMessageURL:url];
 }
 
--(BOOL)isQueueMessageURL:(NSURL*)url {
-    if([[url host] isEqualToString:kQueueHasMessage]){
-        return YES;
-    }
-    return NO;
+- (BOOL)isSchemeMatch:(NSURL*)url {
+    NSString* scheme = url.scheme.lowercaseString;
+    return [scheme isEqualToString:kNewProtocolScheme] || [scheme isEqualToString:kOldProtocolScheme];
 }
 
--(BOOL)isBridgeLoadedURL:(NSURL*)url {
-    return ([[url scheme] isEqualToString:kCustomProtocolScheme] && [[url host] isEqualToString:kBridgeLoaded]);
+- (BOOL)isQueueMessageURL:(NSURL*)url {
+    NSString* host = url.host.lowercaseString;
+    return [self isSchemeMatch:url] && [host isEqualToString:kQueueHasMessage];
 }
 
--(void)logUnkownMessage:(NSURL*)url {
-    NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@://%@", kCustomProtocolScheme, [url path]);
+- (BOOL)isBridgeLoadedURL:(NSURL*)url {
+    NSString* host = url.host.lowercaseString;
+    return [self isSchemeMatch:url] && [host isEqualToString:kBridgeLoaded];
 }
 
--(NSString *)webViewJavascriptCheckCommand {
+- (void)logUnkownMessage:(NSURL*)url {
+    NSLog(@"WebViewJavascriptBridge: WARNING: Received unknown WebViewJavascriptBridge command %@", [url absoluteString]);
+}
+
+- (NSString *)webViewJavascriptCheckCommand {
     return @"typeof WebViewJavascriptBridge == \'object\';";
 }
 
--(NSString *)webViewJavascriptFetchQueyCommand {
+- (NSString *)webViewJavascriptFetchQueyCommand {
     return @"WebViewJavascriptBridge._fetchQueue();";
 }
 

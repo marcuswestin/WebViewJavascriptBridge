@@ -28,10 +28,22 @@
     [WebViewJavascriptBridgeBase setLogMaxLength:length];
 }
 
-+ (instancetype)bridgeForWebView:(WVJB_WEBVIEW_TYPE*)webView {
-    WebViewJavascriptBridge* bridge = [[self alloc] init];
-    [bridge _platformSpecificSetup:webView];
-    return bridge;
++ (instancetype)bridgeForWebView:(id)webView {
+    return [self bridge:webView];
+}
++ (instancetype)bridge:(id)webView {
+#if defined supportsWKWebView
+    if ([webView isKindOfClass:[WKWebView class]]) {
+        return (WebViewJavascriptBridge*) [WKWebViewJavascriptBridge bridgeForWebView:webView];
+    }
+#endif
+    if ([webView isKindOfClass:[WVJB_WEBVIEW_TYPE class]]) {
+        WebViewJavascriptBridge* bridge = [[self alloc] init];
+        [bridge _platformSpecificSetup:webView];
+        return bridge;
+    }
+    [NSException raise:@"BadWebViewType" format:@"Unknown web view type."];
+    return nil;
 }
 
 - (void)send:(id)data {
@@ -58,6 +70,10 @@
     self.base.messageHandlers[handlerName] = [handler copy];
 }
 
+- (void)removeHandler:(NSString *)handlerName {
+    [_base.messageHandlers removeObjectForKey:handlerName];
+}
+
 - (void)disableJavscriptAlertBoxSafetyTimeout {
     [self.base disableJavscriptAlertBoxSafetyTimeout];
 }
@@ -71,15 +87,13 @@
     return [self.webView stringByEvaluatingJavaScriptFromString:javascriptCommand];
 }
 
+#if defined WVJB_PLATFORM_OSX
 /* Platform specific internals: OSX
  **********************************/
-#if defined WVJB_PLATFORM_OSX
 
 - (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView {
     _webView = webView;
-    
     _webView.policyDelegate = self;
-    
     _base = [[WebViewJavascriptBridgeBase alloc] init];
     _base.delegate = self;
 }
@@ -110,9 +124,9 @@
 
 
 
+#elif defined WVJB_PLATFORM_IOS
 /* Platform specific internals: iOS
  **********************************/
-#elif defined WVJB_PLATFORM_IOS
 
 - (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView {
     _webView = webView;
@@ -134,7 +148,6 @@
 }
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    
     if (self.webViewDelegate && [self.webViewDelegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
         return [self.webViewDelegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
     }
