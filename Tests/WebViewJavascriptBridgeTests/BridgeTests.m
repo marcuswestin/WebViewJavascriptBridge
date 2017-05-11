@@ -67,7 +67,7 @@ const NSTimeInterval timeoutSec = 5;
     [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
 }
 
-- (void)testEchoHandler {
+- (void)testEchoHandlerForiOS102 {
     // If you run on iOS 10.2, this test fails.
     [self classSpecificTestEchoHandler:_wkWebView];
     [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
