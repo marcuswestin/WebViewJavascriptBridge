@@ -66,6 +66,12 @@ const NSTimeInterval timeoutSec = 5;
     [self classSpecificTestEchoHandler:_wkWebView];
     [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
 }
+
+- (void)testEchoHandler {
+    // If you run on iOS 10.2, this test fails.
+    [self classSpecificTestEchoHandler:_wkWebView];
+    [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
+}
 - (void)classSpecificTestEchoHandler:(id)webView {
     WebViewJavascriptBridge *bridge = [self bridgeForWebView:webView];
     
