@@ -7,7 +7,7 @@
 //
 
 #import "WebViewJavascriptBridge.h"
-
+#import <objc/runtime.h>
 #if defined(supportsWKWebView)
 #import "WKWebViewJavascriptBridge.h"
 #endif
@@ -125,7 +125,8 @@
     NSURL *url = [request URL];
     if ([_base isWebViewJavascriptBridgeURL:url]) {
         if ([_base isBridgeLoadedURL:url]) {
-            [_base injectJavascriptFile];
+			[_base injectJavascriptFile];
+			!webView.webViewJavascriptBridgeLoadedBlock ?: webView.webViewJavascriptBridgeLoadedBlock();
         } else if ([_base isQueueMessageURL:url]) {
             NSString *messageQueueString = [self _evaluateJavascript:[_base webViewJavascriptFetchQueyCommand]];
             [_base flushMessageQueue:messageQueueString];
@@ -183,6 +184,7 @@
     if ([_base isWebViewJavascriptBridgeURL:url]) {
         if ([_base isBridgeLoadedURL:url]) {
             [_base injectJavascriptFile];
+			!webView.webViewJavascriptBridgeLoadedBlock ?: webView.webViewJavascriptBridgeLoadedBlock();
         } else if ([_base isQueueMessageURL:url]) {
             NSString *messageQueueString = [self _evaluateJavascript:[_base webViewJavascriptFetchQueyCommand]];
             [_base flushMessageQueue:messageQueueString];
@@ -207,5 +209,30 @@
 }
 
 #endif
+
+@end
+
+static void *kJSBridgeDidLoadBlockKey = &kJSBridgeDidLoadBlockKey;
+
+@implementation WVJB_WEBVIEW_TYPE (WebViewJavascriptBridge)
+
+- (void)setWebViewJavascriptBridgeLoadedBlock:(void (^)())webViewJavascriptBridgeLoadedBlock
+{
+	objc_setAssociatedObject(self, kJSBridgeDidLoadBlockKey, webViewJavascriptBridgeLoadedBlock, OBJC_ASSOCIATION_COPY);
+}
+
+- (void (^)())webViewJavascriptBridgeLoadedBlock
+{
+	id block = objc_getAssociatedObject(self, kJSBridgeDidLoadBlockKey);
+	
+	return block;
+}
+
+- (BOOL)didJavascriptBridgeLoadOnWeb
+{
+	NSString *result = [self stringByEvaluatingJavaScriptFromString:@"typeof WebViewJavascriptBridge == \'object\';"];
+	
+	return [result boolValue];
+}
 
 @end

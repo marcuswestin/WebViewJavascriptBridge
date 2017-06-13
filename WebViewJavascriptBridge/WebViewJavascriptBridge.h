@@ -48,3 +48,12 @@
 - (void)disableJavscriptAlertBoxSafetyTimeout;
 
 @end
+
+
+@interface WVJB_WEBVIEW_TYPE (WebViewJavascriptBridge)
+
+@property (nonatomic, copy) void(^webViewJavascriptBridgeLoadedBlock)();
+
+- (BOOL)didJavascriptBridgeLoadOnWeb;
+
+@end
