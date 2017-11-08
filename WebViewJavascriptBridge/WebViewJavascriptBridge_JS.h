@@ -1,3 +1,3 @@
 #import <Foundation/Foundation.h>
 
-NSString * WebViewJavascriptBridge_js();
+NSString * WebViewJavascriptBridge_js(void);
