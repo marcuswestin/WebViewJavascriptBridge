@@ -6,11 +6,9 @@ test:
 
 test-circle-ci:
 	xcodebuild test -project Tests/WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge \
-		-destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.4'  \
-		-destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3'   \
-		-destination 'platform=iOS Simulator,name=iPhone 6s,OS=10.1' \
-		-destination 'platform=iOS Simulator,name=iPhone 7 Plus,OS=10.2'
-	
+		-destination 'platform=iOS Simulator,name=iPhone 5,OS=10.3.1'  \
+		-destination 'platform=iOS Simulator,name=iPhone X,OS=11.0.1'
+
 
 publish-pod:
 	# pod trunk register narcvs@gmail.com 'Marcus Westin' --description='MBA/MBP-xyz'
