@@ -1,20 +1,18 @@
 test:
 	xcodebuild test -project Tests/WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge \
-		-destination 'platform=iOS Simulator,name=iPhone 7'
+		-destination 'platform=iOS Simulator,name=iPhone 8'
 	xcodebuild test -workspace Example\ Apps/ExampleSwiftApp-iOS/ExampleSwiftApp-iOS.xcworkspace -scheme ExampleSwiftApp-iOS \
-		-destination 'platform=iOS Simulator,name=iPhone 7'
+		-destination 'platform=iOS Simulator,name=iPhone 8'
 
 test-travis-ci:
 	xcodebuild test -project Tests/WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge \
-		-destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.4'  \
-		-destination 'platform=iOS Simulator,name=iPhone 6s,OS=9.3'  \
-		-destination 'platform=iOS Simulator,name=iPhone 7,OS=10.1'
+		-destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3.1'  \
+		-destination 'platform=iOS Simulator,name=iPhone 8,OS=11.0.1'
 
 test-circle-ci:
 	xcodebuild test -project Tests/WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge \
-		-destination 'platform=iOS Simulator,name=iPhone 5s,OS=8.4'  \
-		-destination 'platform=iOS Simulator,name=iPhone 6,OS=9.3'   \
-		-destination 'platform=iOS Simulator,name=iPhone 6s,OS=10.1'
+		-destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3.1'   \
+		-destination 'platform=iOS Simulator,name=iPhone 8,OS=11.0.1'
 	
 
 publish-pod:
