@@ -31,4 +31,12 @@
 
 @end
 
+@interface WKWebView (WKWebViewJavascriptBridge)
+
+@property (nonatomic, copy) void(^webViewJavascriptBridgeLoadedBlock)();
+
+- (void)didJavascriptBridgeLoadOnWeb:(void(^)(BOOL didLoad))block;
+
+@end
+
 #endif

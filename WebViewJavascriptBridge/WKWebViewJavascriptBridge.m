@@ -7,6 +7,7 @@
 
 
 #import "WKWebViewJavascriptBridge.h"
+#import <objc/runtime.h>
 
 #if defined supportsWKWebView
 
@@ -140,7 +141,8 @@
 
     if ([_base isWebViewJavascriptBridgeURL:url]) {
         if ([_base isBridgeLoadedURL:url]) {
-            [_base injectJavascriptFile];
+			[_base injectJavascriptFile];
+			!webView.webViewJavascriptBridgeLoadedBlock ?: webView.webViewJavascriptBridgeLoadedBlock();
         } else if ([_base isQueueMessageURL:url]) {
             [self WKFlushMessageQueue];
         } else {
@@ -194,5 +196,37 @@
 
 @end
 
+static void *kJSBridgeDidLoadBlockKey = &kJSBridgeDidLoadBlockKey;
+
+@implementation WKWebView (WKWebViewJavascriptBridge)
+
+- (void)setWebViewJavascriptBridgeLoadedBlock:(void (^)())webViewJavascriptBridgeLoadedBlock
+{
+	objc_setAssociatedObject(self, kJSBridgeDidLoadBlockKey, webViewJavascriptBridgeLoadedBlock, OBJC_ASSOCIATION_COPY);
+}
+
+- (void (^)())webViewJavascriptBridgeLoadedBlock
+{
+	id block = objc_getAssociatedObject(self, kJSBridgeDidLoadBlockKey);
+	
+	return block;
+}
+
+- (void)didJavascriptBridgeLoadOnWeb:(void (^)(BOOL))block
+{
+	__block BOOL isLoaded = NO;
+	
+	[self evaluateJavaScript:@"typeof WebViewJavascriptBridge == \'object\';" completionHandler:^(id _Nullable obj, NSError * _Nullable error) {
+		
+		if (obj && [obj respondsToSelector:@selector(boolValue)])
+		{
+			isLoaded = [obj boolValue];
+		}
+		
+		!block ?: block(isLoaded);
+	}];
+}
+
+@end
 
 #endif

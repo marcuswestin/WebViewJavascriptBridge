@@ -20,6 +20,7 @@
     
     UIWebView* webView = [[UIWebView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:webView];
+	NSLog(@"Is JS Bridge Did Load %@", [webView didJavascriptBridgeLoadOnWeb] ? @"YES" : @"NO");
     
     [WebViewJavascriptBridge enableLogging];
     
@@ -35,6 +36,14 @@
     
     [self renderButtons:webView];
     [self loadExamplePage:webView];
+	
+	__weak typeof(webView) weakWebView = webView;
+	webView.webViewJavascriptBridgeLoadedBlock = ^{
+		NSLog(@"JS Bridge Did Load");
+		
+		__strong typeof(weakWebView) webView = weakWebView;
+		NSLog(@"Is JS Bridge Did Load %@", [webView didJavascriptBridgeLoadOnWeb] ? @"YES" : @"NO");
+	};
 }
 
 - (void)webViewDidStartLoad:(UIWebView *)webView {
