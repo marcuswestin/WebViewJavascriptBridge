@@ -66,7 +66,7 @@ class ExampleSwiftApp_iOSTests: XCTestCase {
     }
     func _testSetup(webView: Any) {
         let setup = self.expectation(description: "Setup completed")
-        let bridge = self.bridgeForWebView(webView: webView)
+        let bridge = self.bridgeForWebView(webView)
         bridge.registerHandler("Greet") { (data, responseCallback) in
             XCTAssertEqual(data as! String, "Hello world")
             setup.fulfill()
