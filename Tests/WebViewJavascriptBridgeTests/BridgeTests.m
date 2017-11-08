@@ -18,20 +18,31 @@ static NSString *const echoHandler = @"echoHandler";
 
 @end
 
+@interface TestWebPageLoadDelegate : NSObject<UIWebViewDelegate, WKNavigationDelegate>
+@property XCTestExpectation* expectation;
+@end
+
 @implementation BridgeTests {
     UIWebView *_uiWebView;
     WKWebView *_wkWebView;
+    NSMutableArray* _retains;
 }
 
 - (void)setUp {
     [super setUp];
     
     UIViewController *rootVC = [[(AppDelegate *)[[UIApplication sharedApplication] delegate] window] rootViewController];
-    _uiWebView = [[UIWebView alloc] initWithFrame:rootVC.view.bounds];
-    CGRect wkFrame = _uiWebView.frame;
-    wkFrame.origin.y += _uiWebView.frame.size.height;
-    _wkWebView = [[WKWebView alloc] initWithFrame:wkFrame];
+    CGRect frame = rootVC.view.bounds;
+    frame.size.height /= 2;
+    _uiWebView = [[UIWebView alloc] initWithFrame:frame];
+    _uiWebView.backgroundColor = [UIColor blueColor];
+    [rootVC.view addSubview:_uiWebView];
+    frame.origin.y += frame.size.height;
+    _wkWebView = [[WKWebView alloc] initWithFrame:frame configuration:WKWebViewConfiguration.new];
+    _wkWebView.backgroundColor = [UIColor redColor];
     [rootVC.view addSubview:_wkWebView];
+    
+    _retains = [NSMutableArray array];
 }
 
 - (void)tearDown {
@@ -167,5 +178,41 @@ const NSTimeInterval timeoutSec = 100;
     } else {
         return (WebViewJavascriptBridge*)[WKWebViewJavascriptBridge bridgeForWebView:_wkWebView];
     }
+}
+
+- (void)testIOS11CrashForWKWebView {
+    TestWebPageLoadDelegate* delegate = [TestWebPageLoadDelegate new];
+    delegate.expectation = [self expectationWithDescription:@"Webpage loaded"];
+    WKWebViewJavascriptBridge* bridge = [WKWebViewJavascriptBridge bridgeForWebView:_wkWebView];
+    [_retains addObject:delegate];
+    [bridge setWebViewDelegate:delegate];
+    
+    NSURLRequest *request = [NSURLRequest requestWithURL:[[NSBundle mainBundle] URLForResource:@"echo" withExtension:@"html"]];
+    [(WKWebView *)_wkWebView loadRequest:request];
+    
+    [self waitForExpectationsWithTimeout:timeoutSec handler:^(NSError * _Nullable error) {
+    }];
+}
+
+@end
+
+@implementation TestWebPageLoadDelegate
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+    BOOL error = NO;
+    @try {
+        decisionHandler(WKNavigationActionPolicyAllow);
+    }
+    @catch (id ex) {
+        error = YES;
+    }
+    @finally {
+        if (error) {
+            XCTFail(@"crashed22");
+        }
+    }
+}
+
+- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation {
+    [self.expectation fulfill];
 }
 @end
