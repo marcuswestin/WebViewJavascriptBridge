@@ -138,6 +138,23 @@ const NSTimeInterval timeoutSec = 5;
     }];
 }
 
+
+- (void)testJavascriptInvokeUndefinedHandler {
+    [self classSpecificTestJavascriptInvokeUndefinedHandler:_uiWebView];
+    [self classSpecificTestJavascriptInvokeUndefinedHandler:_wkWebView];
+    [self waitForExpectationsWithTimeout:timeoutSec handler:NULL];
+}
+- (void)classSpecificTestJavascriptInvokeUndefinedHandler:(id)webView {
+    WebViewJavascriptBridge *bridge = [self bridgeForWebView:webView];
+    loadEchoSample(webView);
+    XCTestExpectation *callbackInvocked = [self expectationWithDescription:@"Callback invoked"];
+    [bridge callHandler:@"jsInvokeUndefinedHandlerTest" data:nil responseCallback:^(id responseData) {
+        XCTAssertEqualObjects(responseData, @"Response from JS");
+        [callbackInvocked fulfill];
+    }];
+}
+
+
 - (void)testJavascriptReceiveResponseWithoutSafetyTimeout {
     [self classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:_uiWebView];
     [self classSpecificTestJavascriptReceiveResponseWithoutSafetyTimeout:_wkWebView];
