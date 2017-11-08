@@ -32,6 +32,7 @@
 
 @interface WebViewJavascriptBridge : WVJB_WEBVIEW_DELEGATE_INTERFACE
 
+@property (weak, nonatomic) WVJB_WEBVIEW_DELEGATE_TYPE *webViewDelegate;
 
 + (instancetype)bridgeForWebView:(id)webView;
 + (instancetype)bridge:(id)webView;
@@ -44,7 +45,6 @@
 - (void)callHandler:(NSString*)handlerName;
 - (void)callHandler:(NSString*)handlerName data:(id)data;
 - (void)callHandler:(NSString*)handlerName data:(id)data responseCallback:(WVJBResponseCallback)responseCallback;
-- (void)setWebViewDelegate:(id)webViewDelegate;
 - (void)disableJavscriptAlertBoxSafetyTimeout;
 
 @end
