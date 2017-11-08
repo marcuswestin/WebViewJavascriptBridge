@@ -4,6 +4,12 @@ test:
 	xcodebuild test -workspace Example\ Apps/ExampleSwiftApp-iOS/ExampleSwiftApp-iOS.xcworkspace -scheme ExampleSwiftApp-iOS \
 		-destination 'platform=iOS Simulator,name=iPhone 8'
 
+test-many:
+	xcodebuild test -project Tests/WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge \
+		-destination 'platform=iOS Simulator,name=iPhone 6' \
+		-destination 'platform=iOS Simulator,name=iPhone 7' \
+		-destination 'platform=iOS Simulator,name=iPhone 8'
+
 test-circle-ci:
 	xcodebuild test -project Tests/WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge \
 		-destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3.1'  \
