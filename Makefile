@@ -6,7 +6,7 @@ test:
 
 test-circle-ci:
 	xcodebuild test -project Tests/WebViewJavascriptBridge.xcodeproj -scheme WebViewJavascriptBridge \
-		-destination 'platform=iOS Simulator,name=iPhone 5,OS=10.3.1'  \
+		-destination 'platform=iOS Simulator,name=iPhone 7,OS=10.3.1'  \
 		-destination 'platform=iOS Simulator,name=iPhone X,OS=11.0.1'
 
 
