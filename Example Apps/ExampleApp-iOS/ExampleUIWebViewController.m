@@ -24,6 +24,7 @@
     [WebViewJavascriptBridge enableLogging];
     
     _bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
+    [_bridge setWebViewDelegate:self];
     
     [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
@@ -45,21 +46,32 @@
 }
 
 - (void)renderButtons:(UIWebView*)webView {
-    UIFont* font = [UIFont fontWithName:@"HelveticaNeue" size:12.0];
+    UIFont* font = [UIFont fontWithName:@"HelveticaNeue" size:11.0];
     
     UIButton *callbackButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [callbackButton setTitle:@"Call handler" forState:UIControlStateNormal];
     [callbackButton addTarget:self action:@selector(callHandler:) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:callbackButton aboveSubview:webView];
-    callbackButton.frame = CGRectMake(10, 400, 100, 35);
+    callbackButton.frame = CGRectMake(0, 400, 100, 35);
     callbackButton.titleLabel.font = font;
     
     UIButton* reloadButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     [reloadButton setTitle:@"Reload webview" forState:UIControlStateNormal];
     [reloadButton addTarget:webView action:@selector(reload) forControlEvents:UIControlEventTouchUpInside];
     [self.view insertSubview:reloadButton aboveSubview:webView];
-    reloadButton.frame = CGRectMake(110, 400, 100, 35);
+    reloadButton.frame = CGRectMake(90, 400, 100, 35);
     reloadButton.titleLabel.font = font;
+    
+    UIButton* safetyTimeoutButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    [safetyTimeoutButton setTitle:@"Disable safety timeout" forState:UIControlStateNormal];
+    [safetyTimeoutButton addTarget:self action:@selector(disableSafetyTimeout) forControlEvents:UIControlEventTouchUpInside];
+    [self.view insertSubview:safetyTimeoutButton aboveSubview:webView];
+    safetyTimeoutButton.frame = CGRectMake(190, 400, 120, 35);
+    safetyTimeoutButton.titleLabel.font = font;
+}
+
+- (void)disableSafetyTimeout {
+    [self.bridge disableJavscriptAlertBoxSafetyTimeout];
 }
 
 - (void)callHandler:(id)sender {

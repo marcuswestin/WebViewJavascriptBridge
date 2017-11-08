@@ -19,9 +19,16 @@ NSString * WebViewJavascriptBridge_js() {
 	if (window.WebViewJavascriptBridge) {
 		return;
 	}
+
+	if (!window.onerror) {
+		window.onerror = function(msg, url, line) {
+			console.log("WebViewJavascriptBridge: ERROR:" + msg + "@" + url + ":" + line);
+		}
+	}
 	window.WebViewJavascriptBridge = {
 		registerHandler: registerHandler,
 		callHandler: callHandler,
+		disableJavscriptAlertBoxSafetyTimeout: disableJavscriptAlertBoxSafetyTimeout,
 		_fetchQueue: _fetchQueue,
 		_handleMessageFromObjC: _handleMessageFromObjC
 	};
@@ -30,11 +37,12 @@ NSString * WebViewJavascriptBridge_js() {
 	var sendMessageQueue = [];
 	var messageHandlers = {};
 	
-	var CUSTOM_PROTOCOL_SCHEME = 'wvjbscheme';
-	var QUEUE_HAS_MESSAGE = '__WVJB_QUEUE_MESSAGE__';
+	var CUSTOM_PROTOCOL_SCHEME = 'https';
+	var QUEUE_HAS_MESSAGE = '__wvjb_queue_message__';
 	
 	var responseCallbacks = {};
 	var uniqueId = 1;
+	var dispatchMessagesWithTimeoutSafety = true;
 
 	function registerHandler(handlerName, handler) {
 		messageHandlers[handlerName] = handler;
@@ -46,6 +54,9 @@ NSString * WebViewJavascriptBridge_js() {
 			data = null;
 		}
 		_doSend({ handlerName:handlerName, data:data }, responseCallback);
+	}
+	function disableJavscriptAlertBoxSafetyTimeout() {
+		dispatchMessagesWithTimeoutSafety = false;
 	}
 	
 	function _doSend(message, responseCallback) {
@@ -65,7 +76,13 @@ NSString * WebViewJavascriptBridge_js() {
 	}
 
 	function _dispatchMessageFromObjC(messageJSON) {
-		setTimeout(function _timeoutDispatchMessageFromObjC() {
+		if (dispatchMessagesWithTimeoutSafety) {
+			setTimeout(_doDispatchMessageFromObjC);
+		} else {
+			 _doDispatchMessageFromObjC();
+		}
+		
+		function _doDispatchMessageFromObjC() {
 			var message = JSON.parse(messageJSON);
 			var messageHandler;
 			var responseCallback;
@@ -81,21 +98,18 @@ NSString * WebViewJavascriptBridge_js() {
 				if (message.callbackId) {
 					var callbackResponseId = message.callbackId;
 					responseCallback = function(responseData) {
-						_doSend({ responseId:callbackResponseId, responseData:responseData });
+						_doSend({ handlerName:message.handlerName, responseId:callbackResponseId, responseData:responseData });
 					};
 				}
 				
 				var handler = messageHandlers[message.handlerName];
-				try {
-					handler(message.data, responseCallback);
-				} catch(exception) {
-					console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception);
-				}
 				if (!handler) {
 					console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
+				} else {
+					handler(message.data, responseCallback);
 				}
 			}
-		});
+		}
 	}
 	
 	function _handleMessageFromObjC(messageJSON) {
@@ -107,6 +121,8 @@ NSString * WebViewJavascriptBridge_js() {
 	messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE;
 	document.documentElement.appendChild(messagingIframe);
 
+	registerHandler("_disableJavascriptAlertBoxSafetyTimeout", disableJavscriptAlertBoxSafetyTimeout);
+	
 	setTimeout(_callWVJBCallbacks, 0);
 	function _callWVJBCallbacks() {
 		var callbacks = window.WVJBCallbacks;

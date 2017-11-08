@@ -9,13 +9,12 @@
 #import "AppDelegate.h"
 #import <WebKit/WebKit.h>
 #import "WebViewJavascriptBridge.h"
-#import "WKWebViewJavascriptBridge.h"
 
 @implementation AppDelegate {
     WebView* _webView;
     WKWebView *_WKWebView;
     WebViewJavascriptBridge* _bridge;
-    WKWebViewJavascriptBridge* _WKBridge;
+    WebViewJavascriptBridge* _WKBridge;
     NSView* _WKWebViewWrapper;
 }
 
@@ -56,13 +55,14 @@
     // Load Page
     NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
     NSString* html = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
-    [[_webView mainFrame] loadHTMLString:html baseURL:nil];
+    NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
+    [[_webView mainFrame] loadHTMLString:html baseURL: baseURL];
 }
 
 
 - (void)_configureWKWebview {
     // Create Bridge
-    _WKBridge = [WKWebViewJavascriptBridge bridgeForWebView:_WKWebView];
+    _WKBridge = [WebViewJavascriptBridge bridgeForWebView:_WKWebView];
     
     [_WKBridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
@@ -89,7 +89,8 @@
     // Load Page
     NSString* htmlPath = [[NSBundle mainBundle] pathForResource:@"ExampleApp" ofType:@"html"];
     NSString* html = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
-    [_WKWebView loadHTMLString:html baseURL:nil];
+    NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
+    [_WKWebView loadHTMLString:html baseURL:baseURL];
 }
 
 -(void)_toggleExample {

@@ -1,9 +1,14 @@
 WebViewJavascriptBridge
 =======================
 
-[![Build Status](https://travis-ci.org/marcuswestin/WebViewJavascriptBridge.svg)](https://travis-ci.org/marcuswestin/WebViewJavascriptBridge)
+[![Circle CI](https://img.shields.io/circleci/project/github/marcuswestin/WebViewJavascriptBridge.svg)](https://circleci.com/gh/marcuswestin/WebViewJavascriptBridge)
 
-An iOS/OSX bridge for sending messages between Obj-C and JavaScript in UIWebViews/WebViews.
+An iOS/OSX bridge for sending messages between Obj-C and JavaScript in WKWebViews, UIWebViews & WebViews.
+
+Migration Guide
+---------------
+
+When upgrading from v5.0.x to 6.0.x you will have to update the `setupWebViewJavascriptBridge` javascript snippet. See https://github.com/marcuswestin/WebViewJavascriptBridge#usage part 4).
 
 Who uses WebViewJavascriptBridge?
 ---------------------------------
@@ -22,6 +27,8 @@ WebViewJavascriptBridge is used by a range of companies and projects. This is a 
 - [鼎盛中华](https://itunes.apple.com/us/app/ding-sheng-zhong-hua/id537273940?mt=8)
 - [FRIL](https://fril.jp)
 - [留白·WHITE](http://liubaiapp.com)
+- [BrowZine](http://thirdiron.com/browzine/)
+- ... & many more!
 
 Installation (iOS & OSX)
 ------------------------
@@ -30,7 +37,7 @@ Installation (iOS & OSX)
 Add this to your [podfile](https://guides.cocoapods.org/using/getting-started.html) and run `pod install` to install:
 
 ```ruby
-`pod 'WebViewJavascriptBridge', '~> 5.0'`
+pod 'WebViewJavascriptBridge'
 ```
 
 ### Manual installation
@@ -61,7 +68,7 @@ Usage
 @property WebViewJavascriptBridge* bridge;
 ```
 
-2) Instantiate WebViewJavascriptBridge with a UIWebView (iOS) or WebView (OSX):
+2) Instantiate WebViewJavascriptBridge with a WKWebView, UIWebView (iOS) or WebView (OSX):
 
 ```objc
 self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
@@ -74,7 +81,7 @@ self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
 	NSLog(@"ObjC Echo called with: %@", data);
 	responseCallback(data);
 }];
-[self.bridge callHandler:@"JS Echo" responseCallback:^(id responseData) {
+[self.bridge callHandler:@"JS Echo" data:nil responseCallback:^(id responseData) {
 	NSLog(@"ObjC received response: %@", responseData);
 }];
 ```
@@ -88,7 +95,7 @@ function setupWebViewJavascriptBridge(callback) {
 	window.WVJBCallbacks = [callback];
 	var WVJBIframe = document.createElement('iframe');
 	WVJBIframe.style.display = 'none';
-	WVJBIframe.src = 'wvjbscheme://__BRIDGE_LOADED__';
+	WVJBIframe.src = 'https://__bridge_loaded__';
 	document.documentElement.appendChild(WVJBIframe);
 	setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
 }
@@ -105,30 +112,24 @@ setupWebViewJavascriptBridge(function(bridge) {
 		console.log("JS Echo called with:", data)
 		responseCallback(data)
 	})
-	bridge.callHandler('ObjC Echo', function responseCallback(responseData) {
+	bridge.callHandler('ObjC Echo', {'key':'value'}, function responseCallback(responseData) {
 		console.log("JS received response:", responseData)
 	})
 })
 ```
 
-WKWebView Support (iOS 8+ & OS 10.10+)
---------------------------------------
+Automatic reference counting (ARC)
+----------------------------------
+This library relies on ARC, so if you use ARC in you project, all works fine.
+But if your project have no ARC support, be sure to do next steps:
 
-(WARNING: WKWebView still has [bugs and missing network APIs.](https://github.com/ShingoFukuyama/WKWebViewTips/blob/master/README.md) It may not be a simple drop-in replacement).
+1) In your Xcode project open project settings -> 'Build Phases'
 
-WebViewJavascriptBridge supports [WKWebView](http://nshipster.com/wkwebkit/) for iOS 8 and OSX Yosemite. In order to use WKWebView you need to instantiate the `WKWebViewJavascriptBridge`. The rest of the `WKWebViewJavascriptBridge` API is the same as `WebViewJavascriptBridge`.
+2) Expand 'Compile Sources' header and find all *.m files which are belongs to this library. Make attention on the 'Compiler Flags' in front of each source file in this list
 
-1) Import the header file:
+3) For each file add '-fobjc-arc' flag
 
-```objc
-#import "WKWebViewJavascriptBridge.h"
-```
-
-2) Instantiate WKWebViewJavascriptBridge and with a WKWebView object
-
-```objc
-WKWebViewJavascriptBridge* bridge = [WKWebViewJavascriptBridge bridgeForWebView:webView];
-```
+Now all WVJB files will be compiled with ARC support.
 
 Contributors & Forks
 --------------------
@@ -141,7 +142,7 @@ API Reference
 
 ### ObjC API
 
-##### `[WebViewJavascriptBridge bridgeForWebView:(UIWebView/WebView*)webview`
+##### `[WebViewJavascriptBridge bridgeForWebView:(WKWebVIew/UIWebView/WebView*)webview`
 
 Create a javascript bridge for the given web view.
 
@@ -181,10 +182,17 @@ Example:
 }];
 ```
 
-#### `[bridge setWebViewDelegate:UIWebViewDelegate*)webViewDelegate]`
+#### `[bridge setWebViewDelegate:(id)webViewDelegate]`
 
-Optionally, set a `UIWebViewDelegate` if you need to respond to the [web view's lifecycle events](http://developer.apple.com/library/ios/documentation/uikit/reference/UIWebViewDelegate_Protocol/Reference/Reference.html).
+Optionally, set a `WKNavigationDelegate/UIWebViewDelegate` if you need to respond to the [web view's lifecycle events](https://developer.apple.com/reference/uikit/uiwebviewdelegate).
 
+##### `[bridge disableJavscriptAlertBoxSafetyTimeout]`
+
+UNSAFE. Speed up bridge message passing by disabling the setTimeout safety check. It is only safe to disable this safety check if you do not call any of the javascript popup box functions (alert, confirm, and prompt). If you call any of these functions from the bridged javascript code, the app will hang.
+
+Example:
+
+	[self.bridge disableJavscriptAlertBoxSafetyTimeout];
 
 
 
@@ -216,4 +224,15 @@ bridge.callHandler("Log", "Foo")
 bridge.callHandler("getScreenHeight", null, function(response) {
 	alert('Screen height:' + response)
 })
+```
+
+
+##### `bridge.disableJavscriptAlertBoxSafetyTimeout()`
+
+Calling `bridge.disableJavscriptAlertBoxSafetyTimeout()` has the same effect as calling `[bridge disableJavscriptAlertBoxSafetyTimeout];` in ObjC.
+
+Example:
+
+```javascript
+bridge.disableJavscriptAlertBoxSafetyTimeout()
 ```

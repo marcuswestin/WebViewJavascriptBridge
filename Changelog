@@ -13,8 +13,14 @@ Release Checklist
 Version History
 ---------------
 
-Next version
-+ Pretty-print json in log messages
+v5.1.1
++ Swift unit tests and examples
++ Implement removeHandler
+
+v5.1.0
++ A single instantiation function for all webview types.
++ Improved test runner.
++ New instructions & templates for github issues and pull requests.
 
 v5.0.5
 + Run all tests for both UIWebView and WKWebView webviews/bridges.
