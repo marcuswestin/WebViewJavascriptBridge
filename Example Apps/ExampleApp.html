@@ -13,6 +13,23 @@
 	window.onerror = function(err) {
 		log('window.onerror: ' + err)
 	}
+	
+	window.onpageshow = function(event) {
+        alert("back to page")
+    }
+    
+    function pageLoaded()
+    {
+        alert("load event handler called.");
+    }
+    
+    function pageUnloaded()
+    {
+        alert("unload event handler called.");
+    }
+    
+    window.addEventListener("load", pageLoaded, false);
+    window.addEventListener("unload", pageUnloaded, false);
 
     function setupWebViewJavascriptBridge(callback) {
         if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
