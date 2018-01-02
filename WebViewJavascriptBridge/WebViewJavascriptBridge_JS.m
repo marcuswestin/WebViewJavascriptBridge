@@ -103,11 +103,16 @@ NSString * WebViewJavascriptBridge_js() {
 				}
 				
 				var handler = messageHandlers[message.handlerName];
-				if (!handler) {
-					console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
-				} else {
-					handler(message.data, responseCallback);
-				}
+                try {
+                    if (!handler) {
+                        console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
+                        throw new Error ("handle not found:" + message.handlerName);
+                    } else {
+                        handler(message.data, responseCallback);
+                    }
+                } catch (e) {
+                    responseCallback();
+                }
 			}
 		}
 	}
