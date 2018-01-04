@@ -27,7 +27,6 @@ typedef NSDictionary WVJBMessage;
 @property (strong, nonatomic) NSMutableArray* startupMessageQueue;
 @property (strong, nonatomic) NSMutableDictionary* responseCallbacks;
 @property (strong, nonatomic) NSMutableDictionary* messageHandlers;
-@property (strong, nonatomic) WVJBHandler messageHandler;
 
 + (void)enableLogging;
 + (void)setLogMaxLength:(int)length;
