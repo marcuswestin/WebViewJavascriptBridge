@@ -102,7 +102,20 @@ static int logMaxLength = 500;
             
             if (!handler) {
                 NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
-                continue;
+                //continue;
+                if (responseCallback) {
+                    // 如果是获取所有method的方法列表
+                    if ([@"allNativeMethodsImplementationForJs" isEqualToString:message[@"handlerName"]]) {
+                        NSArray *handlerNames = self.messageHandlers.allKeys;
+                        if(handlerNames == nil){
+                            handlerNames = @[];
+                        }
+                        responseCallback(handlerNames);
+                    }else{
+                        responseCallback(@"NoMethodInNative");
+                    }
+                    
+                }
             }
             
             handler(message[@"data"], responseCallback);

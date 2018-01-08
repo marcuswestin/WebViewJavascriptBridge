@@ -105,6 +105,18 @@ NSString * WebViewJavascriptBridge_js() {
 				var handler = messageHandlers[message.handlerName];
 				if (!handler) {
 					console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
+                    if (responseCallback) {
+                        if ("AllMethodsImplementationInJs" == message.handlerName) {
+                            var keys = [];
+                            for (var handlerName in messageHandlers){
+                                keys.push(handlerName);
+                            }
+                            responseCallback(keys);
+                        }else{
+                            responseCallback("NoMethodInJs");
+                        }
+                        
+                    }
 				} else {
 					handler(message.data, responseCallback);
 				}
