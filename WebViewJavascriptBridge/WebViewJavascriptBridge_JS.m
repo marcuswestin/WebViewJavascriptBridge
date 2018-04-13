@@ -128,7 +128,7 @@ NSString * WebViewJavascriptBridge_js() {
 		var callbacks = window.WVJBCallbacks;
 		delete window.WVJBCallbacks;
 		for (var i=0; i<callbacks.length; i++) {
-			callbacks[i](WebViewJavascriptBridge);
+			callbacks[i](window.WebViewJavascriptBridge);
 		}
 	}
 })();
