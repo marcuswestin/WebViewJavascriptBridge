@@ -26,6 +26,8 @@ NSString * WebViewJavascriptBridge_js() {
 		}
 	}
 	window.WebViewJavascriptBridge = {
+        init:init,
+        send:send,
 		registerHandler: registerHandler,
 		callHandler: callHandler,
 		disableJavscriptAlertBoxSafetyTimeout: disableJavscriptAlertBoxSafetyTimeout,
@@ -35,6 +37,8 @@ NSString * WebViewJavascriptBridge_js() {
 
 	var messagingIframe;
 	var sendMessageQueue = [];
+    //接收消息队列
+    var receiveMessageQueue = [];
 	var messageHandlers = {};
 	
 	var CUSTOM_PROTOCOL_SCHEME = 'https';
@@ -58,6 +62,23 @@ NSString * WebViewJavascriptBridge_js() {
 	function disableJavscriptAlertBoxSafetyTimeout() {
 		dispatchMessagesWithTimeoutSafety = false;
 	}
+    //    设置默认消息线程
+    function init(messageHandler) {
+        if (window.WebViewJavascriptBridge) {
+            throw new error('WebViewJavascriptBridge.init called twice');
+        }
+        window.WebViewJavascriptBridge._messageHandler = messageHandler;
+        var receiveMessages = receiveMessageQueue;
+        receiveMessageQueue = null;
+        for (var i = 0; i < receiveMessages.length; i++) {
+            _handleMessageFromObjC(receiveMessages[i]);
+        }
+    }
+    
+    //    发送默认消息
+    function send(message, responseCallback) {
+        _doSend({data: message}, responseCallback);
+    }
 	
 	function _doSend(message, responseCallback) {
 		if (responseCallback) {
@@ -113,6 +134,11 @@ NSString * WebViewJavascriptBridge_js() {
 	}
 	
 	function _handleMessageFromObjC(messageJSON) {
+        //加入接收消息队列
+        console.log(messageJSON);
+        if (receiveMessageQueue) {
+            receiveMessageQueue.push(messageJSON);
+        }
         _dispatchMessageFromObjC(messageJSON);
 	}
 
