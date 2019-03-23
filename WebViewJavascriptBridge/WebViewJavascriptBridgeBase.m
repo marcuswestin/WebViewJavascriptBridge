@@ -78,8 +78,10 @@ static int logMaxLength = 500;
         NSString* responseId = message[@"responseId"];
         if (responseId) {
             WVJBResponseCallback responseCallback = _responseCallbacks[responseId];
-            responseCallback(message[@"responseData"]);
-            [self.responseCallbacks removeObjectForKey:responseId];
+            if (responseCallback) {
+                responseCallback(message[@"responseData"]);
+                [self.responseCallbacks removeObjectForKey:responseId];
+            }
         } else {
             WVJBResponseCallback responseCallback = NULL;
             NSString* callbackId = message[@"callbackId"];
