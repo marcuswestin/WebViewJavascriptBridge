@@ -18,6 +18,10 @@ typedef NSDictionary WVJBMessage;
 
 @protocol WebViewJavascriptBridgeBaseDelegate <NSObject>
 - (NSString*) _evaluateJavascript:(NSString*)javascriptCommand;
+
+@optional
+- (void)invokeUnregisteredHandler:(NSString *)handlerName data:(id)data callback:(WVJBResponseCallback)callback;
+
 @end
 
 @interface WebViewJavascriptBridgeBase : NSObject

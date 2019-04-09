@@ -104,6 +104,14 @@
     return [_webView stringByEvaluatingJavaScriptFromString:javascriptCommand];
 }
 
+- (void)invokeUnregisteredHandler:(NSString *)handlerName data:(id)data callback:(WVJBResponseCallback)callback
+{
+    if(nil != _invokeUnregisteredHandlerAction)
+    {
+        _invokeUnregisteredHandlerAction(handlerName, data, callback);
+    }
+}
+
 #if defined WVJB_PLATFORM_OSX
 /* Platform specific internals: OSX
  **********************************/

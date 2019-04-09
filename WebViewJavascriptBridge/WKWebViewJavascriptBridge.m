@@ -191,6 +191,14 @@
 }
 
 
+- (void)invokeUnregisteredHandler:(NSString *)handlerName data:(id)data callback:(WVJBResponseCallback)callback
+{
+    if(nil != _invokeUnregisteredHandlerAction)
+    {
+        _invokeUnregisteredHandlerAction(handlerName, data, callback);
+    }
+}
+
 
 @end
 

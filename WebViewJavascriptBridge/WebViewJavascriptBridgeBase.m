@@ -84,13 +84,14 @@ static int logMaxLength = 500;
             WVJBResponseCallback responseCallback = NULL;
             NSString* callbackId = message[@"callbackId"];
             if (callbackId) {
+                __weak typeof(self) weakSelf = self;
                 responseCallback = ^(id responseData) {
                     if (responseData == nil) {
                         responseData = [NSNull null];
                     }
                     
                     WVJBMessage* msg = @{ @"responseId":callbackId, @"responseData":responseData };
-                    [self _queueMessage:msg];
+                    [weakSelf _queueMessage:msg];
                 };
             } else {
                 responseCallback = ^(id ignoreResponseData) {
@@ -102,6 +103,9 @@ static int logMaxLength = 500;
             
             if (!handler) {
                 NSLog(@"WVJBNoHandlerException, No handler for message from JS: %@", message);
+                if(self.delegate && [self.delegate respondsToSelector:@selector(invokeUnregisteredHandler:data:callback:)]) {
+                    [self.delegate invokeUnregisteredHandler:message[@"handlerName"] data:message[@"data"] callback:responseCallback];
+                }
                 continue;
             }
             

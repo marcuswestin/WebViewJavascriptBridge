@@ -29,6 +29,8 @@
 - (void)setWebViewDelegate:(id)webViewDelegate;
 - (void)disableJavscriptAlertBoxSafetyTimeout;
 
+@property (nonatomic, copy) void (^invokeUnregisteredHandlerAction)(NSString *handleName, id data, WVJBResponseCallback callback);
+
 @end
 
 #endif
