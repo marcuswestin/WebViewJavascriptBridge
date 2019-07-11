@@ -177,7 +177,7 @@
 
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
     if (webView != _webView) { return YES; }
-    
+    if (request == nil) { return YES; }
     NSURL *url = [request URL];
     __strong WVJB_WEBVIEW_DELEGATE_TYPE* strongDelegate = _webViewDelegate;
     if ([_base isWebViewJavascriptBridgeURL:url]) {
