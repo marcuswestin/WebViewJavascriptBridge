@@ -6,4 +6,6 @@ An iOS/OSX bridge for sending messages between Obj-C and JavaScript in WKWebView
 More simple more light.
 ==========================
 
-
+How to use ?
+==========================
+On Native side:
