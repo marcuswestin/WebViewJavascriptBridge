@@ -10,19 +10,8 @@
 </head><body>
 	<h1>WebViewJavascriptBridge Demo</h1>
 	<script>
-	window.onerror = function(err) {
-		log('window.onerror: ' + err)
-	}
-
     function setupWebViewJavascriptBridge(callback) {
-        if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
-        if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
-        window.WVJBCallbacks = [callback];
-        var WVJBIframe = document.createElement('iframe');
-        WVJBIframe.style.display = 'none';
-        WVJBIframe.src = 'https://__bridge_loaded__';
-        document.documentElement.appendChild(WVJBIframe);
-        setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
+    if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
     }
 
     setupWebViewJavascriptBridge(function(bridge) {
@@ -42,19 +31,29 @@
 			log('JS responding with', responseData)
 			responseCallback(responseData)
 		})
-
+        bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+            log('JS got response', response)
+        })
 		document.body.appendChild(document.createElement('br'))
-
-		var callbackButton = document.getElementById('buttons').appendChild(document.createElement('button'))
-		callbackButton.innerHTML = 'Fire testObjcCallback'
-		callbackButton.onclick = function(e) {
-			e.preventDefault()
-			log('JS calling handler "testObjcCallback"')
-			bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
-				log('JS got response', response)
-			})
-		}
-	})
+    })
+    
+    function onclickBtn() {
+        setupWebViewJavascriptBridge(function(bridge) {
+                                     var uniqueId = 1
+                                     function log(message, data) {
+                                     var log = document.getElementById('log')
+                                     var el = document.createElement('div')
+                                     el.className = 'logLine'
+                                     el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + JSON.stringify(data)
+                                     if (log.children.length) { log.insertBefore(el, log.children[0]) }
+                                     else { log.appendChild(el) }
+                                     }
+                                     bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+                                                        log('JS got response', response)
+                                                        })
+                                     document.body.appendChild(document.createElement('br'))
+                                     })
+    }
 	</script>
-	<div id='buttons'></div> <div id='log'></div>
+	<button id='buttons' onclick="onclickBtn()" style="width: 200px;height: 40px">Fire testObjcCallback</button> <div id='log'></div>
 </body></html>

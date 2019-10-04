@@ -7,43 +7,23 @@
 //
 
 #import "ExampleWKWebViewController.h"
-#import "WebViewJavascriptBridge.h"
+#import "WKWebView+JavaScriptBridge.h"
 
 @interface ExampleWKWebViewController ()
-
-@property WebViewJavascriptBridge* bridge;
-
+@property (nonatomic, strong) WKWebView *webView;
 @end
 
 @implementation ExampleWKWebViewController
 
-- (void)viewWillAppear:(BOOL)animated {
-    if (_bridge) { return; }
-    
-    WKWebView* webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
-    webView.navigationDelegate = self;
-    [self.view addSubview:webView];
-    [WebViewJavascriptBridge enableLogging];
-    _bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
-    [_bridge setWebViewDelegate:self];
-    
-    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
+- (void)viewDidLoad {
+    [super viewDidLoad];
+   
+    [self.webView registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
         responseCallback(@"Response from testObjcCallback");
     }];
-    
-    [_bridge callHandler:@"testJavascriptHandler" data:@{ @"foo":@"before ready" }];
-    
-    [self renderButtons:webView];
-    [self loadExamplePage:webView];
-}
-
-- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
-    NSLog(@"webViewDidStartLoad");
-}
-
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    NSLog(@"webViewDidFinishLoad");
+    [self renderButtons:self.webView];
+    [self loadExamplePage:self.webView];
 }
 
 - (void)renderButtons:(WKWebView*)webView {
@@ -66,7 +46,7 @@
 
 - (void)callHandler:(id)sender {
     id data = @{ @"greetingFromObjC": @"Hi there, JS!" };
-    [_bridge callHandler:@"testJavascriptHandler" data:data responseCallback:^(id response) {
+    [self.webView callHandler:@"testJavascriptHandler" data:data responseCallback:^(id response) {
         NSLog(@"testJavascriptHandler responded: %@", response);
     }];
 }
@@ -76,5 +56,15 @@
     NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
     NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
     [webView loadHTMLString:appHtml baseURL:baseURL];
+}
+- (WKWebView *) webView {
+    if (!_webView) {
+        WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+        _webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:config];
+        [self.view addSubview:_webView];
+        //If you set LogginglevelAll ,Xcode command Line will show all JavaScript console.log.
+        [WKWebView enableLogging:LogginglevelAll];
+    }
+    return _webView;
 }
 @end
