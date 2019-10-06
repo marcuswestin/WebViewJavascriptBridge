@@ -8,6 +8,16 @@ More simple more light.  Refactor WebViewJavascriptBridge with AOP
 
 How to use ?
 ==========================
+
+### Installation with CocoaPods
+Add this to your [podfile](https://guides.cocoapods.org/using/getting-started.html) and run `pod install` to install:
+
+```ruby
+pod 'SKJavaScriptBridge', '~> 1.0.1'
+```
+
+### Manual installation
+
 On Native side:
  ![shell文件](https://upload-images.jianshu.io/upload_images/1485140-039a71e6e602bf15.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/1200/format/webp)
 
