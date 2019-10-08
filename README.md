@@ -24,7 +24,7 @@ On Native side:
 On JavaScript side:
  ![shell文件](https://upload-images.jianshu.io/upload_images/1485140-c759d9499766b8b9.jpg?imageMogr2/auto-orient/strip|imageView2/2/w/1080/format/webp)
  
- In fact,just one ```console.log('callNative')``` is enough to call native method.I had hack the Javascript method ```console.log```.. 
+ In fact,just one ```console.log('callNative')``` is enough to call native method.I had hack the Javascript method ```console.log```.
  Any question you can join my Group Chat:
  ![shell文件](https://upload-images.jianshu.io/upload_images/1485140-ccada880a92988df.JPG?imageMogr2/auto-orient/strip|imageView2/2/w/752/format/webp)
  
