@@ -280,7 +280,10 @@ NSString * _WebViewJavascriptBridge_js() {
 #undef __WVJB_js_func__
     return preprocessorJSCode;
 };
-
+- (void)dealloc
+{
+    [self.configuration.userContentController removeScriptMessageHandlerForName:@"log"];
+}
 - (void)setResponseCallbacks:(NSMutableDictionary *)responseCallbacks {
     objc_setAssociatedObject(self, @selector(responseCallbacks), responseCallbacks, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
