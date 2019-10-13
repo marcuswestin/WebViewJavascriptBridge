@@ -15,6 +15,7 @@ Add this to your [podfile](https://guides.cocoapods.org/using/getting-started.ht
 ```ruby
 pod 'SKJavaScriptBridge', '~> 1.0.1'
 ```
+If native want to get console.log in WKWebView just  ```[WKWebView enableLogging:LogginglevelAll];``` is enough.
 
 ### Manual installation
 
