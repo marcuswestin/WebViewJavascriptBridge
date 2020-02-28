@@ -45,7 +45,7 @@
     }
 #endif
 // NOTE: The following allows the old support for WebView (macOS 10.3-10.14 - now
-// deprecated), but not support for UIWebView (iOS 2.0-12.0 - now deprecated).
+// deprecated), but not support UIWebView (iOS 2.0-12.0 - now deprecated).
 // We do NOT want to support UIWebView on iOS, as Apple is warning developers of
 // UIWebView API usage when submitting an app to the AppStore.  The thought is that
 // this will soon be an error with iOS uploads in our near future.
@@ -60,7 +60,7 @@
     return nil;
 }
 
-- (void)setWebViewDelegate:(WVJB_WEBVIEW_DELEGATE_TYPE*)webViewDelegate {
+- (void)setWebViewDelegate:(id)webViewDelegate {
     _webViewDelegate = webViewDelegate;
 }
 
@@ -101,14 +101,21 @@
  *****************************/
 
 - (void)dealloc {
-    [self _platformSpecificDealloc];
+    #if defined WVJB_PLATFORM_OSX
+        [self _platformSpecificDealloc];
+    #endif
     _base = nil;
     _webView = nil;
     _webViewDelegate = nil;
 }
 
 - (NSString*) _evaluateJavascript:(NSString*)javascriptCommand {
+#if defined WVJB_PLATFORM_OSX
     return [_webView stringByEvaluatingJavaScriptFromString:javascriptCommand];
+#else
+    // Respond with nothing on iOS, because this method isn't able to be used.
+    return [[NSString alloc] init];
+#endif
 }
 
 #if defined WVJB_PLATFORM_OSX
@@ -152,67 +159,8 @@
 #elif defined WVJB_PLATFORM_IOS
 /* Platform specific internals: iOS
  **********************************/
-
-- (void) _platformSpecificSetup:(WVJB_WEBVIEW_TYPE*)webView {
-    _webView = webView;
-    _webView.delegate = self;
-    _base = [[WebViewJavascriptBridgeBase alloc] init];
-    _base.delegate = self;
-}
-
-- (void) _platformSpecificDealloc {
-    _webView.delegate = nil;
-}
-
-- (void)webViewDidFinishLoad:(UIWebView *)webView {
-    if (webView != _webView) { return; }
-    
-    __strong WVJB_WEBVIEW_DELEGATE_TYPE* strongDelegate = _webViewDelegate;
-    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webViewDidFinishLoad:)]) {
-        [strongDelegate webViewDidFinishLoad:webView];
-    }
-}
-
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error {
-    if (webView != _webView) { return; }
-    
-    __strong WVJB_WEBVIEW_DELEGATE_TYPE* strongDelegate = _webViewDelegate;
-    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailLoadWithError:)]) {
-        [strongDelegate webView:webView didFailLoadWithError:error];
-    }
-}
-
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType {
-    if (webView != _webView) { return YES; }
-    
-    NSURL *url = [request URL];
-    __strong WVJB_WEBVIEW_DELEGATE_TYPE* strongDelegate = _webViewDelegate;
-    if ([_base isWebViewJavascriptBridgeURL:url]) {
-        if ([_base isBridgeLoadedURL:url]) {
-            [_base injectJavascriptFile];
-        } else if ([_base isQueueMessageURL:url]) {
-            NSString *messageQueueString = [self _evaluateJavascript:[_base webViewJavascriptFetchQueyCommand]];
-            [_base flushMessageQueue:messageQueueString];
-        } else {
-            [_base logUnkownMessage:url];
-        }
-        return NO;
-    } else if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:shouldStartLoadWithRequest:navigationType:)]) {
-        return [strongDelegate webView:webView shouldStartLoadWithRequest:request navigationType:navigationType];
-    } else {
-        return YES;
-    }
-}
-
-- (void)webViewDidStartLoad:(UIWebView *)webView {
-    if (webView != _webView) { return; }
-    
-    __strong WVJB_WEBVIEW_DELEGATE_TYPE* strongDelegate = _webViewDelegate;
-    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webViewDidStartLoad:)]) {
-        [strongDelegate webViewDidStartLoad:webView];
-    }
-}
-
+/* REMOVED, since UIVebView is no longer supported by Apple. */
 #endif
+
 
 @end
