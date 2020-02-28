@@ -3,7 +3,7 @@ WebViewJavascriptBridge
 
 [![Circle CI](https://img.shields.io/circleci/project/github/marcuswestin/WebViewJavascriptBridge.svg)](https://circleci.com/gh/marcuswestin/WebViewJavascriptBridge)
 
-An iOS/OSX bridge for sending messages between Obj-C and JavaScript in WKWebViews, UIWebViews & WebViews.
+An iOS/OSX bridge for sending messages between Obj-C and JavaScript in WKWebViews & WebViews.
 
 Migration Guide
 ---------------
@@ -37,7 +37,7 @@ Installation (iOS & OSX)
 Add this to your [podfile](https://guides.cocoapods.org/using/getting-started.html) and run `pod install` to install:
 
 ```ruby
-pod 'WebViewJavascriptBridge', '~> 6.0'
+pod 'WebViewJavascriptBridge', '~> 7.0'
 ```
 
 ### Manual installation
@@ -68,7 +68,7 @@ Usage
 @property WebViewJavascriptBridge* bridge;
 ```
 
-2) Instantiate WebViewJavascriptBridge with a WKWebView, UIWebView (iOS) or WebView (OSX):
+2) Instantiate WebViewJavascriptBridge with a WKWebView (iOS) or WebView (OSX):
 
 ```objc
 self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
