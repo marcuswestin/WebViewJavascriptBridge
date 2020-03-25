@@ -7,32 +7,18 @@
 //
 
 #import "WKWebView+JavaScriptBridge.h"
-#import <objc/runtime.h>
+#import "WKWebViewJavascriptBridge_JS.h"
+#import "Tool.h"
+#import "Utils.h"
 #define kBridgePrefix @"__bridge__"
+
 static long _uniqueId = 0;
 static Logginglevel loggingLevel = 0;
-void _swizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector)
-{
-    // the method might not exist in the class, but in its superclass
-    Method originalMethod = class_getInstanceMethod(class, originalSelector);
-    Method swizzledMethod = class_getInstanceMethod(class, swizzledSelector);
-    
-    // class_addMethod will fail if original method already exists
-    BOOL didAddMethod = class_addMethod(class, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
-    
-    // the method doesn’t exist and we just added one
-    if (didAddMethod) {
-        class_replaceMethod(class, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
-    }
-    else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
-    }
-}
 
 @implementation WKWebView (JavaScriptBridge)
 
 +(void)load {
-    _swizzleMethod([self class], @selector(initWithFrame:configuration:), @selector(initWithJavaScriptBridgeFrame:configuration:));
+    swizzleMethod([self class], @selector(initWithFrame:configuration:), @selector(initWithJavaScriptBridgeFrame:configuration:));
 }
 - (instancetype)initWithJavaScriptBridgeFrame:(CGRect)frame configuration:(WKWebViewConfiguration *)configuration {
     if (self = [self initWithJavaScriptBridgeFrame:frame configuration:configuration]) {
@@ -100,13 +86,13 @@ void _swizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector)
         return;
     }
     
-    id messages = [self _deserializeMessageJSON:messageQueueString];
+    id messages = [Utils deserializeMessageJSON:messageQueueString];
     for (WVJBMessage* message in messages) {
         if (![message isKindOfClass:[WVJBMessage class]]) {
             NSLog(@"WebViewJavascriptBridge: WARNING: Invalid %@ received: %@", [message class], message);
             continue;
         }
-        [self _log:@"RCVD" json:message];
+        [Utils log:@"RCVD" json:message loggingLevel:loggingLevel];
         
         NSString* responseId = message[@"responseId"];
         if (responseId) {
@@ -141,16 +127,10 @@ void _swizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector)
     }
 }
 - (void)_dispatchMessage:(WVJBMessage*)message {
-    NSString *messageJSON = [self _serializeMessage:message pretty:NO];
-    [self _log:@"SEND" json:messageJSON];
-    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
-    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
-    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\'" withString:@"\\\'"];
-    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n"];
-    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\r" withString:@"\\r"];
-    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\f" withString:@"\\f"];
-    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\u2028" withString:@"\\u2028"];
-    messageJSON = [messageJSON stringByReplacingOccurrencesOfString:@"\u2029" withString:@"\\u2029"];
+    
+    NSString *messageJSON = [Utils serializeMessage:message pretty:NO];
+    [Utils log:@"SEND" json:messageJSON loggingLevel:loggingLevel];
+    messageJSON =  [Utils replacingJSONString:messageJSON];
     NSString* javascriptCommand = [NSString stringWithFormat:@"WebViewJavascriptBridge._handleMessageFromObjC('%@');", messageJSON];
     if ([[NSThread currentThread] isMainThread]) {
         [self _evaluateJavascript:javascriptCommand];
@@ -163,20 +143,6 @@ void _swizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector)
 }
 + (void)enableLogging:(Logginglevel)logginglevel {
     loggingLevel = logginglevel;
-}
-
-- (void)_log:(NSString *)action json:(id)json {
-    if (!loggingLevel) { return; }
-    if (![json isKindOfClass:[NSString class]]) {
-        json = [self _serializeMessage:json pretty:YES];
-    }
-    NSLog(@"WVJB %@: %@", action, json);
-}
-- (NSString *)_serializeMessage:(id)message pretty:(BOOL)pretty{
-    return [[NSString alloc] initWithData:[NSJSONSerialization dataWithJSONObject:message options:(NSJSONWritingOptions)(pretty ? NSJSONWritingPrettyPrinted : 0) error:nil] encoding:NSUTF8StringEncoding];
-}
-- (NSArray*)_deserializeMessageJSON:(NSString *)messageJSON {
-    return [NSJSONSerialization JSONObjectWithData:[messageJSON dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingAllowFragments error:nil];
 }
 
 - (NSString *)_filterMessage:(NSString *) message {
@@ -194,92 +160,6 @@ void _swizzleMethod(Class class, SEL originalSelector, SEL swizzledSelector)
     return nil;
 }
 
-NSString * _WebViewJavascriptBridge_js() {
-#define __WVJB_js_func__(x) #x
-    
-    // BEGIN preprocessorJSCode
-    static NSString * preprocessorJSCode = @__WVJB_js_func__(
-                                                             ;(function() {
-       
-        console.log = (function (oriLogFunc) {
-            return function (str) {
-                window.webkit.messageHandlers.log.postMessage(str);
-                oriLogFunc.call(console, str);
-            }
-        })(console.log);
-        window.WebViewJavascriptBridge = {
-        registerHandler: registerHandler,
-        callHandler: callHandler,
-        _handleMessageFromObjC: _handleMessageFromObjC
-        };
-        
-        var sendMessageQueue = [];
-        var messageHandlers = {};
-        var responseCallbacks = {};
-        var uniqueId = 1;
-        
-        function registerHandler(handlerName, handler) {
-            messageHandlers[handlerName] = handler;
-        }
-        
-        function callHandler(handlerName, data, responseCallback) {
-            if (arguments.length === 2 && typeof data == 'function') {
-                responseCallback = data;
-                data = null;
-            }
-            _doSend({ handlerName:handlerName, data:data }, responseCallback);
-        }
-        function _doSend(message, responseCallback) {
-            if (responseCallback) {
-                var callbackId = 'cb_'+(uniqueId++)+'_'+new Date().getTime();
-                responseCallbacks[callbackId] = responseCallback;
-                message['callbackId'] = callbackId;
-            }
-            sendMessageQueue.push(message);
-            console.log('__bridge__'+ JSON.stringify(sendMessageQueue));
-            sendMessageQueue = [];
-        }
-        
-        function _dispatchMessageFromObjC(messageJSON) {
-            _doDispatchMessageFromObjC();
-            
-            function _doDispatchMessageFromObjC() {
-                var message = JSON.parse(messageJSON);
-                var messageHandler;
-                var responseCallback;
-                
-                if (message.responseId) {
-                    responseCallback = responseCallbacks[message.responseId];
-                    if (!responseCallback) {
-                        return;
-                    }
-                    responseCallback(message.responseData);
-                    delete responseCallbacks[message.responseId];
-                } else {
-                    if (message.callbackId) {
-                        var callbackResponseId = message.callbackId;
-                        responseCallback = function(responseData) {
-                            _doSend({ handlerName:message.handlerName, responseId:callbackResponseId, responseData:responseData });
-                        };
-                    }
-                    var handler = messageHandlers[message.handlerName];
-                    if (!handler) {
-                        console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
-                    } else {
-                        handler(message.data, responseCallback);
-                    }
-                }
-            }
-        }
-        function _handleMessageFromObjC(messageJSON) {
-            _dispatchMessageFromObjC(messageJSON);
-        }
-    })();
-                                                             ); // END preprocessorJSCode
-    
-#undef __WVJB_js_func__
-    return preprocessorJSCode;
-};
 - (void)dealloc
 {
     [self.configuration.userContentController removeScriptMessageHandlerForName:@"log"];

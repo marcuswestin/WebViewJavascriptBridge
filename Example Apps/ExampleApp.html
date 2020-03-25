@@ -11,7 +11,7 @@
 	<h1>WebViewJavascriptBridge Demo</h1>
 	<script>
     function setupWebViewJavascriptBridge(callback) {
-    if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+             return callback(WebViewJavascriptBridge);
     }
 
     setupWebViewJavascriptBridge(function(bridge) {
@@ -52,7 +52,7 @@
                                                         log('JS got response', response)
                                                         })
                                      document.body.appendChild(document.createElement('br'))
-                                     })
+                            })
     }
 	</script>
 	<button id='buttons' onclick="onclickBtn()" style="width: 200px;height: 40px">Fire testObjcCallback</button> <div id='log'></div>

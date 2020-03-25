@@ -24,6 +24,7 @@
     }];
     [self renderButtons:self.webView];
     [self loadExamplePage:self.webView];
+    
 }
 
 - (void)renderButtons:(WKWebView*)webView {
@@ -42,6 +43,13 @@
     [self.view insertSubview:reloadButton aboveSubview:webView];
     reloadButton.frame = CGRectMake(110, 400, 100, 35);
     reloadButton.titleLabel.font = font;
+    
+    UIButton *callBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [callBackButton setTitle:@"测试按钮" forState:UIControlStateNormal];
+    [callBackButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
+    [callBackButton addTarget:self action:@selector(callHandler:) forControlEvents:UIControlEventTouchUpInside];
+    callBackButton.frame = CGRectMake(210, 400, 100, 35);
+    [self.view insertSubview:callBackButton aboveSubview:webView];
 }
 
 - (void)callHandler:(id)sender {
@@ -63,7 +71,7 @@
         _webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:config];
         [self.view addSubview:_webView];
         //If you set LogginglevelAll ,Xcode command Line will show all JavaScript console.log.
-        [WKWebView enableLogging:LogginglevelAll];
+        [WKWebView enableLogging:LogginglevelJSONOnly];
     }
     return _webView;
 }

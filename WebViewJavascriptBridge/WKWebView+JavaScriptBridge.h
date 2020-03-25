@@ -7,13 +7,9 @@
 //
 
 #import <WebKit/WebKit.h>
+#import "Logginglevel.h"
 NS_ASSUME_NONNULL_BEGIN
-typedef enum {
-    //Only printf JSON In Xcode Command line
-    LogginglevelJSONOnly = 1 << 0,
-    //All String  printf In Xcode Command line
-    LogginglevelAll = 1 << 1,
-}Logginglevel;
+
 typedef NSDictionary WVJBMessage;
 typedef void (^WVJBResponseCallback)(id responseData);
 typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
