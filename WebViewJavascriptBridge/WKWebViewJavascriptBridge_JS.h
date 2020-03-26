@@ -14,12 +14,36 @@ NSString * _WebViewJavascriptBridge_js() {
     static NSString * preprocessorJSCode = @__WVJB_js_func__(
                                                              ;(function(window) {
        
-        console.log = (function (oriLogFunc) {
-            return function (str) {
-                window.webkit.messageHandlers.log.postMessage(str);
-                oriLogFunc.call(console, str);
-            }
-        })(console.log);
+     let printObject = function (obj) {
+          let output = "";
+          if (obj === null) {
+              output += "null";
+          }
+          else  if (typeof(obj) == "undefined") {
+              output += "undefined";
+          }
+          else if (typeof obj ==='object'){
+              output+="{";
+              for(let key in obj){
+                  let value = obj[key];
+                  output+= "\""+key+"\""+":"+"\""+value+"\""+",";
+              }
+              output = output.substr(0, output.length - 1);
+              output+="}";
+          }
+          else {
+              output = "" + obj;
+          }
+          return output;
+      };
+      console.log = (function (oriLogFunc,printObject) {
+          return function (str) {
+              str = printObject(str);
+              window.webkit.messageHandlers.log.postMessage(str);
+              oriLogFunc.call(console, str);
+          }
+      })(console.log,printObject);
+        
         window.WebViewJavascriptBridge = {
         registerHandler: registerHandler,
         callHandler: callHandler,
@@ -64,8 +88,10 @@ NSString * _WebViewJavascriptBridge_js() {
                 if (message.responseId) {
                     responseCallback = responseCallbacks[message.responseId];
                     if (!responseCallback) {
+                       
                         return;
                     }
+                    
                     responseCallback(message.responseData);
                     delete responseCallbacks[message.responseId];
                 } else {

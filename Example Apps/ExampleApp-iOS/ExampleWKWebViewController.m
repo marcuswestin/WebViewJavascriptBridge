@@ -20,7 +20,7 @@
    
     [self.webView registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
-        responseCallback(@"Response from testObjcCallback");
+        responseCallback(@"Response from testObjcCallback111");
     }];
     [self renderButtons:self.webView];
     [self loadExamplePage:self.webView];
@@ -44,12 +44,6 @@
     reloadButton.frame = CGRectMake(110, 400, 100, 35);
     reloadButton.titleLabel.font = font;
     
-    UIButton *callBackButton = [UIButton buttonWithType:UIButtonTypeCustom];
-    [callBackButton setTitle:@"测试按钮" forState:UIControlStateNormal];
-    [callBackButton setTitleColor:[UIColor redColor] forState:UIControlStateNormal];
-    [callBackButton addTarget:self action:@selector(callHandler:) forControlEvents:UIControlEventTouchUpInside];
-    callBackButton.frame = CGRectMake(210, 400, 100, 35);
-    [self.view insertSubview:callBackButton aboveSubview:webView];
 }
 
 - (void)callHandler:(id)sender {
@@ -71,7 +65,7 @@
         _webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:config];
         [self.view addSubview:_webView];
         //If you set LogginglevelAll ,Xcode command Line will show all JavaScript console.log.
-        [WKWebView enableLogging:LogginglevelJSONOnly];
+        [WKWebView enableLogging:LogginglevelAll];
     }
     return _webView;
 }

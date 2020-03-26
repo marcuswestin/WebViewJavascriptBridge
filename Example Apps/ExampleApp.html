@@ -9,13 +9,28 @@
 	</style>
 </head><body>
 	<h1>WebViewJavascriptBridge Demo</h1>
+	<script type="text/javascript" src="LogTool.js"></script>
 	<script>
+
+
     function setupWebViewJavascriptBridge(callback) {
              return callback(WebViewJavascriptBridge);
     }
-
+    
+    let person = {};
+    person.name = "hou";
+    person.height = 180;
+    person.loc = "SH";
+    
+    console.log(NaN)
+    console.log(undefined)
+    console.log(null)
+    console.log(333333)
+    console.log(person);
+    console.log(this);
+    
+    var uniqueId = 1
     setupWebViewJavascriptBridge(function(bridge) {
-		var uniqueId = 1
 		function log(message, data) {
 			var log = document.getElementById('log')
 			var el = document.createElement('div')
@@ -38,22 +53,22 @@
     })
     
     function onclickBtn() {
-        setupWebViewJavascriptBridge(function(bridge) {
-                                     var uniqueId = 1
-                                     function log(message, data) {
-                                     var log = document.getElementById('log')
-                                     var el = document.createElement('div')
-                                     el.className = 'logLine'
-                                     el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + JSON.stringify(data)
-                                     if (log.children.length) { log.insertBefore(el, log.children[0]) }
-                                     else { log.appendChild(el) }
-                                     }
-                                     bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
-                                                        log('JS got response', response)
-                                                        })
-                                     document.body.appendChild(document.createElement('br'))
-                            })
-    }
+		setupWebViewJavascriptBridge(function(bridge) {
+
+			function log(message, data) {
+				var log = document.getElementById('log')
+				var el = document.createElement('div')
+				el.className = 'logLine'
+				el.innerHTML = uniqueId++ + '. ' + message + ':<br/>' + JSON.stringify(data)
+				if (log.children.length) { log.insertBefore(el, log.children[0]) }
+				else { log.appendChild(el) }
+			}
+			bridge.callHandler('testObjcCallback', {'foo': 'bar'}, function(response) {
+				log('JS got response', response)
+			})
+			document.body.appendChild(document.createElement('br'))
+		})
+	}
 	</script>
 	<button id='buttons' onclick="onclickBtn()" style="width: 200px;height: 40px">Fire testObjcCallback</button> <div id='log'></div>
 </body></html>
