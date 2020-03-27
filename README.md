@@ -82,5 +82,5 @@ setupWebViewJavascriptBridge(function(bridge) {
 ```
 ### Any question.
 You can watch this chinese video https://www.youtube.com/watch?v=4JUNQkohh5E.  
-English video https://www.youtube.com/watch?v=POohaYA-ew0.
+English video https://www.youtube.com/watch?v=POohaYA-ew0.  
 Also you can contact me with:housenkui@gmail.com or WeChat :housenkui
