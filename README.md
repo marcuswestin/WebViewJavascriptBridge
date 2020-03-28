@@ -85,6 +85,6 @@ You can watch this chinese video https://www.youtube.com/watch?v=4JUNQkohh5E.
 English video https://www.youtube.com/watch?v=POohaYA-ew0.  
 Also you can contact me with:housenkui@gmail.com or WeChat :[housenkui](https://github.com/housenkui/)
 ### 如果你有疑问.
-你可以观看中文版的视频介绍:https://www.youtube.com/watch?v=4JUNQkohh5E
-或者英文版的:https://www.youtube.com/watch?v=POohaYA-ew0  https://v.youku.com/v_show/id_XNDYwNzUwODgwNA==.html
+你可以观看中文版的视频介绍:https://www.youtube.com/watch?v=4JUNQkohh5E  
+或者英文版的:https://www.youtube.com/watch?v=POohaYA-ew0    https://v.youku.com/v_show/id_XNDYwNzUwODgwNA==.html  
 当然你也可以邮件联系我:housenkui@gmail.com 或者微信:[housenkui](https://github.com/housenkui/)
