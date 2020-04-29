@@ -1,7 +1,7 @@
 WebViewJavascriptBridge
 =======================
 
-An iOS/OSX bridge for sending messages between Obj-C and JavaScript in WKWebViews.
+An iOS/OSX bridge for sending messages between Obj-C and JavaScript in WKWebViews. Also easy to get js console.log.
 
 More simple more light.  Refactor WebViewJavascriptBridge with AOP
 ==========================
@@ -15,7 +15,10 @@ Add this to your [podfile](https://guides.cocoapods.org/using/getting-started.ht
 ```ruby
 pod 'SKJavaScriptBridge', '~> 1.0.3'
 ```
-If native want to get console.log in WKWebView just  ```[WKWebView enableLogging:LogginglevelAll];``` is enough.
+If you can't find the last version, maybe you need to update local pod repo.
+```ruby
+pod repo update
+```
 
 ### Manual installation
 Drag the `WebViewJavascriptBridge` folder into your project.
