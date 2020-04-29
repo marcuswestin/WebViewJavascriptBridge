@@ -13,7 +13,7 @@ How to use ?
 Add this to your [podfile](https://guides.cocoapods.org/using/getting-started.html) and run `pod install` to install:
 
 ```ruby
-pod 'SKJavaScriptBridge'
+pod 'SKJavaScriptBridge', '~> 1.0.3'
 ```
 If native want to get console.log in WKWebView just  ```[WKWebView enableLogging:LogginglevelAll];``` is enough.
 
@@ -27,7 +27,7 @@ Usage
 1) Import the header file and declare an ivar property:
 
 ```objc
-#import "WKWebView+JavaScriptBridge.h"
+#import "WebViewJavascriptBridge.h"
 ```
 ```objc
 @property (nonatomic, strong) WKWebView *webView;
