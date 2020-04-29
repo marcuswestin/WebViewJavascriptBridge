@@ -35,7 +35,7 @@ Usage
 ```
 
 ```objc
-self.webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+    self.webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
     [self.view addSubview:self.webView];
     
     _bridge = [WebViewJavascriptBridge bridgeForWebView:self.webView
