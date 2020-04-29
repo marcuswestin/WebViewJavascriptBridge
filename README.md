@@ -31,29 +31,26 @@ Usage
 ```
 ```objc
 @property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong) WebViewJavascriptBridge* bridge;
 ```
 
 ```objc
-- (WKWebView *) webView {
-    if (!_webView) {
-        WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
-        _webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:config];
-        [self.view addSubview:_webView];
-        //If you set LogginglevelAll ,Xcode command Line will show all JavaScript console.log.
-        [WKWebView enableLogging:LogginglevelAll];
-    }
-    return _webView;
-}
+self.webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:self.webView];
+    
+    _bridge = [WebViewJavascriptBridge bridgeForWebView:self.webView
+                                          showJSconsole:YES
+                                          enableLogging:YES];
 ```
 
 2) Register a handler in ObjC, and call a JS handler:
 
 ```objc
-[self.webView registerHandler:@"ObjC Echo" handler:^(id data, WVJBResponseCallback responseCallback) {
+[_bridge registerHandler:@"ObjC Echo" handler:^(id data, WVJBResponseCallback responseCallback) {
 	NSLog(@"ObjC Echo called with: %@", data);
 	responseCallback(data);
 }];
-[self.webView callHandler:@"JS Echo" data:nil responseCallback:^(id responseData) {
+[_bridge callHandler:@"JS Echo" data:nil responseCallback:^(id responseData) {
 	NSLog(@"ObjC received response: %@", responseData);
 }];
 ```
