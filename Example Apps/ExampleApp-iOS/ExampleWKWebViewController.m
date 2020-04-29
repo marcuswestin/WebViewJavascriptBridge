@@ -7,18 +7,25 @@
 //
 
 #import "ExampleWKWebViewController.h"
-#import "WKWebView+JavaScriptBridge.h"
-
+#import "WebViewJavascriptBridge.h"
 @interface ExampleWKWebViewController ()
 @property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong) WebViewJavascriptBridge* bridge;
 @end
 
 @implementation ExampleWKWebViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:self.webView];
+    
+    _bridge = [WebViewJavascriptBridge bridgeForWebView:self.webView
+                                          showJSconsole:YES
+                                          enableLogging:YES];
    
-    [self.webView registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
+    [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
         responseCallback(@"Response from testObjcCallback111");
     }];
@@ -48,7 +55,7 @@
 
 - (void)callHandler:(id)sender {
     id data = @{ @"greetingFromObjC": @"Hi there, JS!" };
-    [self.webView callHandler:@"testJavascriptHandler" data:data responseCallback:^(id response) {
+    [_bridge callHandler:@"testJavascriptHandler" data:data responseCallback:^(id response) {
         NSLog(@"testJavascriptHandler responded: %@", response);
     }];
 }
@@ -64,9 +71,15 @@
         WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
         _webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:config];
         [self.view addSubview:_webView];
-        //If you set LogginglevelAll ,Xcode command Line will show all JavaScript console.log.
-        [WKWebView enableLogging:LogginglevelAll];
+     
     }
     return _webView;
+}
+
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    NSLog(@"viewDidDisappear``");
+    [self.webView.configuration.userContentController removeAllUserScripts];
 }
 @end

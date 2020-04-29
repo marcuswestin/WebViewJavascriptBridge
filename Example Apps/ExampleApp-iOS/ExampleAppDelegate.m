@@ -1,5 +1,6 @@
 #import "ExampleAppDelegate.h"
 #import "ExampleWKWebViewController.h"
+#import "FirstViewController.h"
 
 @implementation ExampleAppDelegate
 
@@ -12,7 +13,9 @@
     [tabBarController addChildViewController:WKWebViewExampleController];
 
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
-    self.window.rootViewController = tabBarController;
+    
+    UINavigationController *nav = [[UINavigationController alloc]initWithRootViewController:[FirstViewController new]];
+    self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];
     
     return YES;

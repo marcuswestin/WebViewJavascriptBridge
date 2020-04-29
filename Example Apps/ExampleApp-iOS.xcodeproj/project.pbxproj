@@ -15,9 +15,11 @@
 		2CA0465C1711AC8E006DEE8B /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = 2CA0465B1711AC8D006DEE8B /* ExampleApp.html */; };
 		2CAB869B1727684300BD9ED1 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2CAB869A1727684300BD9ED1 /* Default-568h@2x.png */; };
 		2CEB3EC01602563600548120 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2CEB3EBF1602563600548120 /* UIKit.framework */; };
-		EF5DC17323472E0B00F81F96 /* WKWebView+JavaScriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5DC17223472E0B00F81F96 /* WKWebView+JavaScriptBridge.m */; };
-		EFE398AD242B15EF0027857D /* Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = EFE398AC242B15EF0027857D /* Utils.m */; };
+		EF5D0B3224599757008DC69C /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5D0B2E24599756008DC69C /* WebViewJavascriptBridge.m */; };
+		EF5D0B3324599757008DC69C /* WebViewJavascriptBridgeBase.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5D0B2F24599756008DC69C /* WebViewJavascriptBridgeBase.m */; };
+		EF5D0B3424599757008DC69C /* WebViewJavascriptLeakAvoider.m in Sources */ = {isa = PBXBuildFile; fileRef = EF5D0B3024599757008DC69C /* WebViewJavascriptLeakAvoider.m */; };
 		EFE398AF242C348C0027857D /* TestConsole.html in Resources */ = {isa = PBXBuildFile; fileRef = EFE398AE242C348C0027857D /* TestConsole.html */; };
+		EFF05EC5244C0FED0060F71C /* FirstViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EFF05EC4244C0FED0060F71C /* FirstViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,14 +38,15 @@
 		2CEB3EBF1602563600548120 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		2CEB3EC11602563600548120 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		2CEB3EC31602563600548120 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		EF5DC17123472E0B00F81F96 /* WKWebView+JavaScriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "WKWebView+JavaScriptBridge.h"; sourceTree = "<group>"; };
-		EF5DC17223472E0B00F81F96 /* WKWebView+JavaScriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+JavaScriptBridge.m"; sourceTree = "<group>"; };
-		EFE398A8242B12C90027857D /* Logginglevel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Logginglevel.h; sourceTree = "<group>"; };
-		EFE398A9242B14340027857D /* WKWebViewJavascriptBridge_JS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WKWebViewJavascriptBridge_JS.h; sourceTree = "<group>"; };
-		EFE398AA242B151E0027857D /* Tool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Tool.h; sourceTree = "<group>"; };
-		EFE398AB242B15EF0027857D /* Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Utils.h; sourceTree = "<group>"; };
-		EFE398AC242B15EF0027857D /* Utils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Utils.m; sourceTree = "<group>"; };
+		EF5D0B2C24599756008DC69C /* WebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge.h; sourceTree = "<group>"; };
+		EF5D0B2D24599756008DC69C /* WebViewJavascriptLeakAvoider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptLeakAvoider.h; sourceTree = "<group>"; };
+		EF5D0B2E24599756008DC69C /* WebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge.m; sourceTree = "<group>"; };
+		EF5D0B2F24599756008DC69C /* WebViewJavascriptBridgeBase.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridgeBase.m; sourceTree = "<group>"; };
+		EF5D0B3024599757008DC69C /* WebViewJavascriptLeakAvoider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptLeakAvoider.m; sourceTree = "<group>"; };
+		EF5D0B3124599757008DC69C /* WebViewJavascriptBridgeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridgeBase.h; sourceTree = "<group>"; };
 		EFE398AE242C348C0027857D /* TestConsole.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = TestConsole.html; sourceTree = SOURCE_ROOT; };
+		EFF05EC3244C0FED0060F71C /* FirstViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FirstViewController.h; sourceTree = "<group>"; };
+		EFF05EC4244C0FED0060F71C /* FirstViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FirstViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,13 +65,12 @@
 		2C1562A7176B9F5400B4AE50 /* WebViewJavascriptBridge */ = {
 			isa = PBXGroup;
 			children = (
-				EFE398A8242B12C90027857D /* Logginglevel.h */,
-				EF5DC17123472E0B00F81F96 /* WKWebView+JavaScriptBridge.h */,
-				EF5DC17223472E0B00F81F96 /* WKWebView+JavaScriptBridge.m */,
-				EFE398A9242B14340027857D /* WKWebViewJavascriptBridge_JS.h */,
-				EFE398AA242B151E0027857D /* Tool.h */,
-				EFE398AB242B15EF0027857D /* Utils.h */,
-				EFE398AC242B15EF0027857D /* Utils.m */,
+				EF5D0B2C24599756008DC69C /* WebViewJavascriptBridge.h */,
+				EF5D0B2E24599756008DC69C /* WebViewJavascriptBridge.m */,
+				EF5D0B3124599757008DC69C /* WebViewJavascriptBridgeBase.h */,
+				EF5D0B2F24599756008DC69C /* WebViewJavascriptBridgeBase.m */,
+				EF5D0B2D24599756008DC69C /* WebViewJavascriptLeakAvoider.h */,
+				EF5D0B3024599757008DC69C /* WebViewJavascriptLeakAvoider.m */,
 			);
 			name = WebViewJavascriptBridge;
 			path = ../../WebViewJavascriptBridge;
@@ -81,6 +83,8 @@
 				EFE398AE242C348C0027857D /* TestConsole.html */,
 				2CA045BC17117439006DEE8B /* ExampleAppDelegate.h */,
 				2CA045BD17117439006DEE8B /* ExampleAppDelegate.m */,
+				EFF05EC3244C0FED0060F71C /* FirstViewController.h */,
+				EFF05EC4244C0FED0060F71C /* FirstViewController.m */,
 				0ECB01421A0EE1BA0037FF4E /* ExampleWKWebViewController.h */,
 				0ECB01431A0EE1F20037FF4E /* ExampleWKWebViewController.m */,
 				2C1562A7176B9F5400B4AE50 /* WebViewJavascriptBridge */,
@@ -167,6 +171,7 @@
 				ORGANIZATIONNAME = "Marcus Westin";
 				TargetAttributes = {
 					2CEB3EBA1602563600548120 = {
+						DevelopmentTeam = D9DMY5ZV46;
 						LastSwiftMigration = 0820;
 					};
 				};
@@ -209,10 +214,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				0ECB01441A0EE1F20037FF4E /* ExampleWKWebViewController.m in Sources */,
+				EFF05EC5244C0FED0060F71C /* FirstViewController.m in Sources */,
+				EF5D0B3424599757008DC69C /* WebViewJavascriptLeakAvoider.m in Sources */,
 				2CA045C217117439006DEE8B /* ExampleAppDelegate.m in Sources */,
-				EF5DC17323472E0B00F81F96 /* WKWebView+JavaScriptBridge.m in Sources */,
-				EFE398AD242B15EF0027857D /* Utils.m in Sources */,
 				2CA045C317117439006DEE8B /* main.m in Sources */,
+				EF5D0B3324599757008DC69C /* WebViewJavascriptBridgeBase.m in Sources */,
+				EF5D0B3224599757008DC69C /* WebViewJavascriptBridge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -309,6 +316,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = D9DMY5ZV46;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ExampleApp-iOS/ExampleApp-iOS-Prefix.pch";
 				INFOPLIST_FILE = "ExampleApp-iOS/ExampleApp-iOS-Info.plist";
@@ -326,6 +334,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = YES;
+				DEVELOPMENT_TEAM = D9DMY5ZV46;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ExampleApp-iOS/ExampleApp-iOS-Prefix.pch";
 				INFOPLIST_FILE = "ExampleApp-iOS/ExampleApp-iOS-Info.plist";
