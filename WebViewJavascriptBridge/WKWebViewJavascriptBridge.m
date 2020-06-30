@@ -100,6 +100,16 @@
     }];
 }
 
+- (void)handleBridgeURL:(NSURL *)url {
+    if ([_base isBridgeLoadedURL:url]) {
+        [_base injectJavascriptFile];
+    } else if ([_base isQueueMessageURL:url]) {
+        [self WKFlushMessageQueue];
+    } else {
+        [_base logUnkownMessage:url];
+    }
+}
+
 - (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     if (webView != _webView) { return; }
     
@@ -139,21 +149,33 @@
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
 
     if ([_base isWebViewJavascriptBridgeURL:url]) {
-        if ([_base isBridgeLoadedURL:url]) {
-            [_base injectJavascriptFile];
-        } else if ([_base isQueueMessageURL:url]) {
-            [self WKFlushMessageQueue];
-        } else {
-            [_base logUnkownMessage:url];
-        }
+        [self handleBridgeURL:url];
         decisionHandler(WKNavigationActionPolicyCancel);
         return;
     }
-    
+
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
         [_webViewDelegate webView:webView decidePolicyForNavigationAction:navigationAction decisionHandler:decisionHandler];
     } else {
         decisionHandler(WKNavigationActionPolicyAllow);
+    }
+}
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction preferences:(WKWebpagePreferences *)preferences decisionHandler:(void (^)(WKNavigationActionPolicy, WKWebpagePreferences*))decisionHandler  API_AVAILABLE(ios(13.0)){
+    if (webView != _webView) { return; }
+    NSURL *url = navigationAction.request.URL;
+    __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
+
+    if ([_base isWebViewJavascriptBridgeURL:url]) {
+        [self handleBridgeURL:url];
+        decisionHandler(WKNavigationActionPolicyCancel, preferences);
+        return;
+    }
+
+    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
+        [_webViewDelegate webView:webView decidePolicyForNavigationAction:navigationAction preferences:preferences decisionHandler:decisionHandler];
+    } else {
+        decisionHandler(WKNavigationActionPolicyAllow, preferences);
     }
 }
 
