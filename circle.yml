@@ -1,10 +1,16 @@
 machine:
-  xcode:
-    version: 9.0
+    xcode:
+        version: 9.0
 # dependencies:
 #   override:
 #     - brew install kylef/formulae/swiftenv
 #     - swiftenv install 3.0
+
+steps:
+    - run:
+          name: pre-start simulator
+          command: xcrun instruments -w "iPhone 11 Pro (13.3) [" || true
+
 test:
-  override:
-    - make test-circle-ci
+    override:
+        - make test-circle-ci
