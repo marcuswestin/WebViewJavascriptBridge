@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2C35E9761C5A7F8E0093FB29 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2C35E9751C5A7F8E0093FB29 /* Default-568h@2x.png */; };
-		2C3E7C631C5A928700A1E322 /* WebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3E7C5C1C5A928700A1E322 /* WebViewJavascriptBridge.m */; };
 		2C3E7C641C5A928700A1E322 /* WebViewJavascriptBridge_JS.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3E7C5E1C5A928700A1E322 /* WebViewJavascriptBridge_JS.m */; };
 		2C3E7C651C5A928700A1E322 /* WebViewJavascriptBridgeBase.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3E7C601C5A928700A1E322 /* WebViewJavascriptBridgeBase.m */; };
 		2C3E7C661C5A928700A1E322 /* WKWebViewJavascriptBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = 2C3E7C621C5A928700A1E322 /* WKWebViewJavascriptBridge.m */; };
@@ -33,8 +32,6 @@
 
 /* Begin PBXFileReference section */
 		2C35E9751C5A7F8E0093FB29 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		2C3E7C5B1C5A928700A1E322 /* WebViewJavascriptBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge.h; sourceTree = "<group>"; };
-		2C3E7C5C1C5A928700A1E322 /* WebViewJavascriptBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge.m; sourceTree = "<group>"; };
 		2C3E7C5D1C5A928700A1E322 /* WebViewJavascriptBridge_JS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridge_JS.h; sourceTree = "<group>"; };
 		2C3E7C5E1C5A928700A1E322 /* WebViewJavascriptBridge_JS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebViewJavascriptBridge_JS.m; sourceTree = "<group>"; };
 		2C3E7C5F1C5A928700A1E322 /* WebViewJavascriptBridgeBase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebViewJavascriptBridgeBase.h; sourceTree = "<group>"; };
@@ -79,8 +76,6 @@
 		2C3E7C5A1C5A928700A1E322 /* WebViewJavascriptBridge */ = {
 			isa = PBXGroup;
 			children = (
-				2C3E7C5B1C5A928700A1E322 /* WebViewJavascriptBridge.h */,
-				2C3E7C5C1C5A928700A1E322 /* WebViewJavascriptBridge.m */,
 				2C3E7C5D1C5A928700A1E322 /* WebViewJavascriptBridge_JS.h */,
 				2C3E7C5E1C5A928700A1E322 /* WebViewJavascriptBridge_JS.m */,
 				2C3E7C5F1C5A928700A1E322 /* WebViewJavascriptBridgeBase.h */,
@@ -223,6 +218,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -264,7 +260,6 @@
 				2C3E7C651C5A928700A1E322 /* WebViewJavascriptBridgeBase.m in Sources */,
 				2C3E7C661C5A928700A1E322 /* WKWebViewJavascriptBridge.m in Sources */,
 				3D9E5F2F1AE288E5009D1C36 /* BridgeTests.m in Sources */,
-				2C3E7C631C5A928700A1E322 /* WebViewJavascriptBridge.m in Sources */,
 				2C52B1E21E11858800517DAF /* BridgeTests.swift in Sources */,
 				2C3E7C641C5A928700A1E322 /* WebViewJavascriptBridge_JS.m in Sources */,
 			);

@@ -8,10 +8,13 @@ Pod::Spec.new do |s|
   s.source       = { :git => 'https://github.com/marcuswestin/WebViewJavascriptBridge.git', :tag => 'v'+s.version.to_s }
   s.platforms    = { :ios => "8.0", :osx => "" }
   s.requires_arc = true
-  
-  s.source_files         = 'WebViewJavascriptBridge/*.{h,m}'
-  s.private_header_files = 'WebViewJavascriptBridge/WebViewJavascriptBridge_JS.h'
-  
+
+  s.ios.source_files         = 'WebViewJavascriptBridge/*.{h,m}'
+  s.ios.private_header_files = 'WebViewJavascriptBridge/WebViewJavascriptBridge_JS.h'
+
+  s.osx.source_files         = 'WebViewJavascriptBridge/*.{h,m}'
+  s.osx.private_header_files = 'WebViewJavascriptBridge/WebViewJavascriptBridge_JS.h'
+
   s.frameworks       = 'WebKit'
   s.ios.frameworks   = 'UIKit', 'WebKit'
 end
