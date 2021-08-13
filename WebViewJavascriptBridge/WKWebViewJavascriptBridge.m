@@ -8,11 +8,11 @@
 
 #import "WKWebViewJavascriptBridge.h"
 
-#if defined(supportsWKWebKit)
+#if defined supportsWKWebView
 
 @implementation WKWebViewJavascriptBridge {
-    WKWebView* _webView;
-    id _webViewDelegate;
+    __weak WKWebView* _webView;
+    __weak id<WKNavigationDelegate> _webViewDelegate;
     long _uniqueId;
     WebViewJavascriptBridgeBase *_base;
 }
@@ -22,19 +22,11 @@
 
 + (void)enableLogging { [WebViewJavascriptBridgeBase enableLogging]; }
 
-+ (instancetype)bridgeForWebView:(WKWebView*)webView handler:(WVJBHandler)handler {
-    return [self bridgeForWebView:webView webViewDelegate:nil handler:handler];
-}
-
-+ (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)messageHandler {
++ (instancetype)bridgeForWebView:(WKWebView*)webView {
     WKWebViewJavascriptBridge* bridge = [[self alloc] init];
-    [bridge _setupInstance:webView webViewDelegate:webViewDelegate handler:messageHandler];
+    [bridge _setupInstance:webView];
     [bridge reset];
     return bridge;
-}
-
-+ (instancetype)bridgeForWebView:(WKWebView*)webView webViewDelegate:(NSObject<WKNavigationDelegate>*)webViewDelegate handler:(WVJBHandler)messageHandler resourceBundle:(NSBundle*)bundle {
-    return [self bridgeForWebView:webView webViewDelegate:webViewDelegate handler:messageHandler];
 }
 
 - (void)send:(id)data {
@@ -61,8 +53,20 @@
     _base.messageHandlers[handlerName] = [handler copy];
 }
 
+- (void)removeHandler:(NSString *)handlerName {
+    [_base.messageHandlers removeObjectForKey:handlerName];
+}
+
 - (void)reset {
     [_base reset];
+}
+
+- (void)setWebViewDelegate:(id<WKNavigationDelegate>)webViewDelegate {
+    _webViewDelegate = webViewDelegate;
+}
+
+- (void)disableJavscriptAlertBoxSafetyTimeout {
+    [_base disableJavscriptAlertBoxSafetyTimeout];
 }
 
 /* Internals
@@ -79,32 +83,25 @@
 /* WKWebView Specific Internals
  ******************************/
 
-- (void) _setupInstance:(WKWebView*)webView webViewDelegate:(id<WKNavigationDelegate>)webViewDelegate handler:(WVJBHandler)messageHandler {
+- (void) _setupInstance:(WKWebView*)webView {
     _webView = webView;
-    _webViewDelegate = webViewDelegate;
     _webView.navigationDelegate = self;
-    _base = [[WebViewJavascriptBridgeBase alloc] initWithHandler:(WVJBHandler)messageHandler];
+    _base = [[WebViewJavascriptBridgeBase alloc] init];
     _base.delegate = self;
 }
 
 
 - (void)WKFlushMessageQueue {
     [_webView evaluateJavaScript:[_base webViewJavascriptFetchQueyCommand] completionHandler:^(NSString* result, NSError* error) {
+        if (error != nil) {
+            NSLog(@"WebViewJavascriptBridge: WARNING: Error when trying to fetch data from WKWebView: %@", error);
+        }
         [_base flushMessageQueue:result];
     }];
 }
 
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation
-{
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
     if (webView != _webView) { return; }
-
-    _base.numRequestsLoading--;
-    
-    if (_base.numRequestsLoading == 0) {
-        [webView evaluateJavaScript:[_base webViewJavascriptCheckCommand] completionHandler:^(NSString *result, NSError *error) {
-            [_base injectJavascriptFile:![result boolValue]];
-        }];
-    }
     
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFinishNavigation:)]) {
@@ -113,20 +110,44 @@
 }
 
 
-- (void)webView:(WKWebView *)webView
-decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction
-decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler {
+    if (webView != _webView) { return; }
+
+    __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
+    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationResponse:decisionHandler:)]) {
+        [strongDelegate webView:webView decidePolicyForNavigationResponse:navigationResponse decisionHandler:decisionHandler];
+    }
+    else {
+        decisionHandler(WKNavigationResponsePolicyAllow);
+    }
+}
+
+- (void)webView:(WKWebView *)webView didReceiveAuthenticationChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential *))completionHandler {
+    if (webView != _webView) { return; }
+
+    __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
+    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didReceiveAuthenticationChallenge:completionHandler:)]) {
+        [strongDelegate webView:webView didReceiveAuthenticationChallenge:challenge completionHandler:completionHandler];
+    } else {
+        completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
+    }
+}
+
+- (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
     if (webView != _webView) { return; }
     NSURL *url = navigationAction.request.URL;
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
 
-    if ([_base isCorrectProcotocolScheme:url]) {
-        if ([_base isCorrectHost:url]) {
+    if ([_base isWebViewJavascriptBridgeURL:url]) {
+        if ([_base isBridgeLoadedURL:url]) {
+            [_base injectJavascriptFile];
+        } else if ([_base isQueueMessageURL:url]) {
             [self WKFlushMessageQueue];
         } else {
             [_base logUnkownMessage:url];
         }
-        [webView stopLoading];
+        decisionHandler(WKNavigationActionPolicyCancel);
+        return;
     }
     
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:decidePolicyForNavigationAction:decisionHandler:)]) {
@@ -139,8 +160,6 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 - (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
     if (webView != _webView) { return; }
     
-    _base.numRequestsLoading++;
-    
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didStartProvisionalNavigation:)]) {
         [strongDelegate webView:webView didStartProvisionalNavigation:navigation];
@@ -148,12 +167,8 @@ decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler {
 }
 
 
-- (void)webView:(WKWebView *)webView
-didFailNavigation:(WKNavigation *)navigation
-      withError:(NSError *)error {
+- (void)webView:(WKWebView *)webView didFailNavigation:(WKNavigation *)navigation withError:(NSError *)error {
     if (webView != _webView) { return; }
-    
-    _base.numRequestsLoading--;
     
     __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
     if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailNavigation:withError:)]) {
@@ -161,8 +176,16 @@ didFailNavigation:(WKNavigation *)navigation
     }
 }
 
-- (NSString*) _evaluateJavascript:(NSString*)javascriptCommand
-{
+- (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(WKNavigation *)navigation withError:(NSError *)error {
+    if (webView != _webView) { return; }
+    
+    __strong typeof(_webViewDelegate) strongDelegate = _webViewDelegate;
+    if (strongDelegate && [strongDelegate respondsToSelector:@selector(webView:didFailProvisionalNavigation:withError:)]) {
+        [strongDelegate webView:webView didFailProvisionalNavigation:navigation withError:error];
+    }
+}
+
+- (NSString*) _evaluateJavascript:(NSString*)javascriptCommand {
     [_webView evaluateJavaScript:javascriptCommand completionHandler:nil];
     return NULL;
 }

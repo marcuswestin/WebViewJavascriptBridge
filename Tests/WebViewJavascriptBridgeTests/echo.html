@@ -3,26 +3,29 @@
 </head><body>
 	<p>WebViewJavascriptBridgeTests - echo.html</p>
 	<script>
-	function connectWebViewJavascriptBridge(callback) {
-		if (window.WebViewJavascriptBridge) {
-			callback(WebViewJavascriptBridge)
-		} else {
-			document.addEventListener('WebViewJavascriptBridgeReady', function() {
-				callback(WebViewJavascriptBridge)
-			}, false)
-		}
+	function setupWebViewJavascriptBridge(callback) {
+		if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+		if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
+		window.WVJBCallbacks = [callback];
+		var WVJBIframe = document.createElement('iframe');
+		WVJBIframe.style.display = 'none';
+		WVJBIframe.src = 'https://__bridge_loaded__';
+		document.documentElement.appendChild(WVJBIframe);
+		setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
 	}
 
-	connectWebViewJavascriptBridge(function(bridge) {
-		bridge.init(function(message, responseCallback) {
-			if(responseCallback) {
-				responseCallback(message);
-			}
-		})
-		bridge.send('Hello world')
-
+	setupWebViewJavascriptBridge(function(bridge) {
 		bridge.registerHandler('echoHandler', function(data, responseCallback) {
 			responseCallback(data)
+		})
+		bridge.registerHandler('jsRcvResponseTest', function(data, responseCallback) {
+			bridge.callHandler('objcEchoToJs', { foo:'bar' }, function(response) {
+				if (response && response.foo == 'bar') {
+					responseCallback("Response from JS")
+				} else {
+					responseCallback("Failed")
+				}
+			})
 		})
 	})
 	</script>

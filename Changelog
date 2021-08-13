@@ -13,12 +13,33 @@ Release Checklist
 Version History
 ---------------
 
-Intended v5.0.0
+v5.1.1
++ Swift unit tests and examples
++ Implement removeHandler
+
+v5.1.0
++ A single instantiation function for all webview types.
++ Improved test runner.
++ New instructions & templates for github issues and pull requests.
+
+v5.0.5
++ Run all tests for both UIWebView and WKWebView webviews/bridges.
++ Allow for calling handlers from JS with just a handler name and responseCallback function (#184).
+
+v5.0.3 & v5.0.4
++ Recalled builds :)
+
+v5.0.2
++ Fix bug that could cause a crash if the webview loads a new page immediately after JS sends a message.
+
+v5.0.1
 + Removed `WebViewJavascriptBridge -reset`. It should never have been exposed as a public API.
 + Fixed compilation in C99 mode
-
-Next version
-+ Pretty-print json in log messages
++ Inline JS source code. WVJB no longer requires `WebViewJavascriptBridge.js.txt` to be included as a resource.
++ Automated testing: see `make test`
++ Added Makefile with common commands
++ Significantly simplified and improved wvjb load detection
++ Simplify API by focusing on explicitly named handlers instead of a default handler and plain `send`.
 
 v4.1.4
 + Improve how WVJB handles the case when there is no ObjC handler for a message received from js.

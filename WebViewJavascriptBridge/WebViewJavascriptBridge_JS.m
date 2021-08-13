@@ -19,55 +19,44 @@ NSString * WebViewJavascriptBridge_js() {
 	if (window.WebViewJavascriptBridge) {
 		return;
 	}
+
+	if (!window.onerror) {
+		window.onerror = function(msg, url, line) {
+			console.log("WebViewJavascriptBridge: ERROR:" + msg + "@" + url + ":" + line);
+		}
+	}
 	window.WebViewJavascriptBridge = {
-		init: init,
-		send: send,
 		registerHandler: registerHandler,
 		callHandler: callHandler,
+		disableJavscriptAlertBoxSafetyTimeout: disableJavscriptAlertBoxSafetyTimeout,
 		_fetchQueue: _fetchQueue,
 		_handleMessageFromObjC: _handleMessageFromObjC
 	};
 
 	var messagingIframe;
 	var sendMessageQueue = [];
-	var receiveMessageQueue = [];
 	var messageHandlers = {};
 	
-	var CUSTOM_PROTOCOL_SCHEME = 'wvjbscheme';
-	var QUEUE_HAS_MESSAGE = '__WVJB_QUEUE_MESSAGE__';
+	var CUSTOM_PROTOCOL_SCHEME = 'https';
+	var QUEUE_HAS_MESSAGE = '__wvjb_queue_message__';
 	
 	var responseCallbacks = {};
 	var uniqueId = 1;
-	
-	function _createQueueReadyIframe(doc) {
-		messagingIframe = doc.createElement('iframe');
-		messagingIframe.style.display = 'none';
-		messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE;
-		doc.documentElement.appendChild(messagingIframe);
-	}
+	var dispatchMessagesWithTimeoutSafety = true;
 
-	function init(messageHandler) {
-		if (WebViewJavascriptBridge._messageHandler) {
-			throw new Error('WebViewJavascriptBridge.init called twice');
-		}
-		WebViewJavascriptBridge._messageHandler = messageHandler;
-		var receivedMessages = receiveMessageQueue;
-		receiveMessageQueue = null;
-		for (var i=0; i<receivedMessages.length; i++) {
-			_dispatchMessageFromObjC(receivedMessages[i]);
-		}
-	}
-
-	function send(data, responseCallback) {
-		_doSend({ data:data }, responseCallback);
-	}
-	
 	function registerHandler(handlerName, handler) {
 		messageHandlers[handlerName] = handler;
 	}
 	
 	function callHandler(handlerName, data, responseCallback) {
+		if (arguments.length == 2 && typeof data == 'function') {
+			responseCallback = data;
+			data = null;
+		}
 		_doSend({ handlerName:handlerName, data:data }, responseCallback);
+	}
+	function disableJavscriptAlertBoxSafetyTimeout() {
+		dispatchMessagesWithTimeoutSafety = false;
 	}
 	
 	function _doSend(message, responseCallback) {
@@ -87,7 +76,13 @@ NSString * WebViewJavascriptBridge_js() {
 	}
 
 	function _dispatchMessageFromObjC(messageJSON) {
-		setTimeout(function _timeoutDispatchMessageFromObjC() {
+		if (dispatchMessagesWithTimeoutSafety) {
+			setTimeout(_doDispatchMessageFromObjC);
+		} else {
+			 _doDispatchMessageFromObjC();
+		}
+		
+		function _doDispatchMessageFromObjC() {
 			var message = JSON.parse(messageJSON);
 			var messageHandler;
 			var responseCallback;
@@ -103,40 +98,39 @@ NSString * WebViewJavascriptBridge_js() {
 				if (message.callbackId) {
 					var callbackResponseId = message.callbackId;
 					responseCallback = function(responseData) {
-						_doSend({ responseId:callbackResponseId, responseData:responseData });
+						_doSend({ handlerName:message.handlerName, responseId:callbackResponseId, responseData:responseData });
 					};
 				}
 				
-				var handler = WebViewJavascriptBridge._messageHandler;
-				if (message.handlerName) {
-					handler = messageHandlers[message.handlerName];
-				}
-				
-				try {
+				var handler = messageHandlers[message.handlerName];
+				if (!handler) {
+					console.log("WebViewJavascriptBridge: WARNING: no handler for message from ObjC:", message);
+				} else {
 					handler(message.data, responseCallback);
-				} catch(exception) {
-					if (typeof console != 'undefined') {
-						console.log("WebViewJavascriptBridge: WARNING: javascript handler threw.", message, exception);
-					}
 				}
 			}
-		});
+		}
 	}
 	
 	function _handleMessageFromObjC(messageJSON) {
-		if (receiveMessageQueue) {
-			receiveMessageQueue.push(messageJSON);
-		} else {
-			_dispatchMessageFromObjC(messageJSON);
-		}
+        _dispatchMessageFromObjC(messageJSON);
 	}
 
-	var doc = document;
-	_createQueueReadyIframe(doc);
-	var readyEvent = doc.createEvent('Events');
-	readyEvent.initEvent('WebViewJavascriptBridgeReady');
-	readyEvent.bridge = WebViewJavascriptBridge;
-	doc.dispatchEvent(readyEvent);
+	messagingIframe = document.createElement('iframe');
+	messagingIframe.style.display = 'none';
+	messagingIframe.src = CUSTOM_PROTOCOL_SCHEME + '://' + QUEUE_HAS_MESSAGE;
+	document.documentElement.appendChild(messagingIframe);
+
+	registerHandler("_disableJavascriptAlertBoxSafetyTimeout", disableJavscriptAlertBoxSafetyTimeout);
+	
+	setTimeout(_callWVJBCallbacks, 0);
+	function _callWVJBCallbacks() {
+		var callbacks = window.WVJBCallbacks;
+		delete window.WVJBCallbacks;
+		for (var i=0; i<callbacks.length; i++) {
+			callbacks[i](WebViewJavascriptBridge);
+		}
+	}
 })();
 	); // END preprocessorJSCode
 
