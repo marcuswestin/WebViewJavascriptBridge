@@ -81,9 +81,7 @@ setupWebViewJavascriptBridge(function(bridge) {
 	})
 })
 ```
-### Any question.
-English video https://www.youtube.com/watch?v=2Z3852I58OQ.  
-Also you can contact me with:housenkui@gmail.com 
+
 ### 如果你有疑问.
 你可以观看中文版的视频介绍:https://www.youtube.com/watch?v=ocyKSpMT7tM   
 当然你也可以邮件联系我:housenkui@gmail.com 
