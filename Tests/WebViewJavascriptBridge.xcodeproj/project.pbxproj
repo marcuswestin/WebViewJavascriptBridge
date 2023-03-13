@@ -80,8 +80,8 @@
 			isa = PBXGroup;
 			children = (
 				2C3E7C5B1C5A928700A1E322 /* WebViewJavascriptBridge.h */,
-				2C3E7C5C1C5A928700A1E322 /* WebViewJavascriptBridge.m */,
 				2C3E7C5D1C5A928700A1E322 /* WebViewJavascriptBridge_JS.h */,
+				2C3E7C5C1C5A928700A1E322 /* WebViewJavascriptBridge.m */,
 				2C3E7C5E1C5A928700A1E322 /* WebViewJavascriptBridge_JS.m */,
 				2C3E7C5F1C5A928700A1E322 /* WebViewJavascriptBridgeBase.h */,
 				2C3E7C601C5A928700A1E322 /* WebViewJavascriptBridgeBase.m */,
@@ -223,6 +223,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);

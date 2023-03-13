@@ -23,11 +23,14 @@
     #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<WebViewJavascriptBridgeBaseDelegate>
     #define WVJB_WEBVIEW_DELEGATE_INTERFACE NSObject<WebViewJavascriptBridgeBaseDelegate, WebPolicyDelegate>
 #elif defined __IPHONE_OS_VERSION_MAX_ALLOWED
-    #import <UIKit/UIWebView.h>
-    #define WVJB_PLATFORM_IOS
-    #define WVJB_WEBVIEW_TYPE UIWebView
-    #define WVJB_WEBVIEW_DELEGATE_TYPE NSObject<UIWebViewDelegate>
-    #define WVJB_WEBVIEW_DELEGATE_INTERFACE NSObject<UIWebViewDelegate, WebViewJavascriptBridgeBaseDelegate>
+    #if defined supportsWKWebView
+        #define WVJB_PLATFORM_IOS
+        #define WVJB_WEBVIEW_TYPE WKWebView
+        #define WVJB_WEBVIEW_DELEGATE_TYPE id
+        #define WVJB_WEBVIEW_DELEGATE_INTERFACE NSObject<WebViewJavascriptBridgeBaseDelegate>
+    #else
+        // iOS unsupported configuration!
+    #endif
 #endif
 
 @interface WebViewJavascriptBridge : WVJB_WEBVIEW_DELEGATE_INTERFACE
