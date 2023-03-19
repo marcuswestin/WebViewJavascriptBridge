@@ -8,42 +8,30 @@
 
 #import "ExampleWKWebViewController.h"
 #import "WebViewJavascriptBridge.h"
-
 @interface ExampleWKWebViewController ()
-
-@property WebViewJavascriptBridge* bridge;
-
+@property (nonatomic, strong) WKWebView *webView;
+@property (nonatomic, strong) WebViewJavascriptBridge* bridge;
 @end
 
 @implementation ExampleWKWebViewController
 
-- (void)viewWillAppear:(BOOL)animated {
-    if (_bridge) { return; }
+- (void)viewDidLoad {
+    [super viewDidLoad];
     
-    WKWebView* webView = [[NSClassFromString(@"WKWebView") alloc] initWithFrame:self.view.bounds];
-    webView.navigationDelegate = self;
-    [self.view addSubview:webView];
-    [WebViewJavascriptBridge enableLogging];
-    _bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
-    [_bridge setWebViewDelegate:self];
+    self.webView = [[WKWebView alloc] initWithFrame:self.view.bounds];
+    [self.view addSubview:self.webView];
     
+    _bridge = [WebViewJavascriptBridge bridgeForWebView:self.webView
+                                          showJSconsole:YES
+                                          enableLogging:YES];
+   
     [_bridge registerHandler:@"testObjcCallback" handler:^(id data, WVJBResponseCallback responseCallback) {
         NSLog(@"testObjcCallback called: %@", data);
-        responseCallback(@"Response from testObjcCallback");
+        responseCallback(@"Response from testObjcCallback111");
     }];
+    [self renderButtons:self.webView];
+    [self loadExamplePage:self.webView];
     
-    [_bridge callHandler:@"testJavascriptHandler" data:@{ @"foo":@"before ready" }];
-    
-    [self renderButtons:webView];
-    [self loadExamplePage:webView];
-}
-
-- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation {
-    NSLog(@"webViewDidStartLoad");
-}
-
-- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation {
-    NSLog(@"webViewDidFinishLoad");
 }
 
 - (void)renderButtons:(WKWebView*)webView {
@@ -62,6 +50,7 @@
     [self.view insertSubview:reloadButton aboveSubview:webView];
     reloadButton.frame = CGRectMake(110, 400, 100, 35);
     reloadButton.titleLabel.font = font;
+    
 }
 
 - (void)callHandler:(id)sender {
@@ -76,5 +65,21 @@
     NSString* appHtml = [NSString stringWithContentsOfFile:htmlPath encoding:NSUTF8StringEncoding error:nil];
     NSURL *baseURL = [NSURL fileURLWithPath:htmlPath];
     [webView loadHTMLString:appHtml baseURL:baseURL];
+}
+- (WKWebView *) webView {
+    if (!_webView) {
+        WKWebViewConfiguration *config = [[WKWebViewConfiguration alloc] init];
+        _webView = [[WKWebView alloc] initWithFrame:self.view.bounds configuration:config];
+        [self.view addSubview:_webView];
+     
+    }
+    return _webView;
+}
+
+-(void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+    
+    NSLog(@"viewDidDisappear``");
+    [self.webView.configuration.userContentController removeAllUserScripts];
 }
 @end
