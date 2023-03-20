@@ -2,6 +2,7 @@ WebViewJavascriptBridge
 =======================
 
 [![Circle CI](https://img.shields.io/circleci/project/github/marcuswestin/WebViewJavascriptBridge.svg)](https://circleci.com/gh/marcuswestin/WebViewJavascriptBridge)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmarcuswestin%2FWebViewJavascriptBridge.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmarcuswestin%2FWebViewJavascriptBridge?ref=badge_shield)
 
 An iOS/OSX bridge for sending messages between Obj-C and JavaScript in WKWebViews, UIWebViews & WebViews.
 
@@ -236,3 +237,7 @@ Example:
 ```javascript
 bridge.disableJavscriptAlertBoxSafetyTimeout()
 ```
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fmarcuswestin%2FWebViewJavascriptBridge.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fmarcuswestin%2FWebViewJavascriptBridge?ref=badge_large)
