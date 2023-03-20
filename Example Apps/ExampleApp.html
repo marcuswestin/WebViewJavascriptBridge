@@ -7,15 +7,71 @@
 		button { margin:0 3px 10px; font-size:12px; }
 		.logLine { border-bottom:1px solid #ccc; padding:4px 2px; font-family:courier; font-size:11px; }
 	</style>
+    <script type="text/javascript"
+        src="https://res.wx.qq.com/mmbizwap/zh_CN/htmledition/js/vconsole/3.0.0/vconsole.min.js"></script>
+    <script>
+        var vConsole = new VConsole();
+    </script>
 </head><body>
 	<h1>WebViewJavascriptBridge Demo</h1>
+    <!--测试-->
+    <p>
+    <input type="text" id="text1" value="用户名(username)"/>
+    </p>
+    <p>
+    <input type="text" id="text2" value="password"/>
+    </p>
+    <p>
+    <xmp id="show">
+    </xmp>
+    </p>
+    <p>
+    <input type="button" id="enter" value="发消息给Native" onclick="testClick();"
+    />
+    </p>
+    <p>
+    <input type="button" id="enter1" value="调用Native方法" onclick="testClick1();"
+    />
+    </p>
+    
 	<script>
 	window.onerror = function(err) {
 		log('window.onerror: ' + err)
 	}
+    
+    <!--发送消息给native-->
+    function testClick() {
+        var str1 = document.getElementById("text1").value;
+        var str2 = document.getElementById("text2").value;
+        
+        //send message to native
+        var data = {id: 1, content: "js 发送handleName=nil的方法"};
+        window.WebViewJavascriptBridge
+            .send(data, function(responseData) {
+                document.getElementById("show").innerHTML = "repsonseData from java, data " + responseData
+            });
+    }
+    
+    <!--调用Native的方法-->
+    function testClick1() {
+        var str1 = document.getElementById("text1").value;
+        var str2 = document.getElementById("text2").value;
+        
+        //调用Native方法
+        window.WebViewJavascriptBridge.callHandler('testObjcCallback', {'param': '中文测试'}, function(responseData) {
+                                                   document.getElementById("show").innerHTML = "send get responseData from java, data = " + responseData
+                                                   });
+    }
 
     function setupWebViewJavascriptBridge(callback) {
         if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
+        document.addEventListener(
+                                  'WebViewJavascriptBridgeReady'
+                                  , function() {
+                                  callback(WebViewJavascriptBridge)
+                                  },
+                                  false
+                                  );
         if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
         window.WVJBCallbacks = [callback];
         var WVJBIframe = document.createElement('iframe');
