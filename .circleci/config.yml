@@ -1,0 +1,11 @@
+version: 2.1
+jobs:
+  build:
+    macos:
+      xcode: 14.0.0
+    steps:
+      - checkout
+      - run:
+          name: Make
+          command: |
+            make test-circle-ci
