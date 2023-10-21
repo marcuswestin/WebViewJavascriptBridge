@@ -15,7 +15,7 @@
     WKWebView *_WKWebView;
     WebViewJavascriptBridge* _bridge;
     WebViewJavascriptBridge* _WKBridge;
-    NSView* _WKWebViewWrapper;
+    NSView* _WKWebViewWrapper;//
 }
 
 - (void)applicationDidFinishLaunching:(NSNotification *)aNotification
