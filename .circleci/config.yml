@@ -1,0 +1,10 @@
+machine:
+  xcode:
+    version: 9.0
+# dependencies:
+#   override:
+#     - brew install kylef/formulae/swiftenv
+#     - swiftenv install 3.0
+test:
+  override:
+    - make test-circle-ci

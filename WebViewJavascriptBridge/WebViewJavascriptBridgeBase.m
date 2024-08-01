@@ -136,12 +136,12 @@ static int logMaxLength = 500;
 
 - (BOOL)isQueueMessageURL:(NSURL*)url {
     NSString* host = url.host.lowercaseString;
-    return [self isSchemeMatch:url] && [host isEqualToString:kQueueHasMessage];
+    return [self isSchemeMatch:url] && ([host isEqualToString:kQueueHasMessage] || [host isEqualToString:kQueueHasMessageNew]);
 }
 
 - (BOOL)isBridgeLoadedURL:(NSURL*)url {
     NSString* host = url.host.lowercaseString;
-    return [self isSchemeMatch:url] && [host isEqualToString:kBridgeLoaded];
+    return [self isSchemeMatch:url] && ([host isEqualToString:kBridgeLoaded] || [host isEqualToString:kBridgeLoadedNew]);
 }
 
 - (void)logUnkownMessage:(NSURL*)url {

@@ -89,13 +89,13 @@ self.bridge = [WebViewJavascriptBridge bridgeForWebView:webView];
 4) Copy and paste `setupWebViewJavascriptBridge` into your JS:
 	
 ```javascript
-function setupWebViewJavascriptBridge(callback) {
+function setupWebViewJavascriptBridge(callback, forCSP=false) {
 	if (window.WebViewJavascriptBridge) { return callback(WebViewJavascriptBridge); }
 	if (window.WVJBCallbacks) { return window.WVJBCallbacks.push(callback); }
 	window.WVJBCallbacks = [callback];
 	var WVJBIframe = document.createElement('iframe');
-	WVJBIframe.style.display = 'none';
-	WVJBIframe.src = 'https://__bridge_loaded__';
+	WVJBIframe.style.display = 'none';                 
+	WVJBIframe.src = forCSP ? 'https://bridge-loaded' : 'https://__bridge_loaded__';
 	document.documentElement.appendChild(WVJBIframe);
 	setTimeout(function() { document.documentElement.removeChild(WVJBIframe) }, 0)
 }

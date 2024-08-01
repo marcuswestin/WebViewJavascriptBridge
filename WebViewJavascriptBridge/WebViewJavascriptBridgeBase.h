@@ -11,6 +11,8 @@
 #define kNewProtocolScheme @"https"
 #define kQueueHasMessage   @"__wvjb_queue_message__"
 #define kBridgeLoaded      @"__bridge_loaded__"
+#define kQueueHasMessageNew @"wvjb-queue-message"
+#define kBridgeLoadedNew    @"bridge-loaded"
 
 typedef void (^WVJBResponseCallback)(id responseData);
 typedef void (^WVJBHandler)(id data, WVJBResponseCallback responseCallback);
